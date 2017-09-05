@@ -68,7 +68,7 @@ android {
         }
 
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
@@ -149,7 +149,7 @@ dependencies {
     testCompile parent.ext.libJunit
     testCompile parent.ext.libMockito
 
-    compile "com.yoti.mobile.android:commons-ui:${yotiCommonUIVersion}"
+    compile(group: 'com.yoti.mobile.android', name: 'base-commons-ui', version: yotiCommonUIVersion, classifier: 'release', ext: 'aar')
 }
 
 // Wrapper upload task to get correct artifacts to repos
