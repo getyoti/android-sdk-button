@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Sample App</string>
+
+    <string name="share_my_phone">Share my phone</string>
+
+    <string name="loc_error_unknow">Something went wrong :(</string>
+    <string name="loc_error_not_completed_on_yoti">Process not completed on the Yoti App</string>
+    <string name="loc_phone_number">Your phone number is : %s</string>
+</resources>

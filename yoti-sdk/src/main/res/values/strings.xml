@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">YotiSDK</string>
+    <string name="yoti.sdk.error.yoti_app_version_incompatible">The current Yoti app installed is not compatible, please update your Yoti app.</string>
+</resources>

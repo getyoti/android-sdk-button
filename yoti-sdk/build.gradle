@@ -1,0 +1,158 @@
+apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
+
+group = "com.yoti.mobile.android"
+version = currentVersion
+
+apply from: 'publication.gradle'
+
+// internal publication with maven-publish
+publishing {
+    repositories {
+
+        maven {
+            name "release"
+            url lkRepoRelease
+            credentials {
+                username lkRepoUsername
+                password lkRepoPassword
+            }
+        }
+    }
+
+    publications {
+        debug(MavenPublication) {
+            updatePomClosure(delegate, "prod", android.buildTypes.debug.name, assembleDebug)
+        }
+        release(MavenPublication) {
+            updatePomClosure(delegate, "prod", android.buildTypes.release.name, assembleRelease)
+        }
+    }
+}
+
+android {
+    compileSdkVersion parent.ext.androidCompileSdkVersion
+    buildToolsVersion parent.ext.androidBuildToolsVersion
+
+    defaultConfig {
+
+        minSdkVersion parent.ext.androidMinSdkVersion
+        targetSdkVersion parent.ext.androidTargetSdkVersion
+
+        versionCode currentVersionCode.toInteger()
+        versionName currentVersion
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file('debug.keystore')
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storePassword 'android'
+        }
+        release {
+            storeFile file('debug.keystore')
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storePassword 'android'
+        }
+    }
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+            debuggable true
+            versionNameSuffix "-SNAPSHOT"
+        }
+
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    libraryVariants.all { variant ->
+
+        String libRootName;
+        variant.outputs.each { output ->
+            def outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.endsWith('.aar')) {
+                libRootName = "${archivesBaseName}${variant.buildType.versionNameSuffix!=null?variant.buildType.versionNameSuffix:""}"
+                output.outputFile = new File(outputFile.parent, libRootName+".aar")
+            }
+        }
+
+        String taskPrefix = "generate" + variant.name.capitalize()
+        String javadocSuffix = "Javadoc"
+        String javadocJarSuffix = "JavadocJar"
+        String sourcesJarSuffix = "SourcesJar"
+
+
+        task(taskPrefix + javadocSuffix, type: Javadoc) {
+            failOnError false
+            source = variant.getJavaCompiler().source
+
+            title = "Button SDK :${variant.name}"
+            description "Generates Javadoc for ${variant.name}."
+
+            destinationDir = new File(new File("${project.getBuildDir()}/docs/javadoc/", variant.baseName), "html")
+
+            options.links("http://docs.oracle.com/javase/7/docs/api/");
+            options.linksOffline("http://d.android.com/reference","${android.sdkDirectory}/docs/reference");
+
+            ext.androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
+            classpath += files(ext.androidJar)
+            classpath += files(variant.javaCompile.classpath.files)
+            classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+            classpath += configurations.compile
+
+            exclude '**/BuildConfig.java'
+            exclude '**/R.java'
+        }
+
+        task(taskPrefix + javadocJarSuffix, type: Jar, dependsOn: taskPrefix + javadocSuffix) {
+            destinationDir = new File("${project.getBuildDir()}/outputs/jar")
+            archiveName = libRootName+ "-javadoc.jar"
+            classifier = "javadoc"
+            extension = "jar"
+
+            from tasks[taskPrefix + javadocSuffix].destinationDir
+        }
+
+        task(taskPrefix + sourcesJarSuffix, type: Jar) {
+            destinationDir = new File("${project.getBuildDir()}/outputs/jar")
+            archiveName = libRootName+ "-sources.jar"
+            classifier = "sources"
+            extension = "jar"
+
+            from android.sourceSets.main.java.sourceFiles
+        }
+
+        artifacts {
+            archives tasks[taskPrefix + javadocJarSuffix]
+            archives tasks[taskPrefix + sourcesJarSuffix]
+        }
+    }
+
+    publishNonDefault true
+}
+
+dependencies {
+    compile parent.ext.libAndroidSupportv7
+    testCompile parent.ext.libJunit
+    testCompile parent.ext.libMockito
+
+    compile "com.yoti.mobile.android:commons-ui:${yotiCommonUIVersion}"
+}
+
+// Wrapper upload task to get correct artifacts to repos
+task publishDebug(dependsOn: ["publishDebugPublicationToSnapshotRepository"], group: "publishing");
+task publishRelease(dependsOn: ["publishReleasePublicationToReleaseRepository"], group: "publishing");
+task publishForSdkDebug(dependsOn: ["publishDebug"], group: "publishing");

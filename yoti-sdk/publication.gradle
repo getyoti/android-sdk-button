@@ -1,0 +1,124 @@
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+/**
+ * Add the ability to deploy on OSSRH. Defines a well structured pom with the information read
+ * from the properties files. Here are the key you need to have defined somewhere:
+ * <ul>
+ *     <li>ossrhSnapshotRepository</li>
+ *     <li>ossrhRepository</li>
+ *     <li>pomGroup: must be a sub group of com.yoti</li>
+ *     <li>pomName</li>
+ *     <li>pomPackaging</li>
+ *     <li>pomDescription</li>
+ *     <li>pomUrl</li>
+ *     <li>pomScmUrl</li>
+ *     <li>pomScmConnection</li>
+ *     <li>pomScmDevConnection</li>
+ *     <li>pomLicenseName</li>
+ *     <li>pomLicenseUrl</li>
+ *     <li>pomDeveloperNames: comma separated, should be the same order and numbers than pomDeveloperIds</li>
+ *     <li>pomDeveloperIds: comma separated, should be the same order and numbers than pomDeveloperNames</li>
+ *     <li>artifactsToArchive: comma separated list of extra task that produce artifacts.
+ *     THis will be used to add extra artifacts to the publication</li>
+ * </ul>
+ */
+
+afterEvaluate { project ->
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+                pom.groupId = pomGroup
+                pom.artifactId = artefactName
+                pom.version = currentVersion
+
+                repository(url: ossrhRepository) {
+                    authentication(userName: sonatypeUsername, password: sonatypePassword)
+                }
+                snapshotRepository(url: ossrhSnapshotRepository) {
+                    authentication(userName: sonatypeUsername, password: sonatypePassword)
+                }
+
+
+                PublishArtifactSet set = configurations.archives.artifacts
+                set.each { ConfigurablePublishArtifact pa ->
+                    // check if the artefact generated contains SNAPSHOT => debug, add to the name
+                    // for later exclusion filter
+                    if(pa.getFile().getAbsolutePath().contains("-SNAPSHOT") &&
+                            !pa.name.contains("-SNAPSHOT")){
+
+                        pa.name = pa.name+"-SNAPSHOT"
+                    }
+                    // Remove the classifier for debug or release
+                    if(pa.classifier!=null && (pa.classifier.contains("debug") ||
+                            pa.classifier.contains("release"))){
+
+                        pa.setClassifier("") // not working ?? only working with non null and non empty value
+                    }
+                }
+
+                // Exclude SNAPSHOT for release
+                // Exclude non SNAPSHOT for debug
+                configurations.archives.artifacts.removeAll { PublishArtifact publishArtifact ->
+                    (publishArtifact.getName().contains("-SNAPSHOT") &&
+                            Boolean.parseBoolean(isReleaseDeployment)) ||
+
+                            (!publishArtifact.getName().contains("-SNAPSHOT") &&
+                                    !Boolean.parseBoolean(isReleaseDeployment))
+                }
+
+                pom.project {
+                    name pomName
+                    packaging pomPackaging
+                    description pomDescription
+                    url pomUrl
+
+                    scm {
+                        url pomScmUrl
+                        connection pomScmConnection
+                        developerConnection pomScmDevConnection
+                    }
+
+                    licenses {
+                        license {
+                            name pomLicenseName
+                            url pomLicenseUrl
+                        }
+                    }
+
+                    developers {
+
+                        String[] devNames = pomDeveloperNames.split(",")
+                        String[] devIds = pomDeveloperIds.split(",")
+                        if (devNames == null || devIds == null || devNames.length != devIds.length) {
+                            println("pomDeveloperNames and pomDeveloperIds must be have comma seprated entries. The count must be the same")
+                        } else {
+                            for (int i = 0; i < devNames.length; i++) {
+                                developer {
+                                    id devIds[i]
+                                    name devNames[i]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+
+    signing {
+        required { Boolean.parseBoolean(isReleaseDeployment) }
+        sign configurations.archives
+    }
+
+    artifacts {
+        String[] taskNames = artifactsToArchive.split(",")
+        taskNames.each {
+            archives tasks[it.toString()]
+        }
+    }
+}
