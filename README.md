@@ -10,7 +10,7 @@ Add this dependency in the "build.grade" file inside your application module dir
 
 ```javascript
 dependencies {
-    compile 'com.yoti.mobile.android.sdk:button-sdk:1.0.0'
+    compile(group: 'com.yoti.mobile.android.sdk', name: 'yoti-button-sdk', version: '0.0.1', classifier: 'release', ext: 'aar')
 }
 ```
 
