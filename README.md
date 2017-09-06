@@ -10,8 +10,9 @@ Add this dependency in the "build.grade" file inside your application module dir
 
 ```javascript
 dependencies {
-    compile(group: 'com.yoti.mobile.android.sdk', name: 'yoti-button-sdk', version: '0.0.1', classifier: 'release', ext: 'aar')
-}
+    compile(group: 'com.yoti.mobile.android.sdk', name: 'yoti-button-sdk', version: '0.0.2', classifier: 'release', ext: 'aar'){
+            transitive = true
+        }
 ```
 
 
@@ -33,11 +34,11 @@ YotiSDK.addScenario(scenario);
 The SDK provide a custom Button you can use in your layout, do not forget to set the useCaseId, it's the link with the Scenario you defined earlier.
 
 ```xml
-<com.yoti.mobile.android.sdk.ui.YotiSDKButton
+<com.yoti.mobile.android.sdk.YotiSDKButton
         android:id="@+id/my_id"
         android:height="wrap_content"
         android:width="wrap_content"
-        yoti:text="My Yoti Button"
+        android:text="My Yoti Button"
         yoti:useCaseId=MY_USE_CASE_ID/>
 ```
 
