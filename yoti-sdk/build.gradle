@@ -149,6 +149,8 @@ dependencies {
     testCompile parent.ext.libJunit
     testCompile parent.ext.libMockito
 
+//    debugCompile(group: 'com.yoti.mobile.android', name: 'base-commons-ui', version: yotiCommonUIVersion+'-SNAPSHOT', classifier: 'debug', ext: 'aar')
+//    releaseCompile(group: 'com.yoti.mobile.android', name: 'base-commons-ui', version: yotiCommonUIVersion, classifier: 'release', ext: 'aar')
     compile(group: 'com.yoti.mobile.android', name: 'base-commons-ui', version: yotiCommonUIVersion, classifier: 'release', ext: 'aar')
 }
 

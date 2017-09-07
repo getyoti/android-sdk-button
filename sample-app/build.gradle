@@ -12,10 +12,32 @@ android {
         versionName "1.0"
     }
 
+    signingConfigs {
+        debug {
+            storeFile file('debug.keystore')
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storePassword 'android'
+        }
+        release {
+            storeFile file('debug.keystore')
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storePassword 'android'
+        }
+    }
+
     buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+            debuggable true
+            versionNameSuffix "-SNAPSHOT"
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }
@@ -25,11 +47,11 @@ dependencies {
     compile parent.ext.libAndroidSupportv7
     testCompile 'junit:junit:4.12'
 
-    debugCompile   project(path: ':yoti-sdk', configuration: 'debug')
+    debugCompile project(path: ':yoti-sdk', configuration: 'debug')
     releaseCompile project(path: ':yoti-sdk', configuration: 'release')
 
     // Use this version if you want to point at the dependency published on mavenCentral
-//    compile(group: 'com.yoti.mobile.android.sdk', name: 'yoti-button-sdk', version: '0.0.3', classifier: 'release', ext: 'aar'){
+//    compile(group: 'com.yoti.mobile.android.sdk', name: 'yoti-button-sdk', version: '0.0.2', classifier: 'release', ext: 'aar'){
 //        transitive = true
 //    }
 }

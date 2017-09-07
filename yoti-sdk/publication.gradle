@@ -41,26 +41,30 @@ afterEvaluate { project ->
                     authentication(userName: sonatypeUsername, password: sonatypePassword)
                 }
 
-
                 PublishArtifactSet set = configurations.archives.artifacts
                 set.each { org.gradle.api.internal.artifacts.publish.ArchivePublishArtifact pa ->
                     // check if the artefact generated contains SNAPSHOT => debug, add to the name
                     // for later exclusion filter
                     if(pa.getFile().getAbsolutePath().contains("-SNAPSHOT") &&
-                            !pa.name.contains("-SNAPSHOT")){
+                            !pa.getArchiveTask().version.contains("-SNAPSHOT")){
 
-                        pa.name = pa.name+"-SNAPSHOT"
+                        pa.getArchiveTask().version +="-SNAPSHOT"
                     }
                 }
 
                 // Exclude SNAPSHOT for release
                 // Exclude non SNAPSHOT for debug
                 configurations.archives.artifacts.removeAll { PublishArtifact publishArtifact ->
-                    ((publishArtifact.getName().contains("-SNAPSHOT") &&
-                            Boolean.parseBoolean(isReleaseDeployment)) ||
+                    def boolean isReleaseVersion = !currentVersion.contains("-SNAPSHOT")
+                    def boolean isSnapshotVersion = publishArtifact.getArchiveTask().version.contains("-SNAPSHOT");
+                    def boolean isReleaseArtefact = publishArtifact.classifier!=null && publishArtifact.classifier.contains("release")
+                    def boolean isDebugArtefact = publishArtifact.classifier!=null && publishArtifact.classifier.contains("debug")
 
-                            (!publishArtifact.getName().contains("-SNAPSHOT") &&
-                                    !Boolean.parseBoolean(isReleaseDeployment)))
+                    def boolean remove =
+                            (isReleaseVersion && (isSnapshotVersion || isDebugArtefact)) || /* release version => exclude snapshot version or debug artefact */
+                                    (!isReleaseVersion && (!isSnapshotVersion || isReleaseArtefact)) /* snapshot version => exclude non snapshot version or release artefact */
+
+                    return remove
                 }
 
                 pom.whenConfigured { p ->
@@ -110,10 +114,8 @@ afterEvaluate { project ->
         }
     }
 
-
-
     signing {
-        required { Boolean.parseBoolean(isReleaseDeployment) }
+        required { !currentVersion.contains("-SNAPSHOT") }
         sign configurations.archives
     }
 
