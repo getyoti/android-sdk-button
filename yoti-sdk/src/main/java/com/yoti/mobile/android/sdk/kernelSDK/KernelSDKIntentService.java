@@ -3,9 +3,11 @@ package com.yoti.mobile.android.sdk.kernelSDK;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import com.yoti.mobile.android.sdk.BuildConfig;
 import com.yoti.mobile.android.sdk.YotiSDK;
 import com.yoti.mobile.android.sdk.YotiSDKLogger;
 import com.yoti.mobile.android.sdk.model.Scenario;
@@ -16,6 +18,8 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 
+import static com.yoti.mobile.android.sdk.YotiSDKDefs.APP_ID_PARAM;
+import static com.yoti.mobile.android.sdk.YotiSDKDefs.APP_NAME_PARAM;
 import static com.yoti.mobile.android.sdk.YotiSDKDefs.CALLBACK_PARAM;
 import static com.yoti.mobile.android.sdk.YotiSDKDefs.INTENT_EXTRA_ERROR;
 import static com.yoti.mobile.android.sdk.YotiSDKDefs.INTENT_EXTRA_HTTP_ERROR_CODE;
@@ -106,11 +110,18 @@ public class KernelSDKIntentService extends IntentService {
 
         currentScenario.setQrCodeUrl(qrCodeUrl);
 
+        // Retrieve the current app name
+        ApplicationInfo applicationInfo = getApplicationInfo();
+        int stringId = applicationInfo.labelRes;
+        String appName = stringId == 0 ? applicationInfo.nonLocalizedLabel.toString() : getString(stringId);
+
         // Here we transform the QrCode url to a Uri to add extra parameter so the Yoti App can callback the Yoti SDK.
         Uri uri = Uri.parse(currentScenario.getQrCodeUrl());
         uri = uri.buildUpon()
                 .appendQueryParameter(CALLBACK_PARAM, currentScenario.getCallbackAction())
                 .appendQueryParameter(USE_CASE_ID_PARAM, String.valueOf(useCaseId))
+                .appendQueryParameter(APP_ID_PARAM, getPackageName())
+                .appendQueryParameter(APP_NAME_PARAM, appName)
                 .build();
 
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);

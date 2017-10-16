@@ -7,6 +7,8 @@ public interface YotiSDKDefs {
     String TOKEN_PARAM = "token";
     String CALLBACK_PARAM = "callback";
     String USE_CASE_ID_PARAM = "useCaseId";
+    String APP_ID_PARAM = "appId";
+    String APP_NAME_PARAM = "appName";
 
 
     /* This should not be changed unless it is changed in the Yoti App */

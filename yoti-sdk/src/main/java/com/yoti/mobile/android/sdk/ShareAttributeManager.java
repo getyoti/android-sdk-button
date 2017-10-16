@@ -62,11 +62,17 @@ public class ShareAttributeManager implements ShareAttributesContract.IShareAttr
     private void handleYotiAppCallback(String useCaseId, String callbackUrl, Scenario currentScenario) {
         currentScenario.setCallbackBackendUrl(callbackUrl);
 
+        if (TextUtils.isEmpty(callbackUrl)) {
+            mShareAttributeBroadcastReceiver.shareFailed(useCaseId);
+            return;
+        }
+
         String callbackRoot = mShareAttributeBroadcastReceiver.extractCallbackRoot(callbackUrl);
         String token = mShareAttributeBroadcastReceiver.extractToken(callbackUrl);
 
         if (TextUtils.isEmpty(token)) {
             mShareAttributeBroadcastReceiver.shareFailed(useCaseId);
+            return;
         }
 
         boolean isProcessed = mShareAttributeBroadcastReceiver.receivedCallback(useCaseId, callbackRoot, token, callbackUrl);
