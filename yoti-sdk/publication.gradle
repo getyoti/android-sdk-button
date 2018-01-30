@@ -41,13 +41,6 @@ afterEvaluate { project ->
                     authentication(userName: sonatypeUsername, password: sonatypePassword)
                 }
 
-//                repository(url: lkRepoRelease) {
-//                    authentication(userName: lkRepoUsername, password: lkRepoPassword)
-//                }
-//                snapshotRepository(url: lkRepoSnapshot) {
-//                    authentication(userName: lkRepoUsername, password: lkRepoPassword)
-//                }
-
                 PublishArtifactSet set = configurations.archives.artifacts
                 set.each { org.gradle.api.internal.artifacts.publish.ArchivePublishArtifact pa ->
                     // check if the artefact generated contains SNAPSHOT => debug, add to the name
