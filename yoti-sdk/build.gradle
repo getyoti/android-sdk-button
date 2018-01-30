@@ -74,6 +74,10 @@ android {
         }
     }
 
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+
     lintOptions {
         abortOnError false
     }
@@ -81,11 +85,11 @@ android {
     libraryVariants.all { variant ->
 
         String libRootName;
-        variant.outputs.each { output ->
+        variant.outputs.all { output ->
             def outputFile = output.outputFile
             if (outputFile != null && outputFile.name.endsWith('.aar')) {
                 libRootName = "${archivesBaseName}${variant.buildType.versionNameSuffix!=null?variant.buildType.versionNameSuffix:""}"
-                output.outputFile = new File(outputFile.parent, libRootName+".aar")
+                outputFileName = new File(outputFile.parent, libRootName+".aar")
             }
         }
 

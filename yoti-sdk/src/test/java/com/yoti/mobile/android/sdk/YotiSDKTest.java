@@ -16,8 +16,9 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import static org.mockito.Mockito.when;
 
 /**
  *
@@ -41,10 +42,10 @@ public class YotiSDKTest {
     @Before
     public void setup() {
 
-        Mockito.when(mMockContext.getPackageManager()).thenReturn(mMockPackageManager);
+        when(mMockContext.getPackageManager()).thenReturn(mMockPackageManager);
 
         try {
-            Mockito.when(mMockPackageManager.getPackageInfo(YotiAppDefs.YOTI_APP_PACKAGE, 0)).thenReturn(mMockYotiAppPackageInfo);
+            when(mMockPackageManager.getPackageInfo(YotiAppDefs.YOTI_APP_PACKAGE, 0)).thenReturn(mMockYotiAppPackageInfo);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -59,7 +60,7 @@ public class YotiSDKTest {
         exception.expect(YotiSDKException.class);
         exception.expectMessage("SDK not initialised");
 
-        YotiSDK.startScenario(mMockContext, "a_scenario");
+        YotiSDK.startScenario(mMockContext, "a_scenario", true);
     }
 
     @Test
@@ -76,7 +77,7 @@ public class YotiSDKTest {
                 .create();
 
         YotiSDK.addScenario(scenario);
-        YotiSDK.startScenario(mMockContext, "a_scenario");
+        YotiSDK.startScenario(mMockContext, "a_scenario", true);
     }
 
     @Test
@@ -93,7 +94,7 @@ public class YotiSDKTest {
                 .create();
 
         YotiSDK.addScenario(scenario);
-        YotiSDK.startScenario(mMockContext, "a_scenario");
+        YotiSDK.startScenario(mMockContext, "a_scenario", true);
     }
 
     @Test
@@ -106,7 +107,7 @@ public class YotiSDKTest {
                 .create();
 
         YotiSDK.addScenario(scenario);
-        YotiSDK.startScenario(mMockContext, "b_scenario");
+        YotiSDK.startScenario(mMockContext, "b_scenario", true);
     }
 
     @Test
@@ -126,13 +127,13 @@ public class YotiSDKTest {
 
 
         YotiSDK.addScenario(scenario);
-        YotiSDK.startScenario(mMockContext, "a_scenario");
+        YotiSDK.startScenario(mMockContext, "a_scenario", true);
     }
 
     @Test
     public void testStartScenario_withNoYotiApp() throws Throwable {
 
-        Mockito.when(mMockPackageManager.getPackageInfo(YotiAppDefs.YOTI_APP_PACKAGE, 0)).thenThrow(PackageManager.NameNotFoundException.class);
+        when(mMockPackageManager.getPackageInfo(YotiAppDefs.YOTI_APP_PACKAGE, 0)).thenThrow(PackageManager.NameNotFoundException.class);
 
         mMockYotiAppPackageInfo.versionCode = -1;
 
@@ -148,6 +149,48 @@ public class YotiSDKTest {
 
 
         YotiSDK.addScenario(scenario);
-        YotiSDK.startScenario(mMockContext, "a_scenario");
+        YotiSDK.startScenario(mMockContext, "a_scenario", false);
+    }
+
+    @Test
+    public void testStartScenario_whenHandlingNoYotiApp() throws Throwable {
+
+        when(mMockPackageManager.getPackageInfo(YotiAppDefs.YOTI_APP_PACKAGE, 0)).thenThrow(PackageManager.NameNotFoundException.class);
+
+        mMockYotiAppPackageInfo.versionCode = -1;
+
+        Scenario scenario = new Scenario.Builder()
+                .setUseCaseId("a_scenario")
+                .setClientSDKId("123")
+                .setScenarioId("123")
+                .setCallbackAction("123")
+                .setBackendCallbackAction("123")
+                .create();
+
+
+        YotiSDK.addScenario(scenario);
+        YotiSDK.startScenario(mMockContext, "a_scenario", true);
+    }
+
+    @Test
+    public void testStartScenario_withoutHandlingNoYotiApp() throws Throwable {
+
+        when(mMockPackageManager.getPackageInfo(YotiAppDefs.YOTI_APP_PACKAGE, 0)).thenThrow(PackageManager.NameNotFoundException.class);
+
+        mMockYotiAppPackageInfo.versionCode = -1;
+
+        exception.expect(YotiSDKNoYotiAppException.class);
+
+        Scenario scenario = new Scenario.Builder()
+                .setUseCaseId("a_scenario")
+                .setClientSDKId("123")
+                .setScenarioId("123")
+                .setCallbackAction("123")
+                .setBackendCallbackAction("123")
+                .create();
+
+
+        YotiSDK.addScenario(scenario);
+        YotiSDK.startScenario(mMockContext, "a_scenario", false);
     }
 }

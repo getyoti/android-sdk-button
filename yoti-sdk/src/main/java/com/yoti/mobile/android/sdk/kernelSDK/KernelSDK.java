@@ -3,7 +3,6 @@ package com.yoti.mobile.android.sdk.kernelSDK;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.yoti.mobile.android.sdk.R;
 import com.yoti.mobile.android.sdk.YotiSDKLogger;
 import com.yoti.mobile.android.sdk.model.CustomCertificate;
 import com.yoti.mobile.android.sdk.model.Scenario;
@@ -23,10 +22,6 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManagerFactory;
 
-import static com.yoti.mobile.android.sdk.kernelSDK.EnvironmentConfiguration.YOTI_PUBLIC_KEYSTORE;
-import static com.yoti.mobile.android.sdk.kernelSDK.EnvironmentConfiguration.YOTI_PUBLIC_KEYSTORE_ALIAS;
-import static com.yoti.mobile.android.sdk.kernelSDK.EnvironmentConfiguration.YOTI_PUBLIC_KEYSTORE_PWD;
-
 public class KernelSDK {
 
     private final Context mContext;
@@ -36,11 +31,6 @@ public class KernelSDK {
         mContext = context;
 
         mCertMgr = new CertificateManager(mContext);
-
-        mCertMgr.storeCrt(R.raw.core,
-                YOTI_PUBLIC_KEYSTORE,
-                YOTI_PUBLIC_KEYSTORE_PWD,
-                YOTI_PUBLIC_KEYSTORE_ALIAS);
     }
 
     /**
@@ -59,7 +49,6 @@ public class KernelSDK {
         URL url = new URL(String.format(EnvironmentConfiguration.GET_QR_CODE_URL, currentScenario.getClientSDKId(), currentScenario.getScenarioId()));
 
         HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
-        urlConnection.setSSLSocketFactory(getSslSocketFactory(YOTI_PUBLIC_KEYSTORE, YOTI_PUBLIC_KEYSTORE_PWD));
 
         byte[] response = getBytes(urlConnection);
 
@@ -70,6 +59,7 @@ public class KernelSDK {
 
     /**
      * Process the result of a share attribute flow, will make a call to the third party backend defined in the scenario.
+     *
      * @param currentScenario
      * @param listener
      */
@@ -116,6 +106,7 @@ public class KernelSDK {
 
     /**
      * return a SSlSocketFactory for the provided store name
+     *
      * @param storeName
      * @param storePassword
      * @return
@@ -145,6 +136,7 @@ public class KernelSDK {
 
     /**
      * read bytes from a UrlConnection
+     *
      * @param urlConnection
      * @return
      * @throws IOException

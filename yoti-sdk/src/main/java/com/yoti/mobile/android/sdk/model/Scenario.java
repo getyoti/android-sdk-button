@@ -9,7 +9,6 @@ import com.yoti.mobile.android.sdk.exceptions.YotiSDKNotValidScenarioException;
 /**
  * This Object will hold all the necessary attributes to successfully perform a sharing of attributes
  * according to what has been defined when you created your application and scenario on the Yoti dashboard.
- *
  */
 
 public class Scenario {

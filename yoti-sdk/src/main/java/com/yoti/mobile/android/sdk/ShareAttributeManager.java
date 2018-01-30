@@ -20,13 +20,13 @@ public class ShareAttributeManager implements ShareAttributesContract.IShareAttr
     /**
      * Method called by a {@link ShareAttributesContract.IShareAttributeBroadcastReceiver} when it receive a new Intent.
      *
-     * @param useCaseId The current use case Id
-     * @param action The Action which trigerred the IShareAttributeBroadcastReceiver
+     * @param useCaseId   The current use case Id
+     * @param action      The Action which trigerred the IShareAttributeBroadcastReceiver
      * @param callbackUrl The url to access the value of the shared attributes (it will be the url to access your backend)
-     * @param isSuccess True if the SDK managed to successfully call your backend with the callback url
-     * @param response The response of your backend after calling the callback url
-     * @param errorCode The error code returned by your backend in case of an error when calling the callback url
-     * @param cause The throwable created while trying to call your backend when calling the callback url
+     * @param isSuccess   True if the SDK managed to successfully call your backend with the callback url
+     * @param response    The response of your backend after calling the callback url
+     * @param errorCode   The error code returned by your backend in case of an error when calling the callback url
+     * @param cause       The throwable created while trying to call your backend when calling the callback url
      */
     @Override
     public void onReceive(@Nullable String useCaseId, @NonNull String action, @Nullable String callbackUrl,
@@ -55,8 +55,8 @@ public class ShareAttributeManager implements ShareAttributesContract.IShareAttr
      * This method is triggered by the {@link AbstractShareAttributesBroadcastReceiver} after receiving the Action from the Yoti App with the callback url.
      * First we check if the call to the callback url is processed by the inheriting class, if it's not we start an IntentService to do it.
      *
-     * @param useCaseId The current use case Id
-     * @param callbackUrl The url to access the value of the shared attributes (it will be the url to access your backend)
+     * @param useCaseId       The current use case Id
+     * @param callbackUrl     The url to access the value of the shared attributes (it will be the url to access your backend)
      * @param currentScenario the scenario link to the current use case Id
      */
     private void handleYotiAppCallback(String useCaseId, String callbackUrl, Scenario currentScenario) {

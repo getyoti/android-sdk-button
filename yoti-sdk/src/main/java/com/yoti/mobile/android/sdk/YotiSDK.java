@@ -17,13 +17,13 @@ import java.util.HashMap;
 
 /**
  * Singleton to manage the different Scenarios defined by a third party app.
- *
+ * <p>
  * This class is initialised when you add your first Scenario.
- *
+ * <p>
  * A Scenario will be started when a click event is detected on a YotiSDKButton,
  * you have defined a use case Id for the view in the xml. We are using this use case Id to start
  * the appropriate Scenario.
- *
+ * <p>
  * To use the YotiSDK define a Scenario and add it, the rest is handled.
  */
 
@@ -60,6 +60,7 @@ public class YotiSDK {
 
     /**
      * Return a Scenario for the given use case Id
+     *
      * @param useCaseId
      * @return
      */
@@ -73,24 +74,27 @@ public class YotiSDK {
 
     /**
      * This method will start a Scenario for the specified use case Id.
-     *
-     *  When a Scenario is started we check :
+     * <p>
+     * When a Scenario is started we check :
      * - if the Yoti app is installed on the device
      * - if the version of the Yoti app is compatible
      * - if the use case id is related to a Scenario
      * - if the Scenario is valid
-     *
+     * <p>
      * If we satisfy all the check, we start the Scenario by :
      * - Calling the Yoti connect API to retrieve the Uri linked to the Scenario you defined in the Yoti Dashboard
      * - Sending the Uri to the Yoti app so the user can do the sharing attribute flow
      *
      * @param context
      * @param useCaseId
+     * @param handleNoYotiAppError true if we want the SDK to handle the error and open a website to
+     *                             invite the user to download Yoti from the Play Store
      * @throws YotiSDKException
      */
-    /*package*/ static void startScenario(final Context context, final String useCaseId) throws YotiSDKException {
+    /*package*/
+    static void startScenario(final Context context, final String useCaseId, final boolean handleNoYotiAppError) throws YotiSDKException {
 
-        YotiSDKLogger.debug("Starting scenario "+useCaseId);
+        YotiSDKLogger.debug("Starting scenario " + useCaseId);
 
         if (mInstance == null) {
             throw new YotiSDKException("SDK not initialised");
@@ -100,13 +104,18 @@ public class YotiSDK {
         try {
             PackageInfo yotiAppInfo = context.getPackageManager().getPackageInfo(YotiAppDefs.YOTI_APP_PACKAGE, 0);
             if (yotiAppInfo.versionCode < YotiAppDefs.MIN_VERSION_YOTI_APP_REQUIRED) {
-                throw  new YotiSDKMinVersionException("The current Yoti app installed is not compatible with the SDK");
+                throw new YotiSDKMinVersionException("The current Yoti app installed is not compatible with the SDK");
             }
         } catch (PackageManager.NameNotFoundException ex) {
-            throw new YotiSDKNoYotiAppException("No Yoti app installed on the device");
+            if (handleNoYotiAppError) {
+                // We send the intent so it opens a website that invites the user to download Yoti
+                YotiSDKLogger.debug("No Yoti app installed on the device.");
+            } else {
+                throw new YotiSDKNoYotiAppException("No Yoti app installed on the device");
+            }
         }
 
-        YotiSDKLogger.debug("Retrieving scenario "+useCaseId);
+        YotiSDKLogger.debug("Retrieving scenario " + useCaseId);
         final Scenario currentScenario = getScenario(useCaseId);
 
         if (currentScenario == null) {
@@ -117,7 +126,7 @@ public class YotiSDK {
             throw new YotiSDKNotValidScenarioException("The scenario " + useCaseId + " is not valid");
         }
 
-        YotiSDKLogger.debug("Started scenario "+useCaseId);
+        YotiSDKLogger.debug("Started scenario " + useCaseId);
         KernelSDKIntentService.startActionStartScenario(context, useCaseId);
     }
 
@@ -133,6 +142,7 @@ public class YotiSDK {
 
     /**
      * Enable or disable logging
+     *
      * @param enable
      */
     public static void enableSDKLogging(boolean enable) {
@@ -143,7 +153,8 @@ public class YotiSDK {
         mInstance.mIsLoggingEnabled = enable;
     }
 
-    /*package*/ static boolean isSDKLoggingEnabled() {
+    /*package*/
+    static boolean isSDKLoggingEnabled() {
         return mInstance != null && mInstance.mIsLoggingEnabled;
     }
 }

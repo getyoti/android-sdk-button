@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.yoti.mobile.android.commons.ui.widget.YotiButton;
 import com.yoti.mobile.android.sdk.exceptions.YotiSDKException;
+import com.yoti.mobile.android.sdk.exceptions.YotiSDKNoYotiAppException;
 
 /**
  * Custom {@link AppCompatButton} which will start its associated {@link com.yoti.mobile.android.sdk.model.Scenario} when clicked.
@@ -17,6 +18,7 @@ public class YotiSDKButton extends YotiButton implements View.OnClickListener {
 
     private String mUseCaseId;
     private OnYotiButtonClickListener mOnYotiButtonClickListener;
+    private OnYotiAppNotInstalledListener mOnYotiAppNotInstalledListener;
 
     public YotiSDKButton(Context context) {
         super(context);
@@ -60,6 +62,10 @@ public class YotiSDKButton extends YotiButton implements View.OnClickListener {
         mOnYotiButtonClickListener = l;
     }
 
+    public void setOnYotiAppNotInstalledListener(@Nullable OnYotiAppNotInstalledListener listener) {
+        mOnYotiAppNotInstalledListener = listener;
+    }
+
     @Override
     public void onClick(View v) {
 
@@ -68,13 +74,17 @@ public class YotiSDKButton extends YotiButton implements View.OnClickListener {
         }
 
         try {
-            YotiSDK.startScenario(getContext(), mUseCaseId);
+            YotiSDK.startScenario(getContext(), mUseCaseId, mOnYotiAppNotInstalledListener == null);
         } catch (YotiSDKException cause) {
 
             YotiSDKLogger.error(cause.getMessage(), cause);
 
             if (mOnYotiButtonClickListener != null) {
                 mOnYotiButtonClickListener.onStartScenarioError(cause);
+            }
+
+            if (mOnYotiAppNotInstalledListener != null && cause instanceof YotiSDKNoYotiAppException) {
+                mOnYotiAppNotInstalledListener.onYotiAppNotInstalledError((YotiSDKNoYotiAppException) cause);
             }
         }
     }
@@ -83,5 +93,9 @@ public class YotiSDKButton extends YotiButton implements View.OnClickListener {
         void onStartScenario();
 
         void onStartScenarioError(YotiSDKException cause);
+    }
+
+    public interface OnYotiAppNotInstalledListener {
+        void onYotiAppNotInstalledError(YotiSDKNoYotiAppException cause);
     }
 }

@@ -7,7 +7,7 @@ import android.content.pm.ApplicationInfo;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import com.yoti.mobile.android.sdk.BuildConfig;
+
 import com.yoti.mobile.android.sdk.YotiSDK;
 import com.yoti.mobile.android.sdk.YotiSDKLogger;
 import com.yoti.mobile.android.sdk.model.Scenario;
@@ -100,11 +100,11 @@ public class KernelSDKIntentService extends IntentService {
         try {
             qrCodeUrl = mKernelSDK.retrieveScenarioUri(currentScenario);
         } catch (CertificateException | NoSuchAlgorithmException | KeyManagementException | KeyStoreException | IOException e) {
-            YotiSDKLogger.error("Error while contaction Connect API", e);
+            YotiSDKLogger.error("Error while reaching Connect API", e);
         }
 
         if (TextUtils.isEmpty(qrCodeUrl)) {
-            YotiSDKLogger.error("Error while retrieving the scenario from the Yoti API, please check your clientSDKId and scenarioId.");
+            YotiSDKLogger.error("Error while retrieving the scenario from the Yoti API, please check your Internet connection and make sure your clientSDKId and scenarioId are correct.");
             return;
         }
 

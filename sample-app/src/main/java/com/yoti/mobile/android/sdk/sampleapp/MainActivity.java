@@ -2,6 +2,7 @@ package com.yoti.mobile.android.sdk.sampleapp;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -9,11 +10,14 @@ import android.widget.TextView;
 import com.yoti.mobile.android.sdk.YotiSDKButton;
 import com.yoti.mobile.android.sdk.YotiSDK;
 import com.yoti.mobile.android.sdk.exceptions.YotiSDKException;
+import com.yoti.mobile.android.sdk.exceptions.YotiSDKNoYotiAppException;
 import com.yoti.mobile.android.sdk.exceptions.YotiSDKNotValidScenarioException;
 import com.yoti.mobile.android.sdk.model.CustomCertificate;
 import com.yoti.mobile.android.sdk.model.Scenario;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,13 @@ public class MainActivity extends AppCompatActivity {
                 yotiSDKButton.setVisibility(View.VISIBLE);
                 progress.setVisibility(View.GONE);
                 message.setText(R.string.loc_error_unknow);
+            }
+        });
+
+        yotiSDKButton.setOnYotiAppNotInstalledListener(new YotiSDKButton.OnYotiAppNotInstalledListener() {
+            @Override
+            public void onYotiAppNotInstalledError(YotiSDKNoYotiAppException cause) {
+                //The Yoti app is not installed, let's deal with it
             }
         });
 
@@ -71,8 +82,8 @@ public class MainActivity extends AppCompatActivity {
         try {
             Scenario scenario = new Scenario.Builder()
                     .setUseCaseId("get_user_phone_1")
-                    .setClientSDKId("111f9ff2-baf9-48c6-8b44-bebf98a78c82")
-                    .setScenarioId("563aa47f-840c-4de9-979a-18196fb77b0d")
+                    .setClientSDKId("4c5ecbe4-dbc1-4e42-9a36-7fc81dd32bea")
+                    .setScenarioId("35e0cf80-c8dc-4dd3-ac66-023d2c2e496c")
                     .setCallbackAction("com.test.app.YOTI_CALLBACK")
                     .setBackendCallbackAction("com.test.app.BACKEND_CALLBACK")
                     .setCustomCertificate(customCertificate)
@@ -83,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
             YotiSDK.enableSDKLogging(true);
 
         } catch (YotiSDKNotValidScenarioException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Invalid scenario!!", e);
         }
 
     }
