@@ -38,13 +38,25 @@ For more information please follow our developer page instructions located [here
 
 3) Installing the Mobile SDK
 
+Make sure you have mavenCentral repository added in your allProjects entry in your root build.gradle:
+
+```javascript
+allprojects {
+    repositories {
+        mavenCentral()
+        ...
+    }
+```
+
 Please start by adding dependencies in the "build.grade" file inside your application module directory:
 
 ```javascript
 dependencies {
-    compile(group: 'com.yoti.mobile.android.sdk', name: 'yoti-button-sdk', version: '0.0.5', classifier: 'release', ext: 'aar'){
-            transitive = true
-        }
+    compile(group: 'com.yoti.mobile.android.sdk', name: 'yoti-button-sdk', version: '0.0.5', ext: 'aar'){
+        transitive = true
+    }
+    ...
+}
 ```
 
 After syncing, go to your layout file where you wish the Yoti button to appear add the below config:

@@ -50,7 +50,7 @@ dependencies {
     implementation project(path: ':yoti-sdk')
 
 // Use this version if you want to point at the dependency published on mavenCentral
-//    compile(group: 'com.yoti.mobile.android.sdk', name: 'yoti-button-sdk', version: '0.0.5', classifier: 'release', ext: 'aar'){
+//    implementation(group: 'com.yoti.mobile.android.sdk', name: 'yoti-button-sdk', version: '0.0.5', ext: 'aar'){
 //        transitive = true
 //    }
 }

@@ -28,7 +28,9 @@ dependencies {
     implementation parent.ext.libAndroidSupportv7
 
     testImplementation 'junit:junit:4.12'
-//    implementation(group: 'com.yoti.mobile.android.sdk', name: 'yoti-button-sdk', version: '0.0.5', classifier: 'release', ext: 'aar') {
+
+// Use this version if you want to point at the dependency published on mavenCentral
+//    implementation(group: 'com.yoti.mobile.android.sdk', name: 'yoti-button-sdk', version: '0.0.5', ext: 'aar') {
 //        transitive = true
 //    }
 
