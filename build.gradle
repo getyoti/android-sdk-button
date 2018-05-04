@@ -4,26 +4,25 @@ buildscript {
     repositories {
         jcenter()
         google()
+        mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.11.0"
     }
 }
+
+apply plugin: 'io.codearte.nexus-staging'
+
 
 allprojects {
     repositories {
         mavenCentral()
         jcenter()
-//        maven { url lkRepoRelease }
-//        maven { url lkRepoSnapshot }
         google()
     }
 
     ext {
-
         // Android config
         androidBuildToolsVersion = project.ext.buildToolsVersion
         androidMinSdkVersion = minSdkVersionVersion.toInteger()
@@ -35,90 +34,5 @@ allprojects {
         // Testing
         libJunit = "junit:junit:${libJunitVersion}"
         libMockito = "org.mockito:mockito-all:${libMockitoVersion}"
-
-        updatePomClosure = { MavenPublication publication, String flavor, String buildType, buildTask ->
-            String flavorAsSuffix = (flavor == null ? "" : "-" + flavor);
-            String aarName = "yoti-sdk-" + flavorAsSuffix + "-" + buildType;
-
-            publication.groupId "com.yoti.mobile.android.sdk"
-            publication.artifact source: "$buildDir/outputs/aar/" + aarName + ".aar", builtBy: buildTask
-            publication.artifactId = "button-sdk" + flavorAsSuffix
-            publication.version = currentVersion + (buildType.equalsIgnoreCase("debug") ? "-SNAPSHOT" : "")
-
-            publication.pom.withXml {
-                def dependenciesNode = asNode().appendNode('dependencies')
-
-                Set<String> used = new HashSet<>();
-                configurations.each {
-
-                    def configuration = it.name.toLowerCase()
-
-                    if (configuration.contains("compile") && !configuration.contains("test") && !it.empty) {
-
-                        def dependencies = it.allDependencies.iterator()
-
-                        while (dependencies.hasNext()) {
-
-                            def dependency = dependencies.next();
-
-                            if (dependency.group) {
-
-                                def artifactId = dependency.name;
-                                def dependencyVersion = dependency.version;
-
-                                // For yoti specific dependency, it must either start with buildType or Contain Flavour and
-                                if (((flavor != null && !configuration.contains(flavor)
-                                        && !configuration.startsWith(buildType))
-                                        || !configuration.contains(buildType))
-                                        && dependency.group.startsWith("com.yoti")) {
-                                    continue;
-                                }
-
-                                // For yoti specific Project Dependencies add the build suffix to dependency version depending on buildType of dependency configuration.
-                                if (dependency instanceof ProjectDependency) {
-                                    def depConf = ((ProjectDependency) dependency).projectConfiguration.name;
-                                    if (depConf.toLowerCase().contains("debug")) {
-                                        dependencyVersion += "-SNAPSHOT"
-                                    }
-                                    println(depConf);
-                                }
-
-                                // For yoti specific dependencies add the environment name to the artifactId
-                                if (dependency.group.contains("com.yoti.mobile.android.core") ||
-                                        dependency.group.contains("com.yoti.mobile.android.app")) {
-
-                                    if (configuration.contains("prep")) {
-                                        artifactId = dependency.name + "-prep"
-
-                                    } else if (configuration.contains("prod")) {
-                                        artifactId = dependency.name + "-prod"
-
-                                    } else if (configuration.contains("staging")) {
-                                        artifactId = dependency.name + "-staging"
-                                    }
-                                }
-
-                                def fullArtefact = dependency.group + ":" + artifactId + ":" + dependencyVersion;
-                                println("artficat-LOG:: " + fullArtefact)
-
-                                if (!used.contains(fullArtefact)) {
-                                    used.add(fullArtefact)
-
-                                    def dependencyNode = dependenciesNode.appendNode('dependency')
-                                    dependencyNode.appendNode('groupId', dependency.group)
-                                    dependencyNode.appendNode('artifactId', artifactId)
-                                    dependencyNode.appendNode('version', dependencyVersion)
-                                    dependencyNode.appendNode('scope', 'compile')
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
 }

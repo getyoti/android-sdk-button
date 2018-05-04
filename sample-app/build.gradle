@@ -40,6 +40,7 @@ android {
             signingConfig signingConfigs.release
         }
     }
+    buildToolsVersion '26.0.2'
 }
 
 
@@ -49,8 +50,7 @@ dependencies {
 
     implementation project(path: ':yoti-sdk')
 
+
 // Use this version if you want to point at the dependency published on mavenCentral
-//    implementation(group: 'com.yoti.mobile.android.sdk', name: 'yoti-button-sdk', version: '0.0.5', ext: 'aar'){
-//        transitive = true
-//    }
+//    implementation("com.yoti.mobile.android:base-commons-ui:0.0.5)
 }

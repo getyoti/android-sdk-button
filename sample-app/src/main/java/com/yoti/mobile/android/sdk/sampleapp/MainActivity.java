@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         final ProgressBar progress = (ProgressBar) findViewById(R.id.progress);
         final TextView message = (TextView)findViewById(R.id.text);
 
-        yotiSDKButton.setOnYotiScenarioListener(new YotiSDKButton.OnYotiButtonClickListener() {
+        yotiSDKButton.setOnYotiButtonClickListener(new YotiSDKButton.OnYotiButtonClickListener() {
             @Override
             public void onStartScenario() {
                 yotiSDKButton.setVisibility(View.GONE);

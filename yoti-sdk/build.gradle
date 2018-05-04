@@ -1,34 +1,11 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
+apply from: 'publication.gradle'
+
 
 group = "com.yoti.mobile.android"
 version = currentVersion
 
-apply from: 'publication.gradle'
-
-// internal publication with maven-publish
-publishing {
-    repositories {
-
-        maven {
-            name "release"
-            url lkRepoRelease
-            credentials {
-                username lkRepoUsername
-                password lkRepoPassword
-            }
-        }
-    }
-
-    publications {
-        debug(MavenPublication) {
-            updatePomClosure(delegate, "prod", android.buildTypes.debug.name, assembleDebug)
-        }
-        release(MavenPublication) {
-            updatePomClosure(delegate, "prod", android.buildTypes.release.name, assembleRelease)
-        }
-    }
-}
 
 android {
     compileSdkVersion parent.ext.androidCompileSdkVersion
@@ -83,14 +60,11 @@ android {
     }
 
     libraryVariants.all { variant ->
-
-        String libRootName;
+        String libRootName
         variant.outputs.all { output ->
-            def outputFile = output.outputFile
-            if (outputFile != null && outputFile.name.endsWith('.aar')) {
-                libRootName = "${archivesBaseName}${variant.buildType.versionNameSuffix!=null?variant.buildType.versionNameSuffix:""}"
-                outputFileName = new File(outputFile.parent, libRootName+".aar")
-            }
+            libRootName = "${archivesBaseName}-${variant.buildType.name}"
+
+            output.outputFileName = "${libRootName}.aar"
         }
 
         String taskPrefix = "generate" + variant.name.capitalize()
@@ -144,18 +118,14 @@ android {
             archives tasks[taskPrefix + sourcesJarSuffix]
         }
     }
-
-    publishNonDefault true
 }
 
 dependencies {
-    compile parent.ext.libAndroidSupportv7
-    testCompile parent.ext.libJunit
-    testCompile parent.ext.libMockito
+    implementation parent.ext.libAndroidSupportv7
+    testImplementation parent.ext.libJunit
+    testImplementation parent.ext.libMockito
 
-//    debugCompile(group: 'com.yoti.mobile.android', name: 'base-commons-ui', version: yotiCommonUIVersion+'-SNAPSHOT', classifier: 'debug', ext: 'aar')
-//    releaseCompile(group: 'com.yoti.mobile.android', name: 'base-commons-ui', version: yotiCommonUIVersion, classifier: 'release', ext: 'aar')
-    compile(group: 'com.yoti.mobile.android', name: 'base-commons-ui', version: yotiCommonUIVersion, classifier: 'release', ext: 'aar')
+    api(group: 'com.yoti.mobile.android', name: 'base-commons-ui', version: yotiCommonUIVersion, ext: 'aar')
 }
 
 // Wrapper upload task to get correct artifacts to repos

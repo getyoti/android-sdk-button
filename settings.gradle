@@ -1,1 +1,1 @@
-include ':sample-app', ':sample-app-2', ':yoti-sdk'
+include ':sample-app', ':yoti-sdk', ':sample-app-2'

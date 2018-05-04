@@ -16,9 +16,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import static org.mockito.Mockito.when;
 
 /**
  *
@@ -42,10 +41,10 @@ public class YotiSDKTest {
     @Before
     public void setup() {
 
-        when(mMockContext.getPackageManager()).thenReturn(mMockPackageManager);
+        Mockito.when(mMockContext.getPackageManager()).thenReturn(mMockPackageManager);
 
         try {
-            when(mMockPackageManager.getPackageInfo(YotiAppDefs.YOTI_APP_PACKAGE, 0)).thenReturn(mMockYotiAppPackageInfo);
+            Mockito.when(mMockPackageManager.getPackageInfo(YotiAppDefs.YOTI_APP_PACKAGE, 0)).thenReturn(mMockYotiAppPackageInfo);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -133,7 +132,7 @@ public class YotiSDKTest {
     @Test
     public void testStartScenario_withNoYotiApp() throws Throwable {
 
-        when(mMockPackageManager.getPackageInfo(YotiAppDefs.YOTI_APP_PACKAGE, 0)).thenThrow(PackageManager.NameNotFoundException.class);
+        Mockito.when(mMockPackageManager.getPackageInfo(YotiAppDefs.YOTI_APP_PACKAGE, 0)).thenThrow(PackageManager.NameNotFoundException.class);
 
         mMockYotiAppPackageInfo.versionCode = -1;
 
@@ -155,7 +154,7 @@ public class YotiSDKTest {
     @Test
     public void testStartScenario_whenHandlingNoYotiApp() throws Throwable {
 
-        when(mMockPackageManager.getPackageInfo(YotiAppDefs.YOTI_APP_PACKAGE, 0)).thenThrow(PackageManager.NameNotFoundException.class);
+        Mockito.when(mMockPackageManager.getPackageInfo(YotiAppDefs.YOTI_APP_PACKAGE, 0)).thenThrow(PackageManager.NameNotFoundException.class);
 
         mMockYotiAppPackageInfo.versionCode = -1;
 
@@ -175,7 +174,7 @@ public class YotiSDKTest {
     @Test
     public void testStartScenario_withoutHandlingNoYotiApp() throws Throwable {
 
-        when(mMockPackageManager.getPackageInfo(YotiAppDefs.YOTI_APP_PACKAGE, 0)).thenThrow(PackageManager.NameNotFoundException.class);
+        Mockito.when(mMockPackageManager.getPackageInfo(YotiAppDefs.YOTI_APP_PACKAGE, 0)).thenThrow(PackageManager.NameNotFoundException.class);
 
         mMockYotiAppPackageInfo.versionCode = -1;
 

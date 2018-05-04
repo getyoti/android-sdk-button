@@ -7,7 +7,6 @@ import android.content.pm.ApplicationInfo;
 import android.net.Uri;
 import android.text.TextUtils;
 
-
 import com.yoti.mobile.android.sdk.YotiSDK;
 import com.yoti.mobile.android.sdk.YotiSDKLogger;
 import com.yoti.mobile.android.sdk.model.Scenario;

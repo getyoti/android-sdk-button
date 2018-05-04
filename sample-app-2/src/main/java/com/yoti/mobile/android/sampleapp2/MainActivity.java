@@ -20,9 +20,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final YotiSDKButton yotiSDKButton = (YotiSDKButton) findViewById(R.id.yoti_button);
-        final ProgressBar progress = (ProgressBar) findViewById(R.id.progress);
-        final TextView message = (TextView) findViewById(R.id.text);
+        final YotiSDKButton yotiSDKButton = findViewById(R.id.yoti_button);
+        final ProgressBar progress = findViewById(R.id.progress);
+        final TextView message = findViewById(R.id.text);
 
         createYoti();
 

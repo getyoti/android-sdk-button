@@ -58,7 +58,13 @@ public class YotiSDKButton extends YotiButton implements View.OnClickListener {
         super.setOnClickListener(this);
     }
 
+    public void setOnYotiButtonClickListener(@Nullable OnYotiButtonClickListener l) {
+        mOnYotiButtonClickListener = l;
+    }
+
+    @Deprecated
     public void setOnYotiScenarioListener(@Nullable OnYotiButtonClickListener l) {
+        YotiSDKLogger.warning("The method 'setOnYotiScenarioListener' is now deprecated. Please use 'setOnYotiButtonClickListener' instead.");
         mOnYotiButtonClickListener = l;
     }
 

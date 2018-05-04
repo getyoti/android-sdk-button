@@ -24,6 +24,13 @@ apply plugin: 'signing'
  * </ul>
  */
 
+nexusStaging {
+    packageGroup = "com.yoti" //optional if packageGroup == project.getGroup()
+
+    username = sonatypeUsername
+    password = sonatypePassword
+}
+
 afterEvaluate { project ->
     uploadArchives {
         repositories {
@@ -55,12 +62,12 @@ afterEvaluate { project ->
                 // Exclude SNAPSHOT for release
                 // Exclude non SNAPSHOT for debug
                 configurations.archives.artifacts.removeAll { PublishArtifact publishArtifact ->
-                    def boolean isReleaseVersion = !currentVersion.contains("-SNAPSHOT")
-                    def boolean isSnapshotVersion = publishArtifact.getArchiveTask().version.contains("-SNAPSHOT");
-                    def boolean isReleaseArtefact = publishArtifact.classifier!=null && publishArtifact.classifier.contains("release")
-                    def boolean isDebugArtefact = publishArtifact.classifier!=null && publishArtifact.classifier.contains("debug")
+                    boolean isReleaseVersion = !currentVersion.contains("-SNAPSHOT")
+                    boolean isSnapshotVersion = publishArtifact.getArchiveTask().version.contains("-SNAPSHOT")
+                    boolean isReleaseArtefact = publishArtifact.classifier!=null && publishArtifact.classifier.contains("release")
+                    boolean isDebugArtefact = publishArtifact.classifier!=null && publishArtifact.classifier.contains("debug")
 
-                    def boolean remove =
+                    boolean remove =
                             (isReleaseVersion && (isSnapshotVersion || isDebugArtefact)) || /* release version => exclude snapshot version or debug artefact */
                                     (!isReleaseVersion && (!isSnapshotVersion || isReleaseArtefact)) /* snapshot version => exclude non snapshot version or release artefact */
 

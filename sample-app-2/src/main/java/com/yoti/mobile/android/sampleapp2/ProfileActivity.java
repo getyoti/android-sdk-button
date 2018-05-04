@@ -25,13 +25,13 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        ImageView profile = (ImageView) findViewById(R.id.img_profile);
-        TextView nameTextView = (TextView) findViewById(R.id.text_view_name);
-        TextView emailTextView = (TextView) findViewById(R.id.text_view_email);
-        TextView addressTextView = (TextView) findViewById(R.id.text_view_address);
-        TextView mobileTextView = (TextView) findViewById(R.id.text_view_mobile);
-        TextView genderTextView = (TextView) findViewById(R.id.text_view_gender);
-        TextView dobTextView = (TextView) findViewById(R.id.text_view_dob);
+        ImageView profile = findViewById(R.id.img_profile);
+        TextView nameTextView = findViewById(R.id.text_view_name);
+        TextView emailTextView = findViewById(R.id.text_view_email);
+        TextView addressTextView = findViewById(R.id.text_view_address);
+        TextView mobileTextView = findViewById(R.id.text_view_mobile);
+        TextView genderTextView = findViewById(R.id.text_view_gender);
+        TextView dobTextView = findViewById(R.id.text_view_dob);
 
         String imageString = getIntent().getStringExtra(IMAGE_EXTRA);
         byte[] decodedString = Base64.decode(imageString.substring(imageString.indexOf(",") + 1), Base64.DEFAULT);

@@ -20,7 +20,7 @@ This repo contains the tools and step by step instructions so that your users ca
 ## Requirements
 
 * You will need to have the Yoti app on your phone
-* You will need to ensure the minimum version of your android is 2.2.3 or above.
+* You will need to ensure the minimum version of your android is 4.0.3 or above.
 
 
 ## Installing the SDK
@@ -40,7 +40,7 @@ For more information please follow our developer page instructions located [here
 
 Make sure you have mavenCentral repository added in your allProjects entry in your root build.gradle:
 
-```javascript
+```gradle
 allprojects {
     repositories {
         mavenCentral()
@@ -50,14 +50,19 @@ allprojects {
 
 Please start by adding dependencies in the "build.grade" file inside your application module directory:
 
-```javascript
+```gradle
 dependencies {
-    compile(group: 'com.yoti.mobile.android.sdk', name: 'yoti-button-sdk', version: '0.0.5', ext: 'aar'){
-        transitive = true
-    }
-    ...
+    compile(com.yoti.mobile.android.sdk:yoti-button-sdk:0.0.6)
 }
 ```
+OR if you are using a recent version of gradle (>= 3.x):
+```gradle
+dependencies {
+    implementation(com.yoti.mobile.android.sdk:yoti-button-sdk:0.0.6)
+}
+```
+
+[See this code in one of our sample apps](./sample-app/build.gradle)
 
 After syncing, go to your layout file where you wish the Yoti button to appear add the below config:
 
@@ -70,7 +75,7 @@ android:layout_width="wrap_content"
 android:text="My Yoti Button"
 yoti:useCaseId="YOUR_USE_CASE_ID"/>
 ```
-
+[See this code in one of our sample apps](./sample-app/src/main/res/layout/activity_main.xml)
 
 The client end of the integration is now complete.
 
@@ -86,6 +91,7 @@ Add the below configuration to your manifest:
     </intent-filter>
 </receiver>
 ```
+[See this code in one of our sample apps](./sample-app/src/main/AndroidManifest.xml)
 
 Adding this broadcast receiver class, this acts as a listener for Yoti to get the callback URL from the Yoti app. Please note there are two call back options:
 
@@ -102,7 +108,7 @@ To be able to listen to those actions you will need to:
 The AbstractYotiBroadcastReceiver will handle the logic regarding those actions, that's why your BroadcastReceiver will have to extend it. The first action defined (MY_CALLBACK_ACTION) will be used by the Yoti app to give you the result of the attributes sharing with your app.
 We have included both config below :
 
-```javascript
+```java
  @Override
     public boolean onCallbackReceived(String useCaseId, String callbackRoot, String token, String fullUrl) {
         // triggered by MY_CALLBACK_ACTION
@@ -127,12 +133,14 @@ We have included both config below :
     }
 }
 ```
+[See this code in one of our sample apps](./sample-app/src/main/java/com/yoti/mobile/android/sdk/sampleapp/ShareAttributesResultBroadcastReceiver.java)
+
 
 You will now need to specify your Client SDK ID and Scenario ID ready from your application dashboard.
 The SDK can be initialised like this:
 
 
-```javascript
+```java
 Scenario scenario = null;
 try {
     scenario = new Scenario.Builder()
@@ -149,9 +157,30 @@ try {
 YotiSDK.addScenario(scenario);
 ```
 
+[See this code in one of our sample apps](./sample-app/src/main/java/com/yoti/mobile/android/sdk/sampleapp/MainActivity.java)
+
+In order to set a listener for the events on the Yoti button you can specify one this way:
+
+```java
+yotiSDKButton.setOnYotiButtonListener(new YotiSDKButton.OnYotiButtonClickListener() {
+    @Override
+    public void onStartScenario() {
+        yotiSDKButton.setVisibility(View.GONE);
+        progress.setVisibility(View.VISIBLE);
+        message.setText(null); 
+    }
+
+    @Override
+    public void onStartScenarioError(YotiSDKException cause){
+        yotiSDKButton.setVisibility(View.VISIBLE);
+        progress.setVisibility(View.GONE);
+        message.setText(R.string.loc_error_unknown); }
+    });
+```
+
 
 You can activate a verbose mode for the SDK by using this method :
-```javascript
+```java
 YotiSDK.enableSDKLogging(true);
 ```
 
@@ -159,7 +188,7 @@ If the Yoti app is not installed in the user's phone by default the SDK will sen
 open a website that invites the user to download the Yoti app.
 Alternatively, an error listener can be set up so you can deal with this situation by yourself.
 
-```javascript
+```java
         yotiSDKButton.setOnYotiAppNotInstalledListener(new YotiSDKButton.OnYotiAppNotInstalledListener() {
             @Override
             public void onYotiAppNotInstalledError(YotiSDKNoYotiAppException cause) {
@@ -167,65 +196,6 @@ Alternatively, an error listener can be set up so you can deal with this situati
             }
         });
 ```
-
-## Profile Retrieval
-
-Once the profile has been retrieved, you can present that data in the app.
-
-To get the profile details you could do something like this:
-
-```javascript
-Gson g = new GsonBuilder().create();
-        Profile profile = g.fromJson(new String(response), Profile.class);
-
-        Intent intent = new Intent(this, ProfileActivity.class);
-        intent.putExtra(NAME_EXTRA, profile.getGivenNames() + " " + profile.getFamilyName());
-        intent.putExtra(EMAIL_EXTRA, profile.getEmailAddress());
-        intent.putExtra(IMAGE_EXTRA, profile.getSelfie());
-        intent.putExtra(DOB_EXTRA, profile.getDateOfBirth());
-        intent.putExtra(ADDRESS_EXTRA, profile.getPostalAddress());
-        intent.putExtra(MOBILE_EXTRA, profile.getMobNum());
-        intent.putExtra(GENDER_EXTRA, profile.getGender());
-        startActivity(intent);
-```
-
-And then display that data as you would normally do:
-
-```javascript
-     @Override
-     protected void onCreate(Bundle savedInstanceState) {
-         super.onCreate(savedInstanceState);
-         setContentView(R.layout.activity_profile);
-
-         ImageView profile = findViewById(R.id.img_profile);
-         TextView nameTextView = findViewById(R.id.text_view_name);
-         TextView emailTextView = findViewById(R.id.text_view_email);
-         TextView addressTextView = findViewById(R.id.text_view_address);
-         TextView mobileTextView = findViewById(R.id.text_view_mobile);
-         TextView genderTextView = findViewById(R.id.text_view_gender);
-         TextView dobTextView = findViewById(R.id.text_view_dob);
-         TextView nationalityTextView = findViewById(R.id.text_view_nationality);
-
-         String imageString = getIntent().getStringExtra("image");
-         byte[] decodedString = Base64.decode(imageString.substring(imageString.indexOf(",") + 1), Base64.DEFAULT);
-         Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-         profile.setImageBitmap(decodedByte);
-         
-         nameTextView.setText(getIntent().getStringExtra("name"));
-         emailTextView.setText(getIntent().getStringExtra("email"));
-         addressTextView.setText(getIntent().getStringExtra("address"));
-         mobileTextView.setText(getIntent().getStringExtra("mobile"));
-         genderTextView.setText(getIntent().getStringExtra("gender"));
-         dobTextView.setText(getIntent().getStringExtra("dob"));
-         nationalityTextView.setText(getIntent().getStringExtra("nationality"));
-     }
-}
-```
-
-## Handling Users
-
-The Web SDK will handle the user storage. When you retrieve the user profile, you receive a user ID generated by Yoti exclusively for your application. This means that if the same individual logs into another app, Yoti will assign her/him a different ID. You can use this ID to verify whether (for your application) the retrieved profile identifies a new or an existing user. Please see relevant github pages for more information.
-
 
 ## Running the Example
 
