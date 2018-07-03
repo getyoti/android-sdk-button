@@ -3,6 +3,7 @@ package com.yoti.mobile.android.sdk;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.ResultReceiver;
 import android.support.annotation.Nullable;
 
 import com.yoti.mobile.android.sdk.exceptions.YotiSDKException;
@@ -92,7 +93,9 @@ public class YotiSDK {
      * @throws YotiSDKException
      */
     /*package*/
-    static void startScenario(final Context context, final String useCaseId, final boolean handleNoYotiAppError) throws YotiSDKException {
+    static void startScenario(final Context context, final String useCaseId,
+                              final boolean handleNoYotiAppError,
+                              final ResultReceiver onYotiCalledResultReceiver) throws YotiSDKException {
 
         YotiSDKLogger.debug("Starting scenario " + useCaseId);
 
@@ -127,7 +130,7 @@ public class YotiSDK {
         }
 
         YotiSDKLogger.debug("Started scenario " + useCaseId);
-        KernelSDKIntentService.startActionStartScenario(context, useCaseId);
+        KernelSDKIntentService.startActionStartScenario(context, useCaseId, onYotiCalledResultReceiver);
     }
 
     /**

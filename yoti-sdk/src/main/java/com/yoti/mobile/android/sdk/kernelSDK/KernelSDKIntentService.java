@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.net.Uri;
+import android.os.ResultReceiver;
 import android.text.TextUtils;
 
 import com.yoti.mobile.android.sdk.YotiSDK;
@@ -35,6 +36,7 @@ public class KernelSDKIntentService extends IntentService {
 
     private static final String ACTION_BACKEND_CALL = "com.yoti.mobile.android.sdk.network.action.BACKEND_CALL";
     private static final String ACTION_START_SCENARIO = "com.yoti.mobile.android.sdk.network.action.START_SCENARIO";
+    private static final String YOTI_CALLED_RESULT_RECEIVER = "com.yoti.mobile.android.sdk.network.action.YOTI_CALLED_RESULT_RECEIVER";
 
     private static final String EXTRA_USE_CASE_ID = "com.yoti.mobile.android.sdk.network.extra.USE_CASE_ID";
     private KernelSDK mKernelSDK;
@@ -67,10 +69,11 @@ public class KernelSDKIntentService extends IntentService {
      *
      * @see IntentService
      */
-    public static void startActionStartScenario(Context context, String useCaseId) {
+    public static void startActionStartScenario(Context context, String useCaseId, ResultReceiver resultReceiver) {
         Intent intent = new Intent(context, KernelSDKIntentService.class);
         intent.setAction(ACTION_START_SCENARIO);
         intent.putExtra(EXTRA_USE_CASE_ID, useCaseId);
+        intent.putExtra(YOTI_CALLED_RESULT_RECEIVER, resultReceiver);
         context.startService(intent);
     }
 
@@ -82,12 +85,13 @@ public class KernelSDKIntentService extends IntentService {
             if (ACTION_BACKEND_CALL.equals(action)) {
                 handleActionBackendCall(useCaseId);
             } else if (ACTION_START_SCENARIO.equals(action)) {
-                handleActionStartScenario(useCaseId);
+                ResultReceiver resultReceiver = intent.getParcelableExtra(YOTI_CALLED_RESULT_RECEIVER);
+                handleActionStartScenario(useCaseId, resultReceiver);
             }
         }
     }
 
-    private void handleActionStartScenario(String useCaseId) {
+    private void handleActionStartScenario(String useCaseId, ResultReceiver resultReceiver) {
 
         Scenario currentScenario = YotiSDK.getScenario(useCaseId);
 
@@ -122,6 +126,8 @@ public class KernelSDKIntentService extends IntentService {
                 .appendQueryParameter(APP_ID_PARAM, getPackageName())
                 .appendQueryParameter(APP_NAME_PARAM, appName)
                 .build();
+
+        resultReceiver.send(0, null);
 
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

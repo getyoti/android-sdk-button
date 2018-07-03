@@ -59,7 +59,7 @@ public class YotiSDKTest {
         exception.expect(YotiSDKException.class);
         exception.expectMessage("SDK not initialised");
 
-        YotiSDK.startScenario(mMockContext, "a_scenario", true);
+        YotiSDK.startScenario(mMockContext, "a_scenario", true, null);
     }
 
     @Test
@@ -76,7 +76,7 @@ public class YotiSDKTest {
                 .create();
 
         YotiSDK.addScenario(scenario);
-        YotiSDK.startScenario(mMockContext, "a_scenario", true);
+        YotiSDK.startScenario(mMockContext, "a_scenario", true, null);
     }
 
     @Test
@@ -93,7 +93,7 @@ public class YotiSDKTest {
                 .create();
 
         YotiSDK.addScenario(scenario);
-        YotiSDK.startScenario(mMockContext, "a_scenario", true);
+        YotiSDK.startScenario(mMockContext, "a_scenario", true, null);
     }
 
     @Test
@@ -106,7 +106,7 @@ public class YotiSDKTest {
                 .create();
 
         YotiSDK.addScenario(scenario);
-        YotiSDK.startScenario(mMockContext, "b_scenario", true);
+        YotiSDK.startScenario(mMockContext, "b_scenario", true, null);
     }
 
     @Test
@@ -126,7 +126,7 @@ public class YotiSDKTest {
 
 
         YotiSDK.addScenario(scenario);
-        YotiSDK.startScenario(mMockContext, "a_scenario", true);
+        YotiSDK.startScenario(mMockContext, "a_scenario", true, null);
     }
 
     @Test
@@ -148,7 +148,7 @@ public class YotiSDKTest {
 
 
         YotiSDK.addScenario(scenario);
-        YotiSDK.startScenario(mMockContext, "a_scenario", false);
+        YotiSDK.startScenario(mMockContext, "a_scenario", false, null);
     }
 
     @Test
@@ -168,7 +168,7 @@ public class YotiSDKTest {
 
 
         YotiSDK.addScenario(scenario);
-        YotiSDK.startScenario(mMockContext, "a_scenario", true);
+        YotiSDK.startScenario(mMockContext, "a_scenario", true, null);
     }
 
     @Test
@@ -190,6 +190,6 @@ public class YotiSDKTest {
 
 
         YotiSDK.addScenario(scenario);
-        YotiSDK.startScenario(mMockContext, "a_scenario", false);
+        YotiSDK.startScenario(mMockContext, "a_scenario", false, null);
     }
 }

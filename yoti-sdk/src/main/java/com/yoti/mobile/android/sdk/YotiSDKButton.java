@@ -2,6 +2,10 @@ package com.yoti.mobile.android.sdk;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
@@ -19,6 +23,17 @@ public class YotiSDKButton extends YotiButton implements View.OnClickListener {
     private String mUseCaseId;
     private OnYotiButtonClickListener mOnYotiButtonClickListener;
     private OnYotiAppNotInstalledListener mOnYotiAppNotInstalledListener;
+    private OnYotiCalledListener mOnYotiCalledListener;
+
+    private ResultReceiver mYotiCallResultReceiver = new ResultReceiver(new Handler()) {
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            super.onReceiveResult(resultCode, resultData);
+            if (mOnYotiCalledListener != null) {
+                mOnYotiCalledListener.onYotiCalled();
+            }
+        }
+    };
 
     public YotiSDKButton(Context context) {
         super(context);
@@ -72,6 +87,10 @@ public class YotiSDKButton extends YotiButton implements View.OnClickListener {
         mOnYotiAppNotInstalledListener = listener;
     }
 
+    public void setOnYotiCalledListener(@NonNull OnYotiCalledListener listener) {
+        mOnYotiCalledListener = listener;
+    }
+
     @Override
     public void onClick(View v) {
 
@@ -80,7 +99,7 @@ public class YotiSDKButton extends YotiButton implements View.OnClickListener {
         }
 
         try {
-            YotiSDK.startScenario(getContext(), mUseCaseId, mOnYotiAppNotInstalledListener == null);
+            YotiSDK.startScenario(getContext(), mUseCaseId, mOnYotiAppNotInstalledListener == null, mYotiCallResultReceiver);
         } catch (YotiSDKException cause) {
 
             YotiSDKLogger.error(cause.getMessage(), cause);
@@ -103,5 +122,9 @@ public class YotiSDKButton extends YotiButton implements View.OnClickListener {
 
     public interface OnYotiAppNotInstalledListener {
         void onYotiAppNotInstalledError(YotiSDKNoYotiAppException cause);
+    }
+
+    public interface OnYotiCalledListener {
+        void onYotiCalled();
     }
 }

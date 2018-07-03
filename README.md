@@ -178,6 +178,19 @@ yotiSDKButton.setOnYotiButtonListener(new YotiSDKButton.OnYotiButtonClickListene
     });
 ```
 
+There is also a listener that you can set to be notified when the intent has been sent to the Yoti app.
+When this happens you would probably want to restore your state.
+
+
+```java
+        yotiSDKButton.setOnYotiCalledListener(new YotiSDKButton.OnYotiCalledListener() {
+            @Override
+            public void onYotiCalled() {
+                // Restore the original state
+            }
+        }); 
+```
+[See this code in one of our sample apps](./sample-app/src/main/java/com/yoti/mobile/android/sdk/sampleapp/MainActivity.java)
 
 You can activate a verbose mode for the SDK by using this method :
 ```java

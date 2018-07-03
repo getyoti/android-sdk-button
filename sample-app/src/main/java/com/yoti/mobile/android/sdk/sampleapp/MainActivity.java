@@ -54,6 +54,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        yotiSDKButton.setOnYotiCalledListener(new YotiSDKButton.OnYotiCalledListener() {
+            @Override
+            public void onYotiCalled() {
+                // Restore the original state
+                yotiSDKButton.setVisibility(View.VISIBLE);
+                progress.setVisibility(View.GONE);
+            }
+        });
+
         if (getIntent().hasExtra(ShareAttributesResultBroadcastReceiver.EXTRA_CANCELLED_BY_USER)) {
             yotiSDKButton.setVisibility(View.VISIBLE);
             progress.setVisibility(View.GONE);
