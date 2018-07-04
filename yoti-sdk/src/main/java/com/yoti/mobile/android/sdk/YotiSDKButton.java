@@ -87,7 +87,7 @@ public class YotiSDKButton extends YotiButton implements View.OnClickListener {
         mOnYotiAppNotInstalledListener = listener;
     }
 
-    public void setOnYotiCalledListener(@NonNull OnYotiCalledListener listener) {
+    public void setOnYotiCalledListener(@Nullable OnYotiCalledListener listener) {
         mOnYotiCalledListener = listener;
     }
 
