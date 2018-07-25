@@ -33,6 +33,6 @@ allprojects {
 
         // Testing
         libJunit = "junit:junit:${libJunitVersion}"
-        libMockito = "org.mockito:mockito-all:${libMockitoVersion}"
+        libMockito = "org.mockito:mockito-core:${libMockitoVersion}"
     }
 }
