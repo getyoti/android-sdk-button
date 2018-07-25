@@ -136,7 +136,7 @@ We have included both config below :
 [See this code in one of our sample apps](./sample-app/src/main/java/com/yoti/mobile/android/sdk/sampleapp/ShareAttributesResultBroadcastReceiver.java)
 
 
-You will now need to specify your Client SDK ID and Scenario ID ready from your application dashboard.
+You will now need to specify your Client SDK ID and Scenario ID from your application dashboard.
 The SDK can be initialised like this:
 
 
@@ -157,7 +157,8 @@ try {
 YotiSDK.addScenario(scenario);
 ```
 
-[See this code in one of our sample apps](./sample-app/src/main/java/com/yoti/mobile/android/sdk/sampleapp/MainActivity.java)
+It is very important that this initialisation is done in the onCreate method fo your Application.
+[See this code in one of our sample apps](./sample-app/src/main/java/com/yoti/mobile/android/sdk/sampleapp/SampleApp.java)
 
 In order to set a listener for the events on the Yoti button you can specify one this way:
 
