@@ -135,6 +135,9 @@ We have included both config below :
 ```
 [See this code in one of our sample apps](./sample-app/src/main/java/com/yoti/mobile/android/sdk/sampleapp/ShareAttributesResultBroadcastReceiver.java)
 
+Once you have received the intent from the Yoti app you should start one of your activities so that
+your app goes back to the foreground and the user can continue with the flow within your app.
+
 
 You will now need to specify your Client SDK ID and Scenario ID from your application dashboard.
 The SDK can be initialised like this:
@@ -159,6 +162,15 @@ YotiSDK.addScenario(scenario);
 
 It is very important that this initialisation is done in the onCreate method fo your Application.
 [See this code in one of our sample apps](./sample-app/src/main/java/com/yoti/mobile/android/sdk/sampleapp/SampleApp.java)
+
+If your backend needs a self-signed certificate to be able to access it and you want the SDK to call
+the backend, you can specify it in the scenario object like this:
+
+```java
+.setCustomCertificate(myCustormCertificate)
+```
+Alternatively you can do the call to your backend by yourself using any network library.
+
 
 In order to set a listener for the events on the Yoti button you can specify one this way:
 
