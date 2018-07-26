@@ -19,7 +19,6 @@ public class Scenario {
     private String callbackAction;
     private String qrCodeUrl;
     private String callbackBackendAction;
-    private CustomCertificate customCertificate;
     private String callbackBackendUrl;
 
     public String getUseCaseId() {
@@ -68,14 +67,6 @@ public class Scenario {
 
     public void setCallbackBackendAction(String callbackBackendAction) {
         this.callbackBackendAction = callbackBackendAction;
-    }
-
-    public CustomCertificate getCustomCertificate() {
-        return customCertificate;
-    }
-
-    public void setCustomCertificate(CustomCertificate customCertificate) {
-        this.customCertificate = customCertificate;
     }
 
     public String getCallbackBackendUrl() {
@@ -128,13 +119,6 @@ public class Scenario {
 
         public Builder setCallbackAction(String action) {
             mScenario.setCallbackAction(action);
-            return this;
-        }
-
-        public Builder setCustomCertificate(CustomCertificate customCertificate) {
-            if (customCertificate.isValid()) {
-                mScenario.setCustomCertificate(customCertificate);
-            }
             return this;
         }
 

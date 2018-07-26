@@ -1,50 +1,27 @@
 package com.yoti.mobile.android.sdk.kernelSDK;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.yoti.mobile.android.sdk.YotiSDKLogger;
-import com.yoti.mobile.android.sdk.model.CustomCertificate;
 import com.yoti.mobile.android.sdk.model.Scenario;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.security.KeyManagementException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
 
 import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManagerFactory;
 
 public class KernelSDK {
-
-    private final Context mContext;
-    private final CertificateManager mCertMgr;
-
-    public KernelSDK(Context context) {
-        mContext = context;
-
-        mCertMgr = new CertificateManager(mContext);
-    }
 
     /**
      * Will make a call to the Yoti Connect API to retrieve the Uri for the provided Scenario
      *
      * @param currentScenario
      * @return the uri of the provided scenario to forward to the Yoti app
-     * @throws CertificateException
-     * @throws NoSuchAlgorithmException
-     * @throws KeyStoreException
-     * @throws KeyManagementException
      * @throws IOException
      */
-    public String retrieveScenarioUri(Scenario currentScenario) throws CertificateException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException, IOException {
+    public String retrieveScenarioUri(Scenario currentScenario) throws IOException {
 
         URL url = new URL(String.format(EnvironmentConfiguration.GET_QR_CODE_URL, currentScenario.getClientSDKId(), currentScenario.getScenarioId()));
 
@@ -66,20 +43,9 @@ public class KernelSDK {
     public void processShareResult(@NonNull Scenario currentScenario, @NonNull ICallbackBackendListener listener) {
 
         try {
-
             URL url = new URL(currentScenario.getCallbackBackendUrl());
 
-            CustomCertificate certificate = currentScenario.getCustomCertificate();
             HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
-
-            if (certificate != null) {
-                mCertMgr.storeCrt(certificate.getCertificateResourceId(),
-                        certificate.getStoreName(),
-                        certificate.getPassword(),
-                        certificate.getAlias());
-
-                urlConnection.setSSLSocketFactory(getSslSocketFactory(certificate.getStoreName(), certificate.getPassword()));
-            }
 
             int statusCode = urlConnection.getResponseCode();
 
@@ -95,43 +61,13 @@ public class KernelSDK {
                 YotiSDKLogger.warning("ICallbackBackendListener is null");
             }
 
-        } catch (IOException | CertificateException | NoSuchAlgorithmException | KeyManagementException | KeyStoreException e) {
+        } catch (IOException e) {
             if (listener != null) {
                 listener.onError(-1, e, null);
             } else {
                 YotiSDKLogger.warning("ICallbackBackendListener is null");
             }
         }
-    }
-
-    /**
-     * return a SSlSocketFactory for the provided store name
-     *
-     * @param storeName
-     * @param storePassword
-     * @return
-     * @throws KeyStoreException
-     * @throws IOException
-     * @throws NoSuchAlgorithmException
-     * @throws CertificateException
-     * @throws KeyManagementException
-     */
-    private SSLSocketFactory getSslSocketFactory(String storeName, String storePassword) throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException, KeyManagementException {
-
-        KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-        InputStream fos = mCertMgr.getKeyStoreAr(storeName);
-        keyStore.load(fos, storePassword.toCharArray());
-
-        // Create a TrustManager that trusts the CAs in our KeyStore
-        String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
-        TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
-        tmf.init(keyStore);
-
-        // Create an SSLContext that uses our TrustManager
-        SSLContext sslContext = SSLContext.getInstance("TLS");
-        sslContext.init(null, tmf.getTrustManagers(), null);
-
-        return sslContext.getSocketFactory();
     }
 
     /**
