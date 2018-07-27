@@ -135,6 +135,11 @@ We have included both config below :
 ```
 [See this code in one of our sample apps](./sample-app/src/main/java/com/yoti/mobile/android/sdk/sampleapp/ShareAttributesResultBroadcastReceiver.java)
 
+Once you have received the intent from the Yoti app you should start one of your activities so that
+your app goes back to the foreground and the user can continue with the flow within your app.
+
+[Check our Sample-app2 to see an example of how this can be done.](./sample-app-2/src/main/java/com/yoti/mobile/android/sampleapp2/recievers/ShareAttributesResultBroadcastReceiver.java)
+
 
 You will now need to specify your Client SDK ID and Scenario ID from your application dashboard.
 The SDK can be initialised like this:

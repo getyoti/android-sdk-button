@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Yoti Android-SDK-Demo</string>
     <string name="loc_error_unknow">Something went wrong :(</string>
+    <string name="loc_loading_message">Retrieving your data...</string>
 </resources>

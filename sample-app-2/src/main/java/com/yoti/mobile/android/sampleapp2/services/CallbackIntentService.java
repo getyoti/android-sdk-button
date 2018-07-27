@@ -7,7 +7,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.yoti.mobile.android.sampleapp2.ProfileActivity;
+import com.yoti.mobile.android.sampleapp2.MainActivity;
 import com.yoti.mobile.android.sampleapp2.model.Profile;
 
 import java.io.ByteArrayOutputStream;
@@ -24,6 +24,7 @@ import static com.yoti.mobile.android.sampleapp2.ProfileActivity.GENDER_EXTRA;
 import static com.yoti.mobile.android.sampleapp2.ProfileActivity.IMAGE_EXTRA;
 import static com.yoti.mobile.android.sampleapp2.ProfileActivity.MOBILE_EXTRA;
 import static com.yoti.mobile.android.sampleapp2.ProfileActivity.NAME_EXTRA;
+import static com.yoti.mobile.android.sampleapp2.ProfileActivity.PROFILE_EXTRA;
 
 /**
  * An {@link IntentService} subclass for handling the call to the backend.
@@ -92,7 +93,7 @@ public class CallbackIntentService extends IntentService {
         Gson g = new GsonBuilder().create();
         Profile profile = g.fromJson(new String(response), Profile.class);
 
-        Intent intent = new Intent(this, ProfileActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(NAME_EXTRA, profile.getGivenNames() + " " + profile.getFamilyName());
         intent.putExtra(EMAIL_EXTRA, profile.getEmailAddress());
         intent.putExtra(IMAGE_EXTRA, profile.getSelfie());
@@ -100,6 +101,7 @@ public class CallbackIntentService extends IntentService {
         intent.putExtra(ADDRESS_EXTRA, profile.getPostalAddress());
         intent.putExtra(MOBILE_EXTRA, profile.getMobNum());
         intent.putExtra(GENDER_EXTRA, profile.getGender());
+        intent.putExtra(PROFILE_EXTRA, true);
         startActivity(intent);
 
     }
