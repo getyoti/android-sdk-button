@@ -104,12 +104,10 @@ public class YotiSDKButton extends YotiButton implements View.OnClickListener {
 
             YotiSDKLogger.error(cause.getMessage(), cause);
 
-            if (mOnYotiButtonClickListener != null) {
-                mOnYotiButtonClickListener.onStartScenarioError(cause);
-            }
-
             if (mOnYotiAppNotInstalledListener != null && cause instanceof YotiSDKNoYotiAppException) {
                 mOnYotiAppNotInstalledListener.onYotiAppNotInstalledError((YotiSDKNoYotiAppException) cause);
+            } else if (mOnYotiButtonClickListener != null) {
+                mOnYotiButtonClickListener.onStartScenarioError(cause);
             }
         }
     }

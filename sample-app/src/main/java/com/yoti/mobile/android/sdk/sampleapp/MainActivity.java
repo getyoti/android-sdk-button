@@ -44,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onYotiAppNotInstalledError(YotiSDKNoYotiAppException cause) {
                 //The Yoti app is not installed, let's deal with it
+                yotiSDKButton.setVisibility(View.VISIBLE);
+                progress.setVisibility(View.GONE);
+                message.setText(R.string.loc_no_yoti_app_error);
             }
         });
 

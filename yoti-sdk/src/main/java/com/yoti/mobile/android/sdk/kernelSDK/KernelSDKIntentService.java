@@ -18,6 +18,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 
+import static com.yoti.mobile.android.sdk.YotiAppDefs.YOTI_APP_PACKAGE;
 import static com.yoti.mobile.android.sdk.YotiSDKDefs.APP_ID_PARAM;
 import static com.yoti.mobile.android.sdk.YotiSDKDefs.APP_NAME_PARAM;
 import static com.yoti.mobile.android.sdk.YotiSDKDefs.CALLBACK_PARAM;
@@ -129,7 +130,16 @@ public class KernelSDKIntentService extends IntentService {
 
         resultReceiver.send(0, null);
 
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        Intent intent;
+        intent = getPackageManager().getLaunchIntentForPackage(YOTI_APP_PACKAGE);
+
+        if (intent == null) {
+            // Yoti app is not installed, let's open the website
+            intent = new Intent(Intent.ACTION_VIEW, uri);
+        } else {
+            intent.setData(uri);
+        }
+
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
