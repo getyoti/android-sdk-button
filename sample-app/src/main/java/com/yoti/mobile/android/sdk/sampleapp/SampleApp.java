@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.yoti.mobile.android.sdk.YotiSDK;
 import com.yoti.mobile.android.sdk.exceptions.YotiSDKNotValidScenarioException;
-import com.yoti.mobile.android.sdk.model.CustomCertificate;
 import com.yoti.mobile.android.sdk.model.Scenario;
 
 import static android.content.ContentValues.TAG;
@@ -16,12 +15,6 @@ public class SampleApp extends Application {
     public void onCreate() {
         super.onCreate();
 
-        CustomCertificate customCertificate = new CustomCertificate();
-        customCertificate.setCertificateResourceId(R.raw.certificate);
-        customCertificate.setAlias("test");
-        customCertificate.setPassword("test123");
-        customCertificate.setStoreName("TEST");
-
         try {
             Scenario scenario = new Scenario.Builder()
                     .setUseCaseId("get_user_phone_1")
@@ -29,7 +22,6 @@ public class SampleApp extends Application {
                     .setScenarioId("17807359-a933-4b77-baa2-3c2fdb5608f2")
                     .setCallbackAction("com.test.app.YOTI_CALLBACK")
                     .setBackendCallbackAction("com.test.app.BACKEND_CALLBACK")
-                    .setCustomCertificate(customCertificate)
                     .create();
 
             YotiSDK.addScenario(scenario);

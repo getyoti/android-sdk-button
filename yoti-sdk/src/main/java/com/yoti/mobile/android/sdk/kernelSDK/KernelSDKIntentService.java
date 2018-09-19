@@ -49,7 +49,7 @@ public class KernelSDKIntentService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-        mKernelSDK = new KernelSDK(this);
+        mKernelSDK = new KernelSDK();
     }
 
     /**
@@ -102,7 +102,7 @@ public class KernelSDKIntentService extends IntentService {
         String qrCodeUrl = null;
         try {
             qrCodeUrl = mKernelSDK.retrieveScenarioUri(currentScenario);
-        } catch (CertificateException | NoSuchAlgorithmException | KeyManagementException | KeyStoreException | IOException e) {
+        } catch (IOException e) {
             YotiSDKLogger.error("Error while reaching Connect API", e);
         }
 
