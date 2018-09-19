@@ -1,6 +1,7 @@
 package com.yoti.mobile.android.sampleapp2.recievers;
 
 
+import android.content.Context;
 import android.content.Intent;
 
 import com.yoti.mobile.android.sampleapp2.MainActivity;
@@ -19,8 +20,16 @@ public class ShareAttributesResultBroadcastReceiver extends AbstractShareAttribu
     public static final String EXTRA_CANCELLED_BY_USER = "com.yoti.mobile.android.sdk.EXTRA_CANCELLED_BY_USER";
 
     @Override
-    public boolean onCallbackReceived(String useCaseId, String callbackRoot, String token, String fullUrl) {
+    public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
+        //Start our activity so the app comes back to the foreground
+        Intent myActivityIntent = new Intent(mContext, MainActivity.class);
+        myActivityIntent.putExtra(MainActivity.LOADING_STATUS, true);
+        mContext.startActivity(myActivityIntent);
+    }
 
+    @Override
+    public boolean onCallbackReceived(String useCaseId, String callbackRoot, String token, String fullUrl) {
         CallbackIntentService.startActionRetrieveProfile(this.mContext, useCaseId, callbackRoot, token, fullUrl);
 
         return true;

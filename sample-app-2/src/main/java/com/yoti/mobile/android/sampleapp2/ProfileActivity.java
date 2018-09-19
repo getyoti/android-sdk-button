@@ -19,6 +19,7 @@ public class ProfileActivity extends AppCompatActivity {
     public static final String ADDRESS_EXTRA = "com.yoti.services.ADDRESS_EXTRA";
     public static final String MOBILE_EXTRA = "com.yoti.services.MOBILE_EXTRA";
     public static final String GENDER_EXTRA = "com.yoti.services.GENDER_EXTRA";
+    public static final String PROFILE_EXTRA = "com.yoti.services.PROFILE_EXTRA";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
