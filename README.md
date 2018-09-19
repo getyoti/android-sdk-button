@@ -52,13 +52,13 @@ Please start by adding dependencies in the "build.grade" file inside your applic
 
 ```gradle
 dependencies {
-    compile(com.yoti.mobile.android.sdk:yoti-button-sdk:0.0.6)
+    compile(com.yoti.mobile.android.sdk:yoti-button-sdk:1.0.0)
 }
 ```
 OR if you are using a recent version of gradle (>= 3.x):
 ```gradle
 dependencies {
-    implementation(com.yoti.mobile.android.sdk:yoti-button-sdk:0.0.6)
+    implementation(com.yoti.mobile.android.sdk:yoti-button-sdk:1.0.0)
 }
 ```
 
