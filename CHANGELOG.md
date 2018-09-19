@@ -9,7 +9,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - Moving initialisation of scenarios to the onCreate method of the app.
 - Readme file improvements.
-- Forcing the opening of the Yoti app when SDK button is press to avoid app chooser to be showed.
+- Forcing the opening of the Yoti app when SDK button is pressed to avoid app chooser to be showed.
 - Bringing 3rd party app to the foreground after Yoti share completion: Added in Sample app 2, comments in Readme file.
 
 ### Removed
