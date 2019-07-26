@@ -36,7 +36,7 @@ public class KernelSDKIntentService extends IntentService {
     private static final String ACTION_BACKEND_CALL = "com.yoti.mobile.android.sdk.network.action.BACKEND_CALL";
     private static final String ACTION_START_SCENARIO = "com.yoti.mobile.android.sdk.network.action.START_SCENARIO";
     private static final String YOTI_CALLED_RESULT_RECEIVER = "com.yoti.mobile.android.sdk.network.action.YOTI_CALLED_RESULT_RECEIVER";
-    public static final String YOTI_PENDING_INTENT_EXTRA = "YOTI_PENDING_INTENT_EXTRA";
+    public static final String YOTI_PENDING_INTENT_EXTRA = "com.yoti.mobile.android.sdk.network.extra.YOTI_PENDING_INTENT_EXTRA";
 
     private static final String EXTRA_USE_CASE_ID = "com.yoti.mobile.android.sdk.network.extra.USE_CASE_ID";
     private KernelSDK mKernelSDK;
