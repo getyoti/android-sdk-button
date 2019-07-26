@@ -1,5 +1,6 @@
 package com.yoti.mobile.android.sdk.sampleapp;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,67 +15,85 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    private YotiSDKButton mYotiSDKButton;
+    private ProgressBar mProgress;
+    private TextView mMessage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
 
-        final YotiSDKButton yotiSDKButton = (YotiSDKButton) findViewById(R.id.button);
-        final ProgressBar progress = (ProgressBar) findViewById(R.id.progress);
-        final TextView message = (TextView)findViewById(R.id.text);
+        mYotiSDKButton = (YotiSDKButton) findViewById(R.id.button);
+        mProgress = (ProgressBar) findViewById(R.id.progress);
+        mMessage = (TextView)findViewById(R.id.text);
 
-        yotiSDKButton.setOnYotiButtonClickListener(new YotiSDKButton.OnYotiButtonClickListener() {
+        mYotiSDKButton.setOnYotiButtonClickListener(new YotiSDKButton.OnYotiButtonClickListener() {
             @Override
             public void onStartScenario() {
-                yotiSDKButton.setVisibility(View.GONE);
-                progress.setVisibility(View.VISIBLE);
-                message.setText(null);
+                mYotiSDKButton.setVisibility(View.GONE);
+                mProgress.setVisibility(View.VISIBLE);
+                mMessage.setText(null);
             }
 
             @Override
             public void onStartScenarioError(YotiSDKException cause) {
-                yotiSDKButton.setVisibility(View.VISIBLE);
-                progress.setVisibility(View.GONE);
-                message.setText(R.string.loc_error_unknow);
+                mYotiSDKButton.setVisibility(View.VISIBLE);
+                mProgress.setVisibility(View.GONE);
+                mMessage.setText(R.string.loc_error_unknow);
             }
         });
 
-        yotiSDKButton.setOnYotiAppNotInstalledListener(new YotiSDKButton.OnYotiAppNotInstalledListener() {
+        mYotiSDKButton.setOnYotiAppNotInstalledListener(new YotiSDKButton.OnYotiAppNotInstalledListener() {
             @Override
             public void onYotiAppNotInstalledError(YotiSDKNoYotiAppException cause) {
                 //The Yoti app is not installed, let's deal with it
-                yotiSDKButton.setVisibility(View.VISIBLE);
-                progress.setVisibility(View.GONE);
-                message.setText(R.string.loc_no_yoti_app_error);
+                mYotiSDKButton.setVisibility(View.VISIBLE);
+                mProgress.setVisibility(View.GONE);
+                mMessage.setText(R.string.loc_no_yoti_app_error);
             }
         });
 
-        yotiSDKButton.setOnYotiCalledListener(new YotiSDKButton.OnYotiCalledListener() {
+        mYotiSDKButton.setOnYotiCalledListener(new YotiSDKButton.OnYotiCalledListener() {
             @Override
             public void onYotiCalled() {
                 // Restore the original state
-                yotiSDKButton.setVisibility(View.VISIBLE);
-                progress.setVisibility(View.GONE);
+                mYotiSDKButton.setVisibility(View.VISIBLE);
+                mProgress.setVisibility(View.GONE);
             }
         });
-
-        if (getIntent().hasExtra(ShareAttributesResultBroadcastReceiver.EXTRA_CANCELLED_BY_USER)) {
-            yotiSDKButton.setVisibility(View.VISIBLE);
-            progress.setVisibility(View.GONE);
-            message.setText(R.string.loc_error_not_completed_on_yoti);
-        }
-
-        if (getIntent().hasExtra(ShareAttributesResultBroadcastReceiver.EXTRA_IS_FAILED)) {
-            yotiSDKButton.setVisibility(View.VISIBLE);
-            progress.setVisibility(View.GONE);
-            message.setText(R.string.loc_error_unknow);
-        }
-
-        if (getIntent().hasExtra(ShareAttributesResultBroadcastReceiver.EXTRA_RESPONSE)) {
-            String phone = getIntent().getStringExtra(ShareAttributesResultBroadcastReceiver.EXTRA_RESPONSE);
-            message.setText(String.format(getString(R.string.loc_phone_number), phone));
-        }
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        processExtraData(intent);
+    }
+
+    private void processExtraData(Intent intent) {
+        if (intent.hasExtra(ShareAttributesResultBroadcastReceiver.EXTRA_CANCELLED_BY_USER)) {
+            mYotiSDKButton.setVisibility(View.VISIBLE);
+            mProgress.setVisibility(View.GONE);
+            mMessage.setText(R.string.loc_error_not_completed_on_yoti);
+        }
+
+        if (intent.hasExtra(ShareAttributesResultBroadcastReceiver.EXTRA_IS_FAILED)) {
+            mYotiSDKButton.setVisibility(View.VISIBLE);
+            mProgress.setVisibility(View.GONE);
+            mMessage.setText(R.string.loc_error_unknow);
+        }
+
+        if (intent.hasExtra(ShareAttributesResultBroadcastReceiver.EXTRA_RESPONSE)) {
+            String response = getIntent().getStringExtra(ShareAttributesResultBroadcastReceiver.EXTRA_RESPONSE);
+            if (response != null) {
+                mMessage.setText(R.string.loc_success_status);
+            }
+        }
+
+        if (intent.hasExtra(ShareAttributesResultBroadcastReceiver.EXTRA_LOADING)) {
+            mMessage.setText(R.string.loc_loading_status);
+        }
+    }
 }

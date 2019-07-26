@@ -7,4 +7,6 @@
     <string name="loc_no_yoti_app_error">The Yoti app is not install in this device</string>
     <string name="loc_error_not_completed_on_yoti">Process not completed on the Yoti App</string>
     <string name="loc_phone_number">Your phone number is : %s</string>
+    <string name="loc_success_status">Success!!</string>
+    <string name="loc_loading_status">Loading...</string>
 </resources>
