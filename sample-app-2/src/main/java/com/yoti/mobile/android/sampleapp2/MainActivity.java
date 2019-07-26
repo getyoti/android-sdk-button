@@ -11,6 +11,7 @@ import com.yoti.mobile.android.sdk.YotiSDKButton;
 import com.yoti.mobile.android.sdk.exceptions.YotiSDKException;
 import com.yoti.sampleapp2.R;
 
+import static com.yoti.mobile.android.sampleapp2.ProfileActivity.BACKEND_DATA_ERROR_EXTRA;
 import static com.yoti.mobile.android.sampleapp2.ProfileActivity.PROFILE_EXTRA;
 
 public class MainActivity extends AppCompatActivity {
@@ -74,6 +75,11 @@ public class MainActivity extends AppCompatActivity {
             yotiSDKButton.setVisibility(View.VISIBLE);
             progress.setVisibility(View.GONE);
             message.setText("");
+
+        } else if (intent.getBooleanExtra(BACKEND_DATA_ERROR_EXTRA, false)) {
+            yotiSDKButton.setVisibility(View.GONE);
+            progress.setVisibility(View.GONE);
+            message.setText(R.string.loc_error_processing_backend_response);
         }
     }
 }
