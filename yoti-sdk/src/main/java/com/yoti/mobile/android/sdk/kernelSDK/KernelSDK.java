@@ -61,7 +61,7 @@ public class KernelSDK {
                 YotiSDKLogger.warning("ICallbackBackendListener is null");
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             if (listener != null) {
                 listener.onError(-1, e, null);
             } else {
