@@ -1,6 +1,7 @@
 package com.yoti.mobile.android.sdk.kernelSDK;
 
 import android.app.IntentService;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -8,15 +9,12 @@ import android.net.Uri;
 import android.os.ResultReceiver;
 import android.text.TextUtils;
 
+import com.yoti.mobile.android.sdk.ReceiverActivity;
 import com.yoti.mobile.android.sdk.YotiSDK;
 import com.yoti.mobile.android.sdk.YotiSDKLogger;
 import com.yoti.mobile.android.sdk.model.Scenario;
 
 import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
 
 import static com.yoti.mobile.android.sdk.YotiAppDefs.YOTI_APP_PACKAGE;
 import static com.yoti.mobile.android.sdk.YotiSDKDefs.APP_ID_PARAM;
@@ -38,6 +36,7 @@ public class KernelSDKIntentService extends IntentService {
     private static final String ACTION_BACKEND_CALL = "com.yoti.mobile.android.sdk.network.action.BACKEND_CALL";
     private static final String ACTION_START_SCENARIO = "com.yoti.mobile.android.sdk.network.action.START_SCENARIO";
     private static final String YOTI_CALLED_RESULT_RECEIVER = "com.yoti.mobile.android.sdk.network.action.YOTI_CALLED_RESULT_RECEIVER";
+    public static final String YOTI_PENDING_INTENT_EXTRA = "com.yoti.mobile.android.sdk.network.extra.YOTI_PENDING_INTENT_EXTRA";
 
     private static final String EXTRA_USE_CASE_ID = "com.yoti.mobile.android.sdk.network.extra.USE_CASE_ID";
     private KernelSDK mKernelSDK;
@@ -139,6 +138,11 @@ public class KernelSDKIntentService extends IntentService {
         } else {
             intent.setData(uri);
         }
+
+        Intent wakeupIntent = new Intent(this, ReceiverActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, wakeupIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        intent.putExtra(YOTI_PENDING_INTENT_EXTRA, pendingIntent);
 
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
