@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.1.0] - 2019-08-22
+### Added
+Support for Android Q
+Small changes in the sample apps to improve error handling.
 
 ## [1.0.0] - 2018-09-20
 ### Added
