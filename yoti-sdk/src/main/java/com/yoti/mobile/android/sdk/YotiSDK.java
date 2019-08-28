@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.ResultReceiver;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.yoti.mobile.android.sdk.exceptions.YotiSDKException;
 import com.yoti.mobile.android.sdk.exceptions.YotiSDKMinVersionException;

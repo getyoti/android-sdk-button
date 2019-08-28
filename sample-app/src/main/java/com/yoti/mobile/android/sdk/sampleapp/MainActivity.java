@@ -1,7 +1,7 @@
 package com.yoti.mobile.android.sdk.sampleapp;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -25,9 +25,9 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        mYotiSDKButton = (YotiSDKButton) findViewById(R.id.button);
-        mProgress = (ProgressBar) findViewById(R.id.progress);
-        mMessage = (TextView)findViewById(R.id.text);
+        mYotiSDKButton = findViewById(R.id.button);
+        mProgress = findViewById(R.id.progress);
+        mMessage = findViewById(R.id.text);
 
         mYotiSDKButton.setOnYotiButtonClickListener(new YotiSDKButton.OnYotiButtonClickListener() {
             @Override

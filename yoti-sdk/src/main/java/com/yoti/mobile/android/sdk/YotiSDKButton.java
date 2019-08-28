@@ -5,18 +5,19 @@ import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
 import android.view.View;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
 
 import com.yoti.mobile.android.commons.ui.widget.YotiButton;
 import com.yoti.mobile.android.sdk.exceptions.YotiSDKException;
 import com.yoti.mobile.android.sdk.exceptions.YotiSDKNoYotiAppException;
 
 /**
- * Custom {@link AppCompatButton} which will start its associated {@link com.yoti.mobile.android.sdk.model.Scenario} when clicked.
+ * Custom {@link AppCompatButton} which will start its associated {@link
+ * com.yoti.mobile.android.sdk.model.Scenario} when clicked.
  */
 public class YotiSDKButton extends YotiButton implements View.OnClickListener {
 
@@ -69,7 +70,7 @@ public class YotiSDKButton extends YotiButton implements View.OnClickListener {
     }
 
     @Override
-    public void setOnClickListener(@Nullable OnClickListener l) {
+    public void setOnClickListener(@Nullable View.OnClickListener l) {
         super.setOnClickListener(this);
     }
 
