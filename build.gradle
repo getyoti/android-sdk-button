@@ -30,7 +30,7 @@ allprojects {
         androidTargetSdkVersion = targetSdkVersion.toInteger()
         androidCompileSdkVersion = compileSdkVersion.toInteger()
 
-        libAndroidSupportv7 = 'androidx.appcompat:appcompat:1.0.0'
+        libAndroidSupport = "androidx.appcompat:appcompat:$supportLibraryVersion"
 
         // Testing
         libJunit = "junit:junit:${libJunitVersion}"

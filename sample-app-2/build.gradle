@@ -25,7 +25,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation parent.ext.libAndroidSupport
     testImplementation 'junit:junit:4.12'
     implementation("com.yoti.mobile.android.sdk:yoti-button-sdk:1.1.0")
     implementation 'com.google.code.gson:gson:2.8.5'

@@ -43,12 +43,12 @@ android {
 
 
 dependencies {
-    implementation parent.ext.libAndroidSupportv7
+    implementation parent.ext.libAndroidSupport
     testImplementation 'junit:junit:4.12'
 
-    //implementation project(path: ':yoti-sdk')
+    implementation project(path: ':yoti-sdk')
 
 
 // Use this version if you want to point at the dependency published on mavenCentral
-    implementation("com.yoti.mobile.android.sdk:yoti-button-sdk:1.1.0")
+    //implementation("com.yoti.mobile.android.sdk:yoti-button-sdk:1.1.0")
 }

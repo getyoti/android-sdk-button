@@ -32,5 +32,7 @@ dependencies {
     testImplementation parent.ext.libJunit
     testImplementation parent.ext.libMockito
 
+    implementation parent.ext.libAndroidSupport
+
     api(group: 'com.yoti.mobile.android', name: 'base-commons-ui', version: yotiCommonUIVersion, ext: 'aar')
 }
