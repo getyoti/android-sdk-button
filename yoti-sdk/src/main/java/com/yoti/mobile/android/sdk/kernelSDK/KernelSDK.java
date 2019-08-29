@@ -1,6 +1,6 @@
 package com.yoti.mobile.android.sdk.kernelSDK;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.yoti.mobile.android.sdk.YotiSDKLogger;
 import com.yoti.mobile.android.sdk.model.Scenario;

@@ -2,13 +2,14 @@
 
 buildscript {
     repositories {
+        mavenLocal()
         jcenter()
         google()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
-        classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.11.0"
+        classpath 'com.android.tools.build:gradle:3.5.0'
+        classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.20.0"
     }
 }
 
@@ -17,6 +18,7 @@ apply plugin: 'io.codearte.nexus-staging'
 
 allprojects {
     repositories {
+        mavenLocal()
         mavenCentral()
         jcenter()
         google()
@@ -24,12 +26,11 @@ allprojects {
 
     ext {
         // Android config
-        androidBuildToolsVersion = project.ext.buildToolsVersion
         androidMinSdkVersion = minSdkVersionVersion.toInteger()
         androidTargetSdkVersion = targetSdkVersion.toInteger()
         androidCompileSdkVersion = compileSdkVersion.toInteger()
 
-        libAndroidSupportv7 = "com.android.support:appcompat-v7:${supportLibraryVersion}"
+        libAndroidSupport = "androidx.appcompat:appcompat:$supportLibraryVersion"
 
         // Testing
         libJunit = "junit:junit:${libJunitVersion}"

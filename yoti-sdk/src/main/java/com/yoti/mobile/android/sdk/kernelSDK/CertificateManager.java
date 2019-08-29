@@ -1,8 +1,9 @@
 package com.yoti.mobile.android.sdk.kernelSDK;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.RawRes;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RawRes;
 
 import com.yoti.mobile.android.sdk.YotiSDKLogger;
 
@@ -30,10 +31,12 @@ public class CertificateManager {
     /**
      * Store a certificate in the private file of the application
      *
-     * @param certificateResourceId - the certificate resource identifier ot store in the key store
-     * @param storeName             - the key name used to identify this very store
-     * @param password              - the password to secure the keystore in which the certificate will be stored
-     * @param alias                 - the alias for this certificate in the in the keystore
+     * @param certificateResourceId - the certificate resource identifier ot store in the
+     *         key store
+     * @param storeName - the key name used to identify this very store
+     * @param password - the password to secure the keystore in which the certificate will
+     *         be stored
+     * @param alias - the alias for this certificate in the in the keystore
      * @return true if the certificate has been successfully stored
      */
     public boolean storeCrt(@RawRes int certificateResourceId,
@@ -57,11 +60,13 @@ public class CertificateManager {
     /**
      * Force write the certificate in the designated key store
      *
-     * @param certificateResourceId - the certificate resource identifier ot store in the key store
-     * @param storeName             - the key name used to identify this very store
-     * @param password              - the password to secure the keystore in which the certificate will be stored
-     * @param alias                 - the alias for this certificate in the in the keystore
-     * @param keyStore              - the key store instance
+     * @param certificateResourceId - the certificate resource identifier ot store in the
+     *         key store
+     * @param storeName - the key name used to identify this very store
+     * @param password - the password to secure the keystore in which the certificate will
+     *         be stored
+     * @param alias - the alias for this certificate in the in the keystore
+     * @param keyStore - the key store instance
      */
     private void storeCertificateInKeyStore(@RawRes int certificateResourceId, @NonNull String storeName,
                                             @NonNull String password, @NonNull String alias,
@@ -91,10 +96,11 @@ public class CertificateManager {
      * Save the certificate in the key store and persist this key store on the file system
      *
      * @param storeName - the key name used to identify this very store
-     * @param password  - the password to secure the keystore in which the certificate will be stored
-     * @param alias     - the alias for this certificate in the in the keystore
-     * @param keyStore  - the key store instance
-     * @param ca        - the certificate to save
+     * @param password - the password to secure the keystore in which the certificate will
+     *         be stored
+     * @param alias - the alias for this certificate in the in the keystore
+     * @param keyStore - the key store instance
+     * @param ca - the certificate to save
      */
     private void writeCertificateInKeyStore(@NonNull String storeName,
                                             @NonNull String password, @NonNull String alias,
@@ -124,8 +130,8 @@ public class CertificateManager {
      * Attempt to load the keystore from the file system if present or create new one if needed
      *
      * @param storeName the store name
-     * @param password  the password to load the existing store
-     * @param store     the store instance to load
+     * @param password the password to load the existing store
+     * @param store the store instance to load
      */
     private void loadKeyStore(@NonNull String storeName, @NonNull String password, KeyStore store) throws CertificateException, NoSuchAlgorithmException, IOException {
         try {
