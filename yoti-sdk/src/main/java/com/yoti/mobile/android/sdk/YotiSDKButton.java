@@ -66,7 +66,15 @@ public class YotiSDKButton extends YotiButton implements View.OnClickListener {
             }
         }
 
+        setLeftRigthPadding();
         setOnClickListener(this);
+    }
+
+    private void setLeftRigthPadding(){
+        int paddingDp = 8;
+        float density = getResources().getDisplayMetrics().density;
+        int paddingPixel = (int)(paddingDp * density);
+        setPadding(paddingPixel,0,paddingPixel,0);
     }
 
     @Override
