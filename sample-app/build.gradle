@@ -4,7 +4,7 @@ android {
     compileSdkVersion parent.ext.androidCompileSdkVersion
 
     defaultConfig {
-        applicationId "com.yoti.mobile.android.sdk.sampleapp"
+        applicationId "com.yoti.mobile.android.button.sdk.sampleapp"
         minSdkVersion parent.ext.androidMinSdkVersion
         targetSdkVersion parent.ext.androidTargetSdkVersion
         versionCode 1

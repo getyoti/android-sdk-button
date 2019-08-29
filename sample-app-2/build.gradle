@@ -5,7 +5,7 @@ android {
 
 
     defaultConfig {
-        applicationId "com.madmaclon.sampleapp2"
+        applicationId "com.yoti.mobile.android.button.sdk.sampleapp2"
         minSdkVersion parent.ext.androidMinSdkVersion
         targetSdkVersion parent.ext.androidTargetSdkVersion
         versionCode 1
