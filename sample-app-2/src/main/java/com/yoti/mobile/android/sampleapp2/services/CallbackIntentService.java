@@ -17,6 +17,7 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.yoti.mobile.android.sampleapp2.ProfileActivity.ADDRESS_EXTRA;
 import static com.yoti.mobile.android.sampleapp2.ProfileActivity.BACKEND_DATA_ERROR_EXTRA;
 import static com.yoti.mobile.android.sampleapp2.ProfileActivity.DOB_EXTRA;
@@ -105,10 +106,12 @@ public class CallbackIntentService extends IntentService {
             intent.putExtra(MOBILE_EXTRA, profile.getMobNum());
             intent.putExtra(GENDER_EXTRA, profile.getGender());
             intent.putExtra(PROFILE_EXTRA, true);
+            intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         } catch (Exception e) {
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra(BACKEND_DATA_ERROR_EXTRA, true);
+            intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
 
