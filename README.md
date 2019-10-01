@@ -52,13 +52,13 @@ Please start by adding dependencies in the "build.grade" file inside your applic
 
 ```gradle
 dependencies {
-    compile(com.yoti.mobile.android.sdk:yoti-button-sdk:1.0.0)
+    compile(com.yoti.mobile.android.sdk:yoti-button-sdk:1.1.0)
 }
 ```
-OR if you are using a recent version of gradle (>= 3.x):
+OR if you are using a more recent version of gradle (>= 3.x):
 ```gradle
 dependencies {
-    implementation(com.yoti.mobile.android.sdk:yoti-button-sdk:1.0.0)
+    implementation(com.yoti.mobile.android.sdk:yoti-button-sdk:1.1.0)
 }
 ```
 
@@ -84,7 +84,7 @@ The client end of the integration is now complete.
 Add the below configuration to your manifest:
 
 ```xml
-<receiver android:name=".MyBroadcastReceiver">
+<receiver android:name=".MyBroadcastReceiver" android:exported="false">
     <intent-filter>
         <action android:name="YOUR_CALLBACK_ACTION"/>
         <action android:name="YOUR_BACKEND_CALLBACK_ACTION"/>
@@ -93,7 +93,11 @@ Add the below configuration to your manifest:
 ```
 [See this code in one of our sample apps](./sample-app/src/main/AndroidManifest.xml)
 
-Adding this broadcast receiver class, this acts as a listener for Yoti to get the callback URL from the Yoti app. Please note there are two call back options:
+This broadcast receiver was used to receive the communication back from the Yoti App. That's not
+the case in recent versions of the SDK and it is only used internally within your app. Therefore we
+strongly recommend you to declare your receiver with the option exported="false".
+
+Please note there are two call back options:
 
 1) You handle the callback to your backend
 2) Let the SDK manage this for you
