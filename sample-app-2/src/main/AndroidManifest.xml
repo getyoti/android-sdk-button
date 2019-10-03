@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name="com.yoti.mobile.android.sampleapp2.recievers.ShareAttributesResultBroadcastReceiver">
+        <receiver android:name="com.yoti.mobile.android.sampleapp2.recievers.ShareAttributesResultBroadcastReceiver" android:exported="false">
             <intent-filter>
                 <action android:name="com.yoti.services.CALLBACK" />
             </intent-filter>

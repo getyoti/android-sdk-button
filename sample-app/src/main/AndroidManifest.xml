@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".ShareAttributesResultBroadcastReceiver">
+        <receiver android:name=".ShareAttributesResultBroadcastReceiver" android:exported="false">
             <intent-filter>
                 <action android:name="com.test.app.YOTI_CALLBACK" />
                 <action android:name="com.test.app.BACKEND_CALLBACK" />

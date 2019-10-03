@@ -25,6 +25,7 @@ public class ShareAttributesResultBroadcastReceiver extends AbstractShareAttribu
         //Start our activity so the app comes back to the foreground
         Intent myActivityIntent = new Intent(mContext, MainActivity.class);
         myActivityIntent.putExtra(MainActivity.LOADING_STATUS, true);
+        myActivityIntent.addFlags(FLAG_ACTIVITY_NEW_TASK);
         mContext.startActivity(myActivityIntent);
     }
 
