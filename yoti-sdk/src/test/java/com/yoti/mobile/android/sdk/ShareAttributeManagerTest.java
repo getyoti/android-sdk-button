@@ -1,7 +1,5 @@
 package com.yoti.mobile.android.sdk;
 
-import android.test.suitebuilder.annotation.SmallTest;
-
 import com.yoti.mobile.android.sdk.exceptions.YotiSDKNotValidScenarioException;
 import com.yoti.mobile.android.sdk.model.Scenario;
 
@@ -21,7 +19,6 @@ import static org.mockito.Mockito.when;
 
 
 @RunWith(MockitoJUnitRunner.class)
-@SmallTest
 public class ShareAttributeManagerTest {
 
     @Mock
