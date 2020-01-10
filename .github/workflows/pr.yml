@@ -3,7 +3,7 @@ name: PR test
 on: [pull_request]
 
 jobs:
-  unit_test:
+  check:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,6 +20,7 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
+
     - name: Run tests with Gradle
       run: ./gradlew testDebug --no-daemon
     - name: Archive test results
@@ -28,3 +29,19 @@ jobs:
       with:
         name: test-results
         path: "yoti-sdk/build/reports/tests/"
+
+    - name: Build sample-1
+      run: ./gradlew sample-app:assembleDebug --no-daemon
+    - name: Upload sample-1
+      uses: actions/upload-artifact@v1
+      with:
+        name: sample-1
+        path: "sample-app/build/outputs/apk/"
+
+    - name: Build sample-2
+      run: ./gradlew sample-app-2:assembleDebug --no-daemon
+    - name: Upload sample-2
+      uses: actions/upload-artifact@v1
+      with:
+        name: sample-2
+        path: "sample-app-2/build/outputs/apk/"
