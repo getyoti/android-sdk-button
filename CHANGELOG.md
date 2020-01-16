@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.1.2] - 2020-01-16
+### Added
+[(#11)](https://github.com/getyoti/android-sdk-button/pull/11) Added setter `setUseCaseId()` which enables developers to define the useCaseId programatically. Prior to the change, the Use Case ID could only be set statically in the layout file.
+
 ## [1.1.1]
 ### Changed
 Update publication scripts and publish from github actions
