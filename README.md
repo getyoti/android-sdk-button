@@ -77,6 +77,11 @@ yoti:useCaseId="YOUR_USE_CASE_ID"/>
 ```
 [See this code in one of our sample apps](./sample-app/src/main/res/layout/activity_main.xml)
 
+Alternatively, you can set the button's useCaseId with:
+```java
+YotiSDKButton.setUseCaseId("YOUR_USE_CASE_ID");
+```
+
 The client end of the integration is now complete.
 
 ## Configuration

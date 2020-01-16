@@ -70,6 +70,10 @@ public class YotiSDKButton extends YotiButton implements View.OnClickListener {
         setOnClickListener(this);
     }
 
+    public void setUseCaseId(String useCaseId) {
+        mUseCaseId = useCaseId;
+    }
+    
     private void setLeftRigthPadding(){
         int paddingDp = 8;
         float density = getResources().getDisplayMetrics().density;
