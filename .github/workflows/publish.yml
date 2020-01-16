@@ -74,7 +74,7 @@ jobs:
         sonatypePassword: ${{ secrets.sonatypePassword }}
         signingKey: ${{ secrets.signingPrivateKey }}
         signingPassword: ${{ secrets.signingPrivateKeyPassword }}
-      run: ./gradlew publishAarReleasePublicationToMavenCentralRepository closeAndReleaseRepository "-PsonatypeUsername=$sonatypeUsername" "-PsonatypePassword=$sonatypePassword" "-PinMemorySigningKey=$signingKey" "-PinMemoryKeyPassword=$signingPassword" --no-daemon
+      run: ./gradlew publishAarReleasePublicationToMavenCentralRepository closeAndReleaseRepository -PsonatypeUsername="$sonatypeUsername" -PsonatypePassword="$sonatypePassword" -PinMemorySigningKey="$signingKey" -PinMemoryKeyPassword="$signingPassword" --no-daemon
 
   tag:
     runs-on: ubuntu-latest
