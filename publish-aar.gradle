@@ -1,0 +1,464 @@
+//Version 2.1.1
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+apply plugin: 'maven-publish'
+
+task androidJavadocs(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    source += "${buildDir}/generated/source"
+    if (project.hasProperty('moduleExtraSourcePaths')) {
+        source += moduleExtraSourcePaths
+    }
+
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    android.libraryVariants.all { variant ->
+        if (variant.name == 'release') {
+            owner.classpath += variant.javaCompileProvider.get().classpath
+        }
+    }
+    exclude '**/R.html', '**/R.*.html', '**/index.html', '**/*.kt'
+}
+
+task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+    classifier = 'javadoc'
+    from androidJavadocs.destinationDir
+}
+
+task androidSourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+
+    if (plugins.hasPlugin("kotlin-android")) {
+        //Add kotlin sources if we're using kotlin. This should be a superset of sourceSets.java,
+        //so ignore duplicates
+        from android.sourceSets.main.kotlin.srcDirs
+    }
+    if (project.hasProperty('moduleExtraSourcePaths')) {
+        from moduleExtraSourcePaths
+    }
+    duplicatesStrategy 'exclude'
+}
+
+project.afterEvaluate {
+
+    androidJavadocs.classpath += files(android.libraryVariants.collect { variant ->
+        variant.javaCompileProvider.get().classpath.files
+    })
+
+    def yotiRepoName = "release"
+
+    publishing {
+        publications {
+            def tasksContainer = project.getTasks()
+
+            def allTaskNames
+
+            if (project.hasProperty('productFlavors')) {
+                def parts = productFlavors.split(",")
+                allTaskNames = new ArrayList<?>(parts.length * 2)
+                for (part in parts) {
+                    allTaskNames.add(tasksContainer.getByName("bundle${part.capitalize()}DebugAar"))
+                    allTaskNames.add(tasksContainer.getByName("bundle${part.capitalize()}ReleaseAar"))
+                }
+            } else {
+                allTaskNames = new ArrayList<?>(2)
+                allTaskNames.add(tasksContainer.getByName("bundleReleaseAar"))
+                allTaskNames.add(tasksContainer.getByName("bundleDebugAar"))
+            }
+
+
+            // Create a task for  debug and for release build task
+            for (art in allTaskNames) {
+                //Must build generated code first for Javadoc to work
+                androidJavadocs.dependsOn(art)
+                androidSourcesJar.dependsOn(art)
+
+                def buildVariantFromTask = art.name.substring(6, art.name.indexOf("Aar"))
+
+                "aar${buildVariantFromTask}"(MavenPublication) {
+                    artifact art
+                    artifact androidJavadocsJar
+
+                    def includeSources = project.hasProperty('includeSources') ?
+                            Boolean.valueOf(includeSources) : true
+
+                    if (includeSources) {
+                        artifact androidSourcesJar
+                    }
+
+                    // Check if we need to rename some artefacts id (includes publication and dependencies)
+                    ArtefactFlavorProperties flavorsConf
+                    if (project.hasProperty('omitFlavorSuffixFor')) {
+                        flavorsConf = new ArtefactFlavorProperties(omitFlavorSuffixFor)
+                    } else {
+                        flavorsConf = ArtefactFlavorProperties.EMPTY
+                    }
+
+                    def buildTypeLower
+                    def artifactIdSuffix
+                    def productFlavorLower
+
+                    def currentArtefact = new PropertyDependency(pomGroup, pomId, pomVersion)
+
+                    if (buildVariantFromTask.contains("Release")) {
+                        buildTypeLower = "release"
+                        productFlavorLower = buildVariantFromTask.substring(0, buildVariantFromTask.indexOf("Release")).toLowerCase()
+
+                    } else {
+                        buildTypeLower = "debug"
+                        productFlavorLower = buildVariantFromTask.substring(0, buildVariantFromTask.indexOf("Debug")).toLowerCase()
+                    }
+
+                    def removeFlavor = flavorsConf.ignoreFlavorFor(currentArtefact, productFlavorLower)
+                    artifactIdSuffix = getIdSuffix(buildVariantFromTask, buildTypeLower, productFlavorLower, removeFlavor)
+
+                    pom {
+
+                        if (project.hasProperty('pomName')) {
+                            name = pomName
+                        } else {
+                            name = pomDescription
+                        }
+
+                        if (project.hasProperty('pomUrl')) {
+                            url = pomUrl
+                        } else {
+                            url = "https://github.com/getyoti"
+                        }
+
+                        groupId = pomGroup
+                        artifactId = pomId + artifactIdSuffix
+                        version = pomVersion
+
+                        packaging = "aar"
+                        description = pomDescription
+
+                        scm {
+                            url = pomScmUrl
+                            connection = pomScmConnection
+                        }
+
+                        def resolvedLicenceName = project.hasProperty('pomLicenseName') ? pomLicenseName : null
+                        def resolvedLicenceUrl = project.hasProperty('pomLicenseUrl') ? pomLicenseUrl : null
+                        if (resolvedLicenceName == null || resolvedLicenceName.trim().length() == 0) {
+                            resolvedLicenceName = "For internal use only"
+                            resolvedLicenceUrl = null
+                        }
+
+                        licenses {
+                            license {
+                                name = resolvedLicenceName
+
+                                if (resolvedLicenceUrl != null) {
+                                    url = resolvedLicenceUrl
+                                }
+                            }
+                        }
+
+                        developers {
+                            developer {
+                                id = "yoti-ci"
+                                name = "Yoti"
+                            }
+                        }
+                    }
+
+
+                    pom.withXml {
+                        final dependenciesNode = asNode().appendNode('dependencies')
+
+                        ext.addDependency = { Dependency dep, String scope ->
+                            if (dep.group == null || dep.version == null || dep.name == null ||
+                                    dep.name == "unspecified") {
+                                return // ignore invalid dependencies
+                            }
+
+                            // For project we need to get the unspecified version, the group and the
+                            // artifact id from the configuration
+                            def localDep = dep
+                            if (dep instanceof ProjectDependency) {
+                                if (project.hasProperty('projectDependencies')) {
+                                    def propertiesDependencies = PropertyDependency.parseModuleToDependencyProperty(projectDependencies)
+                                    localDep = propertiesDependencies[dep.name]
+
+                                    // If it is null it's most likely because the user entered the
+                                    // mapping with a typo
+                                    if (localDep == null) {
+                                        throw new InvalidUserDataException("The 'projectDependencies gradle property':[$projectDependencies] must contain a typo as " +
+                                                "'${dep.name}' is not found in the list of dependencies")
+                                    }
+
+                                    // Check if the property dependency is name only, if so, use the
+                                    // group and version from the dependency (meaning the user has
+                                    // defined them on the root of the module gradle file). Only the
+                                    // name will be used from the mapping to resolve the artifact.
+                                    if (localDep.isNameOnly()) {
+                                        localDep = new PropertyDependency(dep.group, localDep.name, dep.version)
+                                    }
+
+                                } else if (dep.version == "unspecified") {
+                                    throw new InvalidUserDataException("A project dependency: '${dep.name}' " +
+                                            "is used but no mapping has been found.\n" +
+                                            "Please add the property in your " +
+                                            "gradle.properties: projectDependencies=${dep.name}/yourGroup:yourName:yourVersion\n" +
+                                            "Or add ext.pomId, ext.pomGroup and ext.pomVersion to the " +
+                                            "module: '${dep.name}'")
+                                } else {
+                                    logger.warn("Warning this project dependency: '${dep.name}' is using the" +
+                                            " module name as artefact id since no property mapping has" +
+                                            " been found, group is '${dep.group}' and version is '${dep.version}'")
+                                }
+
+                                def ignoreFlavorForCurrentDep = flavorsConf.ignoreFlavorFor(localDep, productFlavorLower)
+                                def suffix = getIdSuffix(buildVariantFromTask, buildTypeLower, productFlavorLower, ignoreFlavorForCurrentDep)
+
+                                //Use correct debug suffix for internal projects (assumes all
+                                //dependencies also use this script)
+                                if (localDep.group.startsWith("com.yoti")) {
+                                    localDep = new PropertyDependency(dep.group, localDep.name + suffix, dep.version)
+                                }
+                            } else if (dep.version == "unspecified") {
+                                throw new InvalidUserDataException("A dependency: '$dep' is used but no version has been found.\n" +
+                                        "Please add a version for this dependency")
+                            }
+
+                            final dependencyNode = dependenciesNode.appendNode('dependency')
+                            dependencyNode.appendNode('groupId', localDep.group)
+                            dependencyNode.appendNode('artifactId', localDep.name)
+                            dependencyNode.appendNode('version', localDep.version)
+                            dependencyNode.appendNode('scope', scope)
+
+                            if (!dep.transitive) {
+
+                                // If this dependency is not transitive, we should force exclude all its
+                                // dependencies from the POM
+                                final exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
+                                exclusionNode.appendNode('groupId', '*')
+                                exclusionNode.appendNode('artifactId', '*')
+                            } else if (!dep.properties.excludeRules.empty) {
+
+                                // Otherwise, if we have exclude rules, add them
+                                final exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
+                                dep.properties.excludeRules.each { ExcludeRule rule ->
+                                    exclusionNode.appendNode('groupId', rule.group ?: '*')
+                                    exclusionNode.appendNode('artifactId', rule.module ?: '*')
+                                }
+                            }
+                        }
+
+                        def scopes = ["compile", "api", "implementation"]
+                        for (scope in scopes) {
+                            for (conf in configurations) {
+                                def confName = conf.name.toLowerCase()
+
+                                if (confName.endsWith(scope) &&
+                                        !confName.contains("test") &&
+                                        !confName.contains("metadata") &&
+                                        !confName.contains("android") &&
+                                        !confName.contains("dependencies") && (
+
+                                        // Only consider the debug dependencies for debug publication
+                                        // equally release for release or normal (neither debug,
+                                        // nor release)
+                                        (buildTypeLower == "debug" && confName.contains('debug')) ||
+                                                (buildTypeLower == "release" && confName.contains('release')) ||
+                                                (!confName.contains('debug') && !confName.contains('release'))
+                                )
+                                ) {
+                                    conf.getDependencies().each { dep ->
+                                        //Ignore kotlin transitive dependencies as they will be applied
+                                        // by the kotlin plugin
+                                        if (!(dep.group == "org.jetbrains.kotlin" &&
+                                                (dep.name.contains("kotlin-stdlib")))
+                                        ) {
+                                            addDependency(dep, scope)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    def publicationsDependencies = []
+    for (pub in publishing.publications) {
+        // Used to create an aggregation task for all publication
+        publicationsDependencies << "publish${pub.name.capitalize()}PublicationTo${yotiRepoName.capitalize()}Repository"
+    }
+
+    task publishToYoti(dependsOn: publicationsDependencies, group: "publishing")
+}
+
+String getIdSuffix(String buildVariant, String buildType, String flavor, boolean ignoreFlavor) {
+    if (buildVariant.contains("Release")) {
+        return ignoreFlavor ? "" : "-$flavor"
+    } else {
+        return ignoreFlavor ? "-debug" : "-$flavor-debug"
+    }
+}
+
+
+/**
+ * Process a string composed this way:
+ * $moduleName1/$group1:$name1:$version1,$moduleName2/$group2:$name2:$version2
+ * Or:
+ *  $moduleName1/$name1,$moduleName2/$group2:$name2:$version2
+ * in which case $name1 will be used as the artifact name and group and version will stay null.
+ * and create
+ * a Map of $moduleName -> PropertyDependency{group = group, name = name, version = version}*
+ * */
+class PropertyDependency {
+    public String group = null
+    public String name = null
+    public String version = null
+
+    PropertyDependency(String colonSeparated) {
+        def parts = colonSeparated.split(":")
+        if (parts.length == 3) {
+            group = parts[0].trim()
+            name = parts[1].trim()
+            version = parts[2].trim()
+        } else if (parts.length == 1) {
+            name = parts[0].trim()
+        }
+    }
+
+    PropertyDependency(String aGroup, String aName, String aVersion) {
+        group = aGroup
+        name = aName
+        version = aVersion
+    }
+
+    String toString() {
+        return group + ":" + name + ":" + version
+    }
+
+    boolean isNameOnly() {
+        return !group?.trim() && name != null && !version?.trim()
+    }
+
+    boolean equals(obj) {
+        if (this.is(obj)) return true
+        if (getClass() != obj.class) return false
+
+        PropertyDependency dep = (PropertyDependency) obj
+        if (dep.isNameOnly()) {
+            return name == dep.name
+        } else {
+            return group == dep.group && name == dep.name && version == dep.version
+        }
+    }
+
+    static Map<String, PropertyDependency> parseModuleToDependencyProperty(String propertyValue) {
+        def propertiesDependencies = [:]
+        for (propDep in propertyValue.split(",")) {
+            def parts = propDep.split("/")
+            propertiesDependencies[parts[0].trim()] = new PropertyDependency(parts[1])
+        }
+        return propertiesDependencies
+    }
+
+    static List<PropertyDependency> parsePropertyDependencyList(String propertyValue) {
+        def propertiesDependencies = []
+        for (propDep in propertyValue.split(",")) {
+            propertiesDependencies.add(new PropertyDependency(propDep))
+        }
+
+        return propertiesDependencies
+    }
+}
+
+class ArtefactFlavorConf {
+    public PropertyDependency artefact = null
+    public ArrayList<String> flavors = null
+
+    /**
+     * @param slashColonSeparated : expected format is
+     * group1:id1:version1/flavor1|flavor2
+     * name1/flavor1|flavor2
+     */
+    ArtefactFlavorConf(String slashSeparated) {
+        def parts = slashSeparated.split("/")
+
+        artefact = new PropertyDependency(parts[0].trim())
+        flavors = parts[1].trim().toLowerCase().split("\\|")
+    }
+
+    String toString() {
+        return "artefact=${artefact.toString()}, flavors=$flavors"
+    }
+
+    // Allow the definition to be only artefact name-based
+    boolean isArtefact(PropertyDependency dependency) {
+        return (artefact == dependency || (artefact.isNameOnly() && artefact.name == dependency.name)) ||
+                isForAllArtefacts()
+    }
+
+    boolean hasFlavor(String flavorName) {
+        return flavors.contains(flavorName.toLowerCase()) || isForAllFlavors()
+    }
+
+    private boolean isForAllArtefacts() {
+        return artefact.isNameOnly() && artefact.name == "*"
+    }
+
+    private boolean isForAllFlavors() {
+        return flavors.contains("*")
+    }
+}
+
+class ArtefactFlavorProperties {
+    public List<ArtefactFlavorConf> configuration = null
+
+    /**
+     * @param propertyValue : expected format is
+     * group1:id1:version1/flavor1:flavor2,group2:id2:version2/flavor1:flavor2
+     * name1/flavor1:flavor2,name2/flavor1:flavor2
+     */
+    ArtefactFlavorProperties(String propertyValue) {
+        this()
+
+        for (propDep in propertyValue.split(",")) {
+            configuration.add(new ArtefactFlavorConf(propDep))
+        }
+    }
+
+    ArtefactFlavorProperties() {
+        configuration = []
+    }
+
+    boolean ignoreFlavorFor(PropertyDependency dependency, String flavor){
+        if (flavor.empty) {
+            //No flavours in project, treat this as ignored
+            return true
+        }
+
+        for (ArtefactFlavorConf conf : configuration) {
+            if (conf.isArtefact(dependency) && conf.hasFlavor(flavor)){
+                return true
+            }
+        }
+
+        return false
+    }
+
+    @Override
+    String toString() {
+        StringBuilder sb = new StringBuilder()
+        for (ArtefactFlavorConf conf : configuration) {
+            sb.append(conf.toString())
+            sb.append(" <> ")
+        }
+        return sb.toString()
+    }
+
+    public static ArtefactFlavorProperties EMPTY = new ArtefactFlavorProperties()
+}

@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
 
-
 group = "$pomGroup"
 version = "$pomVersion"
 
@@ -36,3 +35,5 @@ dependencies {
 
     api(group: 'com.yoti.mobile.android', name: 'base-commons-ui', version: yotiCommonUIVersion, ext: 'aar')
 }
+
+apply from: "$rootDir/publish-maven.gradle"

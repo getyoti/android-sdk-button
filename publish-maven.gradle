@@ -1,0 +1,48 @@
+//Version 2.1.0
+apply from: "$rootDir/publish-aar.gradle"
+
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+nexusStaging {
+    // this package group has to be this one so that all yoti publication there are under the same group
+    packageGroup = "com.yoti"
+
+    username = sonatypeUsername
+    password = sonatypePassword
+}
+
+project.afterEvaluate {
+    publishing {
+        repositories {
+            maven {
+                def repoUrl = project.hasProperty('ossrhRepository') ?
+                        ossrhRepository : "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+
+                name = "mavenCentral"
+                url = repoUrl
+                credentials {
+                    username = sonatypeUsername
+                    password = sonatypePassword
+                }
+            }
+        }
+    }
+
+    signing {
+        def performSigning = !(project.hasProperty('disableSigning') ?
+                Boolean.valueOf(disableSigning) : false)
+
+        if (performSigning) {
+            required true
+
+            if (project.hasProperty("inMemorySigningKey")) {
+                useInMemoryPgpKeys(inMemorySigningKey, inMemoryKeyPassword)
+            }
+
+            for (pub in publishing.publications) {
+                sign pub
+            }
+        }
+    }
+}

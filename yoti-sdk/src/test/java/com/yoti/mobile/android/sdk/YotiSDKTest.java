@@ -3,7 +3,6 @@ package com.yoti.mobile.android.sdk;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.test.suitebuilder.annotation.SmallTest;
 
 import com.yoti.mobile.android.sdk.exceptions.YotiSDKException;
 import com.yoti.mobile.android.sdk.exceptions.YotiSDKMinVersionException;
@@ -23,7 +22,6 @@ import org.mockito.runners.MockitoJUnitRunner;
  *
  */
 @RunWith(MockitoJUnitRunner.class)
-@SmallTest
 public class YotiSDKTest {
 
     @Mock

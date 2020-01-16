@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.1.1]
+### Changed
+Update publication scripts and publish from github actions
+
 ## [1.1.0] - 2019-08-22
 ### Added
 Support for Android Q
