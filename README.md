@@ -1,4 +1,6 @@
 # Yoti Android SDK
+![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/getyoti/android-sdk-button?label=latest%20release) ![Publish Release](https://github.com/getyoti/android-sdk-button/workflows/Publish%20Release/badge.svg)
+
 The mobile SDK purpose is to provide 3rd party applications the ability to request attributes from a Yoti user while leveraging the Yoti mobile App. It is an interaction between a 3rd Party app and Yoti app facilitated by a very lightweight SDKs.
 This repo contains the tools and step by step instructions so that your users can share their identity details with your application in a secure and trusted way.
 
