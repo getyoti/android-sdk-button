@@ -54,15 +54,16 @@ Please start by adding dependencies in the "build.grade" file inside your applic
 
 ```gradle
 dependencies {
-    compile(com.yoti.mobile.android.sdk:yoti-button-sdk:1.1.0)
+    compile(com.yoti.mobile.android.sdk:yoti-button-sdk:$yotiButtonVersion)
 }
 ```
 OR if you are using a more recent version of gradle (>= 3.x):
 ```gradle
 dependencies {
-    implementation(com.yoti.mobile.android.sdk:yoti-button-sdk:1.1.0)
+    implementation(com.yoti.mobile.android.sdk:yoti-button-sdk:$yotiButtonVersion)
 }
 ```
+where `$yotiButtonVersion` references the latest [release](https://github.com/getyoti/android-sdk-button/releases)
 
 [See this code in one of our sample apps](./sample-app/build.gradle)
 
