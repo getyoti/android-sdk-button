@@ -42,7 +42,7 @@ For more information please follow our developer page instructions located [here
 Make sure you have mavenCentral repository added in your allProjects entry in your root build.gradle:
 
 ```gradle
-allprojects {Some sections were change
+allprojects {
     repositories {
         mavenCentral()
         ...
