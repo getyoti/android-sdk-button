@@ -9,9 +9,8 @@ This repo contains the tools and step by step instructions so that your users ca
 
 1) [References](#references) 
 2) [Requirements](#requirements)
-3) [Installing the SDK](#installing-the-sDK)
-4) [Profile Retrieval](#profile-retrieval)
-5) [Handling Users](#handling-users)
+3) [Installing the SDK](#installing-the-sdk)
+4) [Configuration](#configuration)
 6) [Running the Example](#running-the-example)
 7) [API Coverage](#api-coverage)
 8) [Support](#support)
@@ -43,7 +42,7 @@ For more information please follow our developer page instructions located [here
 Make sure you have mavenCentral repository added in your allProjects entry in your root build.gradle:
 
 ```gradle
-allprojects {
+allprojects {Some sections were change
     repositories {
         mavenCentral()
         ...
