@@ -7,13 +7,13 @@ This repo contains the tools and step by step instructions so that your users ca
 
 ## Table of Contents
 
-1) [References](#references) 
-2) [Requirements](#requirements)
-3) [Installing the SDK](#installing-the-sdk)
-4) [Configuration](#configuration)
-6) [Running the Example](#running-the-example)
-7) [API Coverage](#api-coverage)
-8) [Support](#support)
+* [References](#references) 
+* [Requirements](#requirements)
+* [Installing the SDK](#installing-the-sdk)
+* [Configuration](#configuration)
+* [Running the Example](#running-the-example)
+* [API Coverage](#api-coverage)
+* [Support](#support)
 ## References
 
 * [Base64 data](https://en.wikipedia.org/wiki/Base64)
