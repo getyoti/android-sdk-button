@@ -1,18 +1,19 @@
 # Yoti Android SDK
+[![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/getyoti/android-sdk-button?label=latest%20release)](https://github.com/getyoti/android-sdk-button/releases) [![Publish Release](https://github.com/getyoti/android-sdk-button/workflows/Publish%20Release/badge.svg)](https://github.com/getyoti/android-sdk-button/actions?query=workflow%3A%22Publish+Release%22)
+
 The mobile SDK purpose is to provide 3rd party applications the ability to request attributes from a Yoti user while leveraging the Yoti mobile App. It is an interaction between a 3rd Party app and Yoti app facilitated by a very lightweight SDKs.
 This repo contains the tools and step by step instructions so that your users can share their identity details with your application in a secure and trusted way.
 
 
 ## Table of Contents
 
-1) [References](#references) 
-2) [Requirements](#requirements)
-3) [Installing the SDK](#installing-the-sDK)
-4) [Profile Retrieval](#profile-retrieval)
-5) [Handling Users](#handling-users)
-6) [Running the Example](#running-the-example)
-7) [API Coverage](#api-coverage)
-8) [Support](#support)
+* [References](#references) 
+* [Requirements](#requirements)
+* [Installing the SDK](#installing-the-sdk)
+* [Configuration](#configuration)
+* [Running the Example](#running-the-example)
+* [API Coverage](#api-coverage)
+* [Support](#support)
 ## References
 
 * [Base64 data](https://en.wikipedia.org/wiki/Base64)
@@ -52,15 +53,16 @@ Please start by adding dependencies in the "build.grade" file inside your applic
 
 ```gradle
 dependencies {
-    compile(com.yoti.mobile.android.sdk:yoti-button-sdk:1.1.0)
+    compile(com.yoti.mobile.android.sdk:yoti-button-sdk:$yotiButtonVersion)
 }
 ```
 OR if you are using a more recent version of gradle (>= 3.x):
 ```gradle
 dependencies {
-    implementation(com.yoti.mobile.android.sdk:yoti-button-sdk:1.1.0)
+    implementation(com.yoti.mobile.android.sdk:yoti-button-sdk:$yotiButtonVersion)
 }
 ```
+where `$yotiButtonVersion` references the latest [release](https://github.com/getyoti/android-sdk-button/releases)
 
 [See this code in one of our sample apps](./sample-app/build.gradle)
 
