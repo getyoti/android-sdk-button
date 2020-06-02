@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - 2020-03-26
+### Changed
+Move some SDK configuration to gradle. This allows for creating skinned SDKs with different backends,
+although this is not a publically supported feature.
+
 ## [1.1.3] - 2020-02-03
 ### Removed
 Removed `android:allowBackup` from manifest.

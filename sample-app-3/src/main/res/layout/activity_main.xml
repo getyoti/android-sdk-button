@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.yoti.mobile.android.sdk.sampleapp.MainActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_margin="16dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/yoti_logo" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/title"
+        android:textSize="16sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/intro" />
+
+    <LinearLayout
+        android:id="@+id/resultContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/YotiGreen"
+        android:orientation="vertical"
+        android:visibility="invisible"
+        tools:visibility="visible">
+
+        <TextView
+            android:id="@+id/resultHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/result_header_success" />
+
+        <TextView
+            android:id="@+id/resultStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/result_status_openYoti" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/sdkIdText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/sdk_id_hint"
+        android:text="@string/sdk_id_default" />
+
+    <EditText
+        android:id="@+id/buttonLabelText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/button_title_hint"
+        android:text="@string/button_title_default" />
+
+    <EditText
+        android:id="@+id/scenarioIdText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/scenario_id_hint"
+        android:text="@string/scenario_id_default" />
+
+    <EditText
+        android:id="@+id/useCaseIdText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/use_case_id_hint"
+        android:text="@string/use_case_id_default" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <com.yoti.mobile.android.sdk.YotiSDKButton
+            android:id="@+id/button"
+            android:layout_width="175dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="24dp"
+            android:text="@string/button_title_default" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+</LinearLayout>

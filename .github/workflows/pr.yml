@@ -45,3 +45,11 @@ jobs:
       with:
         name: sample-2
         path: "sample-app-2/build/outputs/apk/"
+
+    - name: Build sample-3
+      run: ./gradlew sample-app-3:assembleDebug --no-daemon
+    - name: Upload sample-3
+      uses: actions/upload-artifact@v1
+      with:
+        name: sample-3
+        path: "sample-app-3/build/outputs/apk/"

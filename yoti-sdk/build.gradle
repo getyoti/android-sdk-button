@@ -16,6 +16,11 @@ android {
         versionName pomVersion
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField 'String', 'YOTI_APP_PACKAGE', "\"$yotiAppPackage\""
+        buildConfigField 'int', 'YOTI_APP_MIN_VERSION', yotiAppMinVersion
+        buildConfigField 'String', 'YOTI_BACKEND_URL', "\"$yotiBackendUrl\""
+        buildConfigField 'int', 'YOTI_BACKEND_PORT', "$yotiBackendPort"
     }
 
     testOptions {

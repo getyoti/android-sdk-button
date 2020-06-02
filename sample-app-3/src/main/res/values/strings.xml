@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Sample App</string>
+
+    <string name="title">Yoti Button for Android Native</string>
+    <string name="intro">Please fill in the required information below, and tap the Yoti button once you are done.</string>
+
+    <string name="sdk_id_hint">Client SDK ID</string>
+    <string name="sdk_id_default">5d6a5aa0-bc47-4d62-8136-bb706d794e56</string>
+    <string name="button_title_hint">Button Title</string>
+    <string name="button_title_default">Test</string>
+    <string name="scenario_id_hint">Scenario ID</string>
+    <string name="scenario_id_default">406e1d35-6171-459f-b667-3f533bed0a00</string>
+    <string name="use_case_id_hint">Use Case ID</string>
+    <string name="use_case_id_default">test-123</string>
+
+    <string name="result_header_success">Current result: SUCCESS</string>
+    <string name="result_header_error">Current result: ERROR</string>
+    <string name="result_status_success">onSuccess</string>
+    <string name="result_status_fail">onFail</string>
+    <string name="result_status_cancel">onCancelled</string>
+    <string name="result_status_openYoti">onOpenYotiApp</string>
+    <string name="result_status_startScenario">onStartScenario</string>
+    <string name="result_status_startScenarioError">onStartScenarioError</string>
+    <string name="result_status_appNotInstalled">onAppNotInstalled</string>
+    <string name="result_status_loading">Loading</string>
+
+</resources>
