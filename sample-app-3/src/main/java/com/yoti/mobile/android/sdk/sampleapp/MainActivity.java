@@ -50,9 +50,9 @@ public class MainActivity extends AppCompatActivity {
         mUseCaseEntry = findViewById(R.id.useCaseIdText);
         createScenario();
 
-        mSdkEntry.setOnFocusChangeListener(scenarioChangeListener);
-        mScenarioEntry.setOnFocusChangeListener(scenarioChangeListener);
-        mUseCaseEntry.setOnFocusChangeListener(scenarioChangeListener);
+        mSdkEntry.addTextChangedListener(scenarioUpdateListener);
+        mScenarioEntry.addTextChangedListener(scenarioUpdateListener);
+        mUseCaseEntry.addTextChangedListener(scenarioUpdateListener);
         mButtonTextEntry.addTextChangedListener(buttonTextListener);
 
         mYotiSDKButton.setOnYotiButtonClickListener(new YotiSDKButton.OnYotiButtonClickListener() {
@@ -118,16 +118,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private OnFocusChangeListener scenarioChangeListener = new OnFocusChangeListener() {
-
-        @Override
-        public void onFocusChange(final View v, final boolean hasFocus) {
-            if (!hasFocus) {
-                createScenario();
-            }
-        }
-    };
-
     private void createScenario() {
         hideStatus();
         mYotiSDKButton.setVisibility(View.INVISIBLE);
@@ -175,6 +165,24 @@ public class MainActivity extends AppCompatActivity {
     private void hideStatus() {
         mStatusContainer.setVisibility(View.INVISIBLE);
     }
+
+    private TextWatcher scenarioUpdateListener = new TextWatcher() {
+
+        @Override
+        public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(final Editable s) {
+            createScenario();
+        }
+    };
 
     private TextWatcher buttonTextListener = new TextWatcher() {
 
