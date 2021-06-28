@@ -11,7 +11,6 @@ import android.view.View;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 
-import com.yoti.mobile.android.commons.ui.widget.YotiButton;
 import com.yoti.mobile.android.sdk.exceptions.YotiSDKException;
 import com.yoti.mobile.android.sdk.exceptions.YotiSDKNoYotiAppException;
 
@@ -19,7 +18,7 @@ import com.yoti.mobile.android.sdk.exceptions.YotiSDKNoYotiAppException;
  * Custom {@link AppCompatButton} which will start its associated {@link
  * com.yoti.mobile.android.sdk.model.Scenario} when clicked.
  */
-public class YotiSDKButton extends YotiButton implements View.OnClickListener {
+public class YotiSDKButton extends YotiButtonContainer implements View.OnClickListener {
 
     private String mUseCaseId;
     private OnYotiButtonClickListener mOnYotiButtonClickListener;
