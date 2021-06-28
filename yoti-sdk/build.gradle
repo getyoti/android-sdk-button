@@ -30,6 +30,11 @@ android {
     lintOptions {
         abortOnError false
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -38,7 +43,7 @@ dependencies {
 
     implementation parent.ext.libAndroidSupport
 
-    api(group: 'com.yoti.mobile.android', name: 'base-commons-ui', version: yotiCommonUIVersion, ext: 'aar')
+    implementation "com.yoti.mobile.android.common.ui:ui-widgets:${uiWidgetsVersion}"
 }
 
 apply from: "$rootDir/publish-maven.gradle"
