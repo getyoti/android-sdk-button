@@ -11,7 +11,7 @@
         android:layout_height="32dp"
         android:layout_margin="16dp"
         android:scaleType="centerInside"
-        android:src="@drawable/yoti_logo" />
+        android:src="@drawable/yoti_button_icon" />
 
     <TextView
         android:layout_width="match_parent"
