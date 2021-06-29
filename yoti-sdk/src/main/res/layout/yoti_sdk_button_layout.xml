@@ -4,29 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     tools:ignore="HardcodedText">
 
     <com.yoti.mobile.android.common.ui.widgets.YotiButton
         android:id="@+id/sdkButton"
         style="@style/Yoti.Sdk.Button.PostOffice"
-        android:enabled="false"
-        android:layout_width="300dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
+        android:layout_centerInParent="true"
+        android:enabled="true" />
 
     <TextView
         android:id="@+id/partnershipText"
-        style="@style/Yoti.Field.Text"
+        style="@style/Yoti.Sdk.Button.SupportText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/sdkButton"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="36dp"
-        android:drawableRight="@drawable/ic_partnership_logo"
-        android:drawablePadding="8dp"
+        android:gravity="center_vertical"
+        android:drawableRight="@drawable/ic_partnership"
         android:text="Works with:"
         android:textColor="@color/yoti_grey_battleship"
-        app:drawableEndCompat="@drawable/ic_partnership_logo" />
+        app:drawableEndCompat="@drawable/ic_partnership" />
 
 </RelativeLayout>

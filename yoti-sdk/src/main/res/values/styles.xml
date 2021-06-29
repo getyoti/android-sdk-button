@@ -11,6 +11,7 @@
 
     <style name="Yoti.Sdk.Button.Global" parent="Yoti.Sdk.Button.Base">
         <item name="icon">@drawable/ic_yoti_logo</item>
+        <item name="iconTint">@null</item>
         <item name="theme">@style/Theme.Yoti.Button.Global</item>
         <item name="android:text">CONTINUE WITH YOTI</item>
         <item name="android:textAppearance">@style/Sdk.Button.text.Yoti</item>
@@ -27,6 +28,7 @@
         <item name="icon">@drawable/ic_yoti_logo_uk</item>
         <item name="theme">@style/Theme.Yoti.Button.PostOffice</item>
         <item name="android:text">Continue with Post Office EasyID</item>
+        <item name="iconPadding">16dp</item>
         <item name="android:textAppearance">@style/Sdk.Button.text.PostOffice</item>
     </style>
 
@@ -34,25 +36,36 @@
         <item name="icon">@drawable/ic_yoti_logo_partnership</item>
         <item name="theme">@style/Theme.Yoti.Button.Partnership</item>
         <item name="android:text">Continue with your Digital ID</item>
-        <item name="android:textAppearance">@style/Sdk.Button.text.Yoti</item>
+        <item name="android:textAppearance">@style/Sdk.Button.text.Partnership</item>
     </style>
 
     <style name="Yoti.Sdk.Button.Base" parent="Yoti.v4.Button.Primary.Icon">
+        <item name="android:minWidth">300dp</item>
         <item name="cornerRadius">8dp</item>
         <item name="android:paddingLeft">16dp</item>
-        <item name="iconSize">24dp</item>
+        <item name="iconSize">20dp</item>
         <item name="iconGravity">start</item>
         <item name="android:minHeight">44dp</item>
     </style>
 
-    <style name="Sdk.Button.text.Yoti" parent="Yoti.v3.Font.Button.Text.Small">
+    <style name="Sdk.Button.text.Yoti" parent="Yoti.v4.Font.ButtonText">
         <item name="android:fontFamily">@font/gt_eesti_display_bold</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
-    <style name="Sdk.Button.text.PostOffice" parent="Yoti.v3.Font.Button.Text.Small">
+    <style name="Sdk.Button.text.PostOffice" parent="Yoti.v4.Font.ButtonText">
         <item name="android:fontFamily">@font/nunitosans_bold</item>
         <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="Sdk.Button.text.Partnership" parent="Yoti.v4.Font.ButtonText">
+        <item name="android:fontFamily">@font/gt_eesti_display_bold</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="Yoti.Sdk.Button.SupportText" parent="Yoti.Field.Text">
+        <item name="android:drawablePadding">8dp</item>
+        <item name="android:fontFamily">@font/gt_eesti_display_regular</item>
     </style>
 
 </resources>
