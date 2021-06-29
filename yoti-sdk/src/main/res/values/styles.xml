@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="Theme.Yoti.AppCompat.Translucent" parent="Theme.AppCompat.NoActionBar">
         <item name="android:background">#00000000</item>
         <item name="android:windowNoTitle">true</item>
@@ -8,9 +9,50 @@
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
-    //TODO: Need to update style
-    <style name="Yoti.Sdk.Button.UK" parent="Yoti.v4.Button.Primary">
+    <style name="Yoti.Sdk.Button.Global" parent="Yoti.Sdk.Button.Base">
+        <item name="icon">@drawable/ic_yoti_logo</item>
+        <item name="theme">@style/Theme.Yoti.Button.Global</item>
+        <item name="android:text">CONTINUE WITH YOTI</item>
+        <item name="android:textAppearance">@style/Sdk.Button.text.Yoti</item>
+    </style>
+
+    <style name="Yoti.Sdk.Button.UK" parent="Yoti.Sdk.Button.Base">
+        <item name="icon">@drawable/ic_yoti_logo_uk</item>
+        <item name="theme">@style/Theme.Yoti.Button.Global</item>
+        <item name="android:text">CONTINUE WITH YOTI</item>
+        <item name="android:textAppearance">@style/Sdk.Button.text.Yoti</item>
+    </style>
+
+    <style name="Yoti.Sdk.Button.PostOffice" parent="Yoti.Sdk.Button.Base">
+        <item name="icon">@drawable/ic_yoti_logo_uk</item>
+        <item name="theme">@style/Theme.Yoti.Button.PostOffice</item>
+        <item name="android:text">Continue with Post Office EasyID</item>
+        <item name="android:textAppearance">@style/Sdk.Button.text.PostOffice</item>
+    </style>
+
+    <style name="Yoti.Sdk.Button.Partnership" parent="Yoti.Sdk.Button.Base">
+        <item name="icon">@drawable/ic_yoti_logo_partnership</item>
+        <item name="theme">@style/Theme.Yoti.Button.Partnership</item>
+        <item name="android:text">Continue with your Digital ID</item>
+        <item name="android:textAppearance">@style/Sdk.Button.text.Yoti</item>
+    </style>
+
+    <style name="Yoti.Sdk.Button.Base" parent="Yoti.v4.Button.Primary.Icon">
+        <item name="cornerRadius">8dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="iconSize">24dp</item>
         <item name="iconGravity">start</item>
+        <item name="android:minHeight">44dp</item>
+    </style>
+
+    <style name="Sdk.Button.text.Yoti" parent="Yoti.v3.Font.Button.Text.Small">
+        <item name="android:fontFamily">@font/gt_eesti_display_bold</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="Sdk.Button.text.PostOffice" parent="Yoti.v3.Font.Button.Text.Small">
+        <item name="android:fontFamily">@font/nunitosans_bold</item>
+        <item name="android:textAllCaps">false</item>
     </style>
 
 </resources>

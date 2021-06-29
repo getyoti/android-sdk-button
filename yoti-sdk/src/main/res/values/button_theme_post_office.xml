@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Yoti.Button.PostOffice" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="button_primary_foreground_disabled" type="color">@color/postoffice_cloud</item>
+        <item name="button_primary_foreground_pressed" type="color">@color/postoffice_white</item>
+        <item name="button_primary_foreground" type="color">@color/postoffice_white</item>
+
+        <item name="button_primary_background_disabled" type="color">@color/postoffice_stone_tint_80</item>
+        <item name="button_primary_background_pressed" type="color">@color/postoffice_red_shade_20</item>
+        <item name="button_primary_background" type="color">@color/postoffice_red</item>
+
+        <item name="button_primary_border_disabled" type="color">@android:color/transparent</item>
+        <item name="button_primary_border_pressed" type="color">@android:color/transparent</item>
+        <item name="button_primary_border" type="color">@android:color/transparent</item>
+
+        <item name="button_primary_ripple" type="color">@color/postoffice_red_shade_50</item>
+        <item name="text_button_ripple">@color/postoffice_purple_shade_20</item>
+    </style>
+
+</resources>
