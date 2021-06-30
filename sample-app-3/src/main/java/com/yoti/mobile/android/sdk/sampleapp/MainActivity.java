@@ -152,10 +152,10 @@ public class MainActivity extends AppCompatActivity {
     private void showStatus(boolean success, @StringRes int message) {
         mStatusContainer.setVisibility(View.VISIBLE);
         if (success) {
-            mStatusContainer.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            mStatusContainer.setBackgroundColor(getResources().getColor(R.color.yoti_green));
             mStatusHeader.setText(R.string.result_header_success);
         }else {
-            mStatusContainer.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+            mStatusContainer.setBackgroundColor(getResources().getColor(R.color.yoti_red));
             mStatusHeader.setText(R.string.result_header_error);
         }
 
