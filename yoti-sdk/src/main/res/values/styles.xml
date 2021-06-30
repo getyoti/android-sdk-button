@@ -69,4 +69,6 @@
         <item name="android:fontFamily">@font/gt_eesti_display_regular</item>
     </style>
 
+    <style name="Theme.Yoti.Button" parent="Theme.MaterialComponents.DayNight"/>
+
 </resources>

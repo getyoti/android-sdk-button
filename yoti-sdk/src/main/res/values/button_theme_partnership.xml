@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Yoti.Button.Partnership" parent="Theme.MaterialComponents.DayNight">
+    <style name="Theme.Yoti.Button.Partnership" parent="Theme.Yoti.Button">
         <item name="button_primary_foreground_disabled" type="color">@color/yoti_charcoal_half_alpha</item>
         <item name="button_primary_foreground_pressed" type="color">@color/yoti_charcoal_half_alpha</item>
         <item name="button_primary_foreground" type="color">@color/yoti_charcoal</item>
