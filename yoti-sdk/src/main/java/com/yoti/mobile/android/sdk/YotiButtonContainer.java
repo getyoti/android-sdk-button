@@ -10,10 +10,12 @@ import android.widget.ViewFlipper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.yoti.mobile.android.common.ui.widgets.YotiButton;
+
 import java.util.Locale;
 
 //TODO: Need to handle the layout based on selected them
-public class YotiButtonContainer extends RelativeLayout {
+abstract class YotiButtonContainer extends RelativeLayout {
 
     private static final int DISPLAY_YOTI_UK = 0;
     private static final int DISPLAY_YOTI_GLOBAL = 1;
@@ -40,10 +42,11 @@ public class YotiButtonContainer extends RelativeLayout {
 
         TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.YotiSDKButton, 0, 0);
         ButtonTheme theme = ButtonTheme.fromValue(typedArray.getInt(R.styleable.YotiSDKButton_buttonTheme, ButtonTheme.THEME_YOTI.getValue()));
-        setButtonTheme(theme);
+        setSdkButtonTheme(theme);
+        setSdkButtonClickListener();
     }
 
-    private void setButtonTheme(ButtonTheme theme) {
+    private void setSdkButtonTheme(ButtonTheme theme) {
         ViewFlipper viewFlipper = findViewById(R.id.sdkButtonRootLayout);
         switch (theme) {
             case THEME_YOTI:
@@ -57,6 +60,20 @@ public class YotiButtonContainer extends RelativeLayout {
                 break;
         }
     }
+
+    private void setSdkButtonClickListener() {
+        YotiButton sdkButtonUK = findViewById(R.id.sdkButtonUK);
+        YotiButton sdkButtonGlobal = findViewById(R.id.sdkButtonGlobal);
+        YotiButton sdkButtonEasyId = findViewById(R.id.sdkButtonEasyId);
+        YotiButton sdkButtonPartnership = findViewById(R.id.sdkButtonPartnership);
+
+        sdkButtonUK.setOnClickListener(v -> onSdkButtonClicked());
+        sdkButtonGlobal.setOnClickListener(v -> onSdkButtonClicked());
+        sdkButtonEasyId.setOnClickListener(v -> onSdkButtonClicked());
+        sdkButtonPartnership.setOnClickListener(v -> onSdkButtonClicked());
+    }
+
+    abstract protected void onSdkButtonClicked();
 
     private void applyYotiTheme() {
         ViewFlipper viewFlipper = findViewById(R.id.sdkButtonRootLayout);

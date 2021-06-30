@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.util.AttributeSet;
-import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
@@ -18,7 +17,7 @@ import com.yoti.mobile.android.sdk.exceptions.YotiSDKNoYotiAppException;
  * Custom {@link AppCompatButton} which will start its associated {@link
  * com.yoti.mobile.android.sdk.model.Scenario} when clicked.
  */
-public class YotiSDKButton extends YotiButtonContainer implements View.OnClickListener {
+public final class YotiSDKButton extends YotiButtonContainer {
 
     private String mUseCaseId;
     private OnYotiButtonClickListener mOnYotiButtonClickListener;
@@ -66,7 +65,6 @@ public class YotiSDKButton extends YotiButtonContainer implements View.OnClickLi
         }
 
         setLeftRigthPadding();
-        setOnClickListener(this);
     }
 
     public void setUseCaseId(String useCaseId) {
@@ -78,11 +76,6 @@ public class YotiSDKButton extends YotiButtonContainer implements View.OnClickLi
         float density = getResources().getDisplayMetrics().density;
         int paddingPixel = (int)(paddingDp * density);
         setPadding(paddingPixel,0,paddingPixel,0);
-    }
-
-    @Override
-    public void setOnClickListener(@Nullable View.OnClickListener l) {
-        super.setOnClickListener(this);
     }
 
     public void setOnYotiButtonClickListener(@Nullable OnYotiButtonClickListener l) {
@@ -104,7 +97,7 @@ public class YotiSDKButton extends YotiButtonContainer implements View.OnClickLi
     }
 
     @Override
-    public void onClick(View v) {
+    protected void onSdkButtonClicked() {
 
         if (mOnYotiButtonClickListener != null) {
             mOnYotiButtonClickListener.onStartScenario();
