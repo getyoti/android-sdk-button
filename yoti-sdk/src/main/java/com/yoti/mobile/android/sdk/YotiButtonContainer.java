@@ -14,7 +14,6 @@ import com.yoti.mobile.android.common.ui.widgets.YotiButton;
 
 import java.util.Locale;
 
-//TODO: Need to handle the layout based on selected them
 abstract class YotiButtonContainer extends RelativeLayout {
 
     private static final int DISPLAY_YOTI_UK = 0;
