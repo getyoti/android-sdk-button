@@ -39,8 +39,12 @@ abstract class YotiButtonContainer extends RelativeLayout {
     private void init(Context context, AttributeSet attrs) {
         LayoutInflater.from(context).inflate(R.layout.yoti_sdk_button_layout, this, true);
 
-        TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.YotiSDKButton, 0, 0);
-        ButtonTheme theme = ButtonTheme.fromValue(typedArray.getInt(R.styleable.YotiSDKButton_buttonTheme, ButtonTheme.THEME_YOTI.getValue()));
+        TypedArray typedArray = context.getTheme().obtainStyledAttributes(
+                attrs, R.styleable.YotiSDKButton, 0, 0
+        );
+        ButtonTheme theme = ButtonTheme.fromValue(
+                typedArray.getInt(R.styleable.YotiSDKButton_buttonTheme, ButtonTheme.THEME_YOTI.getValue())
+        );
         setSdkButtonTheme(theme);
         setSdkButtonClickListener();
     }
