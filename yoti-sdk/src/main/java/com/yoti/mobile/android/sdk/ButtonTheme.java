@@ -1,10 +1,9 @@
 package com.yoti.mobile.android.sdk;
 
 enum ButtonTheme {
-    THEME_YOTI_UK(0),
-    THEME_YOTI_GLOBAL(1),
-    THEME_EASYID(2),
-    THEME_PARTNERSHIP(3);
+    THEME_YOTI(0),
+    THEME_EASYID(1),
+    THEME_PARTNERSHIP(2);
 
     private final int themeValue;
 
@@ -17,9 +16,9 @@ enum ButtonTheme {
     }
 
     public static ButtonTheme fromValue(int themeValue) {
-        ButtonTheme buttonTheme = THEME_YOTI_UK;
-        for(ButtonTheme theme: values()) {
-            if(theme.themeValue == themeValue) {
+        ButtonTheme buttonTheme = THEME_YOTI;
+        for (ButtonTheme theme : values()) {
+            if (theme.themeValue == themeValue) {
                 buttonTheme = theme;
                 break;
             }

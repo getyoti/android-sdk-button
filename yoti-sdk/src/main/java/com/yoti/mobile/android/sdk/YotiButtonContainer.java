@@ -10,6 +10,8 @@ import android.widget.ViewFlipper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.util.Locale;
+
 //TODO: Need to handle the layout based on selected them
 public class YotiButtonContainer extends RelativeLayout {
 
@@ -20,7 +22,7 @@ public class YotiButtonContainer extends RelativeLayout {
 
     public YotiButtonContainer(@NonNull final Context context) {
         super(context);
-        init(context,null);
+        init(context, null);
     }
 
     public YotiButtonContainer(@NonNull final Context context, @Nullable final AttributeSet attrs) {
@@ -30,25 +32,22 @@ public class YotiButtonContainer extends RelativeLayout {
 
     public YotiButtonContainer(@NonNull final Context context, @Nullable final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context,attrs);
+        init(context, attrs);
     }
 
-    private void init(Context context,AttributeSet attrs) {
-       LayoutInflater.from(context).inflate(R.layout.yoti_sdk_button_layout, this, true);
+    private void init(Context context, AttributeSet attrs) {
+        LayoutInflater.from(context).inflate(R.layout.yoti_sdk_button_layout, this, true);
 
         TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.YotiSDKButton, 0, 0);
-        ButtonTheme theme = ButtonTheme.fromValue(typedArray.getInt(R.styleable.YotiSDKButton_buttonTheme, ButtonTheme.THEME_YOTI_UK.getValue()));
+        ButtonTheme theme = ButtonTheme.fromValue(typedArray.getInt(R.styleable.YotiSDKButton_buttonTheme, ButtonTheme.THEME_YOTI.getValue()));
         setButtonTheme(theme);
     }
 
     private void setButtonTheme(ButtonTheme theme) {
         ViewFlipper viewFlipper = findViewById(R.id.sdkButtonRootLayout);
         switch (theme) {
-            case THEME_YOTI_UK:
-                viewFlipper.setDisplayedChild(DISPLAY_YOTI_UK);
-                break;
-            case THEME_YOTI_GLOBAL:
-                viewFlipper.setDisplayedChild(DISPLAY_YOTI_GLOBAL);
+            case THEME_YOTI:
+                applyYotiTheme();
                 break;
             case THEME_EASYID:
                 viewFlipper.setDisplayedChild(DISPLAY_EASY_ID);
@@ -56,6 +55,15 @@ public class YotiButtonContainer extends RelativeLayout {
             case THEME_PARTNERSHIP:
                 viewFlipper.setDisplayedChild(DISPLAY_PARTNERSHIP);
                 break;
+        }
+    }
+
+    private void applyYotiTheme() {
+        ViewFlipper viewFlipper = findViewById(R.id.sdkButtonRootLayout);
+        if (Locale.getDefault().getISO3Country().equalsIgnoreCase(Locale.UK.getISO3Country())) {
+            viewFlipper.setDisplayedChild(DISPLAY_YOTI_UK);
+        } else {
+            viewFlipper.setDisplayedChild(DISPLAY_YOTI_GLOBAL);
         }
     }
 

@@ -16,7 +16,7 @@
         android:layout_centerVertical="true"
         android:layout_centerInParent="true"
         android:gravity="center"
-        yoti:buttonTheme="Theme_Partnership"
+        yoti:buttonTheme="Theme_Yoti"
         yoti:useCaseId="yoti_btn_1" />
 
     <TextView
