@@ -1,7 +1,6 @@
 package com.yoti.mobile.android.sdk;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -55,27 +54,9 @@ public class YotiButtonContainer extends RelativeLayout {
                 viewFlipper.setDisplayedChild(DISPLAY_EASY_ID);
                 break;
             case THEME_PARTNERSHIP:
-                handleDarkThemeForPartnership();
                 viewFlipper.setDisplayedChild(DISPLAY_PARTNERSHIP);
                 break;
         }
-    }
-
-    private void handleDarkThemeForPartnership() {
-        ViewFlipper viewFlipper = findViewById(R.id.sdkButtonRootLayout);
-        int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-        switch (currentNightMode) {
-            case Configuration.UI_MODE_NIGHT_NO:
-                // Night mode is not active, we're using the light theme
-                break;
-            case Configuration.UI_MODE_NIGHT_YES:
-                // Night mode is active, we're using dark theme
-                break;
-        }
-    }
-
-    public void setText(String text){
-        //Nothing to do here
     }
 
     @Override

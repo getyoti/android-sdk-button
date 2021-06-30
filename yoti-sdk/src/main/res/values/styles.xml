@@ -65,6 +65,7 @@
 
     <style name="Yoti.Sdk.Button.SupportText" parent="Yoti.Field.Text">
         <item name="android:drawablePadding">8dp</item>
+        <item name="android:textColor">@color/yoti_grey_battleship</item>
         <item name="android:fontFamily">@font/gt_eesti_display_regular</item>
     </style>
 

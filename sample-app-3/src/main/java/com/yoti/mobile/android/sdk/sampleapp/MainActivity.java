@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void afterTextChanged(final Editable s) {
-            mYotiSDKButton.setText(s.toString());
+
         }
     };
 }

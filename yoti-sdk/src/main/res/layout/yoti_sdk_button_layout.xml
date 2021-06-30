@@ -56,7 +56,6 @@
             android:drawableRight="@drawable/ic_partnership"
             android:gravity="center"
             android:text="Works with:"
-            android:textColor="@color/yoti_grey_battleship"
             app:drawableEndCompat="@drawable/ic_partnership" />
     </LinearLayout>
 
