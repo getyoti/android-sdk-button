@@ -14,6 +14,9 @@ import com.yoti.mobile.android.common.ui.widgets.YotiButton;
 
 import java.util.Locale;
 
+import static com.yoti.mobile.android.sdk.ButtonTheme.THEME_PARTNERSHIP;
+import static com.yoti.mobile.android.sdk.ButtonTheme.THEME_YOTI;
+
 abstract class YotiButtonContainer extends RelativeLayout {
 
     private static final int DISPLAY_YOTI_UK = 0;
@@ -43,10 +46,18 @@ abstract class YotiButtonContainer extends RelativeLayout {
                 attrs, R.styleable.YotiSDKButton, 0, 0
         );
         ButtonTheme theme = ButtonTheme.fromValue(
-                typedArray.getInt(R.styleable.YotiSDKButton_buttonTheme, ButtonTheme.THEME_YOTI.getValue())
+                typedArray.getInt(R.styleable.YotiSDKButton_buttonTheme, getDefaultTheme().getValue())
         );
         setSdkButtonTheme(theme);
         setSdkButtonClickListener();
+    }
+
+    private ButtonTheme getDefaultTheme() {
+        if (isUKLocale()) {
+            return THEME_PARTNERSHIP;
+        } else {
+            return THEME_YOTI;
+        }
     }
 
     private void setSdkButtonTheme(ButtonTheme theme) {
@@ -80,10 +91,14 @@ abstract class YotiButtonContainer extends RelativeLayout {
 
     private void applyYotiTheme() {
         ViewFlipper viewFlipper = findViewById(R.id.sdkButtonRootLayout);
-        if (Locale.getDefault().getISO3Country().equalsIgnoreCase(Locale.UK.getISO3Country())) {
+        if (isUKLocale()) {
             viewFlipper.setDisplayedChild(DISPLAY_YOTI_UK);
         } else {
             viewFlipper.setDisplayedChild(DISPLAY_YOTI_GLOBAL);
         }
+    }
+
+    private boolean isUKLocale() {
+        return Locale.getDefault().getISO3Country().equalsIgnoreCase(Locale.UK.getISO3Country());
     }
 }
