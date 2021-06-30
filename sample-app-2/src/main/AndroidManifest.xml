@@ -15,7 +15,8 @@
 
         <activity
             android:name="com.yoti.mobile.android.sampleapp2.MainActivity"
-            android:launchMode="singleInstance">
+            android:launchMode="singleInstance"
+            android:theme="@style/SampleAppFullScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
