@@ -27,7 +27,7 @@
 
     <com.yoti.mobile.android.common.ui.widgets.YotiButton
         android:id="@+id/sdkButtonEasyId"
-        style="@style/Yoti.Sdk.Button.PostOffice"
+        style="@style/Yoti.Sdk.Button.EasyId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

@@ -117,6 +117,11 @@ public final class YotiSDKButton extends YotiButtonContainer {
         }
     }
 
+    @Override
+    public void setEnabled(final boolean enabled) {
+        super.setEnabled(enabled);
+    }
+
     public interface OnYotiButtonClickListener {
         void onStartScenario();
 

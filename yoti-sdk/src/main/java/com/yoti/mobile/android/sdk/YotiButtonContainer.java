@@ -75,6 +75,23 @@ abstract class YotiButtonContainer extends RelativeLayout {
         }
     }
 
+    @Override
+    public void setEnabled(final boolean enabled) {
+        setSdkEnabled(enabled);
+    }
+
+    protected void setSdkEnabled(boolean enable) {
+        YotiButton sdkButtonUK = findViewById(R.id.sdkButtonUK);
+        YotiButton sdkButtonGlobal = findViewById(R.id.sdkButtonGlobal);
+        YotiButton sdkButtonEasyId = findViewById(R.id.sdkButtonEasyId);
+        YotiButton sdkButtonPartnership = findViewById(R.id.sdkButtonPartnership);
+
+        sdkButtonUK.setEnabled(enable);
+        sdkButtonGlobal.setEnabled(enable);
+        sdkButtonEasyId.setEnabled(enable);
+        sdkButtonPartnership.setEnabled(enable);
+    }
+
     private void setSdkButtonClickListener() {
         YotiButton sdkButtonUK = findViewById(R.id.sdkButtonUK);
         YotiButton sdkButtonGlobal = findViewById(R.id.sdkButtonGlobal);

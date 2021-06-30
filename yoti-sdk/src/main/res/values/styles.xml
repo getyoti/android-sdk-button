@@ -24,12 +24,12 @@
         <item name="android:textAppearance">@style/Sdk.Button.text.Yoti</item>
     </style>
 
-    <style name="Yoti.Sdk.Button.PostOffice" parent="Yoti.Sdk.Button.Base">
+    <style name="Yoti.Sdk.Button.EasyId" parent="Yoti.Sdk.Button.Base">
         <item name="icon">@drawable/ic_yoti_logo_uk</item>
-        <item name="theme">@style/Theme.Yoti.Button.PostOffice</item>
+        <item name="theme">@style/Theme.Yoti.Button.EasyId</item>
         <item name="android:text">Continue with Post Office EasyID</item>
         <item name="iconPadding">16dp</item>
-        <item name="android:textAppearance">@style/Sdk.Button.text.PostOffice</item>
+        <item name="android:textAppearance">@style/Sdk.Button.text.EasyId</item>
     </style>
 
     <style name="Yoti.Sdk.Button.Partnership" parent="Yoti.Sdk.Button.Base">
@@ -53,7 +53,7 @@
         <item name="android:textAllCaps">false</item>
     </style>
 
-    <style name="Sdk.Button.text.PostOffice" parent="Yoti.v4.Font.ButtonText">
+    <style name="Sdk.Button.text.EasyId" parent="Yoti.v4.Font.ButtonText">
         <item name="android:fontFamily">@font/nunitosans_bold</item>
         <item name="android:textAllCaps">false</item>
     </style>
