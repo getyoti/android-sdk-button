@@ -2,5 +2,11 @@
 <resources>
     <declare-styleable name="YotiSDKButton">
         <attr name="useCaseId" format="string" />
+        <attr name="buttonTheme" format="enum">
+            <enum name="Theme_Yoti_UK" value="0" />
+            <enum name="Theme_Yoti_Global" value="1" />
+            <enum name="Theme_EasyId" value="2" />
+            <enum name="Theme_Partnership" value="3" />
+        </attr>
     </declare-styleable>
 </resources>

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:theme="@style/Theme.MaterialComponents.DayNight"
     tools:context="com.yoti.mobile.android.sampleapp2.MainActivity"
     xmlns:yoti="http://schemas.android.com/apk/res-auto">
 
@@ -15,7 +16,7 @@
         android:layout_centerVertical="true"
         android:layout_centerInParent="true"
         android:gravity="center"
-        android:text="    Use Yoti"
+        yoti:buttonTheme="Theme_Partnership"
         yoti:useCaseId="yoti_btn_1" />
 
     <TextView
