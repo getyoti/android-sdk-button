@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Yoti.Button.PostOffice" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.Yoti.Button.PostOffice" parent="Theme.MaterialComponents.DayNight">
         <item name="button_primary_foreground_disabled" type="color">@color/yoti_white_alpha_50</item>
         <item name="button_primary_foreground_pressed" type="color">@color/postoffice_white</item>
         <item name="button_primary_foreground" type="color">@color/postoffice_white</item>
