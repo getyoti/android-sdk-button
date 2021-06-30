@@ -83,9 +83,4 @@ abstract class YotiButtonContainer extends RelativeLayout {
             viewFlipper.setDisplayedChild(DISPLAY_YOTI_GLOBAL);
         }
     }
-
-    @Override
-    public void setVisibility(final int visibility) {
-        super.setVisibility(visibility);
-    }
 }
