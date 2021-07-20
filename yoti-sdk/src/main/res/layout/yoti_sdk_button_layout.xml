@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sdkButtonRootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:theme="@style/Theme.MaterialComponents.DayNight"
+    android:measureAllChildren="false"
+    tools:ignore="HardcodedText">
+
+    <com.yoti.mobile.android.common.ui.widgets.YotiButton
+        android:id="@+id/sdkButtonUK"
+        style="@style/Yoti.Sdk.Button.UK"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+    <com.yoti.mobile.android.common.ui.widgets.YotiButton
+        android:id="@+id/sdkButtonGlobal"
+        style="@style/Yoti.Sdk.Button.Global"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:enabled="true" />
+
+    <com.yoti.mobile.android.common.ui.widgets.YotiButton
+        android:id="@+id/sdkButtonEasyId"
+        style="@style/Yoti.Sdk.Button.EasyId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:enabled="true" />
+
+    <LinearLayout
+        android:id="@+id/partnershipContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <com.yoti.mobile.android.common.ui.widgets.YotiButton
+            android:id="@+id/sdkButtonPartnership"
+            style="@style/Yoti.Sdk.Button.Partnership"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/partnershipText"
+            style="@style/Yoti.Sdk.Button.SupportText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:drawableRight="@drawable/ic_partnership"
+            android:gravity="center"
+            android:text="@string/yoti.sdk.support_info.text"
+            app:drawableEndCompat="@drawable/ic_partnership" />
+    </LinearLayout>
+
+</ViewFlipper>

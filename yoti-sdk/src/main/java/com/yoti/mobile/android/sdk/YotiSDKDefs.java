@@ -4,6 +4,7 @@ public interface YotiSDKDefs {
 
     String YOTI_SDK_TAG = "Yoti Mobile SDK";
 
+    String QR_CODE_URL_HTTPS_SCHEME = "https://";
     String TOKEN_PARAM = "token";
     String CALLBACK_PARAM = "callback";
     String USE_CASE_ID_PARAM = "useCaseId";

@@ -6,24 +6,24 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.util.AttributeSet;
-import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 
-import com.yoti.mobile.android.commons.ui.widget.YotiButton;
 import com.yoti.mobile.android.sdk.exceptions.YotiSDKException;
+import com.yoti.mobile.android.sdk.exceptions.YotiSDKAppNotInstalledException;
 import com.yoti.mobile.android.sdk.exceptions.YotiSDKNoYotiAppException;
 
 /**
  * Custom {@link AppCompatButton} which will start its associated {@link
  * com.yoti.mobile.android.sdk.model.Scenario} when clicked.
  */
-public class YotiSDKButton extends YotiButton implements View.OnClickListener {
+public final class YotiSDKButton extends YotiButtonContainer {
 
     private String mUseCaseId;
     private OnYotiButtonClickListener mOnYotiButtonClickListener;
     private OnYotiAppNotInstalledListener mOnYotiAppNotInstalledListener;
+    private OnAppNotInstalledListener mOnAppNotInstalledListener;
     private OnYotiCalledListener mOnYotiCalledListener;
 
     private ResultReceiver mYotiCallResultReceiver = new ResultReceiver(new Handler()) {
@@ -67,7 +67,6 @@ public class YotiSDKButton extends YotiButton implements View.OnClickListener {
         }
 
         setLeftRigthPadding();
-        setOnClickListener(this);
     }
 
     public void setUseCaseId(String useCaseId) {
@@ -81,11 +80,6 @@ public class YotiSDKButton extends YotiButton implements View.OnClickListener {
         setPadding(paddingPixel,0,paddingPixel,0);
     }
 
-    @Override
-    public void setOnClickListener(@Nullable View.OnClickListener l) {
-        super.setOnClickListener(this);
-    }
-
     public void setOnYotiButtonClickListener(@Nullable OnYotiButtonClickListener l) {
         mOnYotiButtonClickListener = l;
     }
@@ -96,8 +90,23 @@ public class YotiSDKButton extends YotiButton implements View.OnClickListener {
         mOnYotiButtonClickListener = l;
     }
 
+    @Deprecated
     public void setOnYotiAppNotInstalledListener(@Nullable OnYotiAppNotInstalledListener listener) {
+        YotiSDKLogger.warning("The method 'setOnYotiAppNotInstalledListener' is now deprecated. Please use 'setOnAppNotInstalledListener' instead.");
         mOnYotiAppNotInstalledListener = listener;
+    }
+
+    /**
+     * Listener to notify if the app is not installed based on the selected theme
+     *
+     * Theme_Yoti / Theme_Partnership - Either Yoti or EasyId app should be installed
+     * Theme_EasyId - EasyId app should be installed
+     *
+     * @param listener will notify when the app is not installed by providing the exception and
+     * the respective app url to navigate the user to browser with url to download the app
+     */
+    public void setOnAppNotInstalledListener(@Nullable OnAppNotInstalledListener listener) {
+        mOnAppNotInstalledListener = listener;
     }
 
     public void setOnYotiCalledListener(@Nullable OnYotiCalledListener listener) {
@@ -105,24 +114,48 @@ public class YotiSDKButton extends YotiButton implements View.OnClickListener {
     }
 
     @Override
-    public void onClick(View v) {
+    protected void onSdkButtonClicked() {
 
         if (mOnYotiButtonClickListener != null) {
             mOnYotiButtonClickListener.onStartScenario();
         }
 
         try {
-            YotiSDK.startScenario(getContext(), mUseCaseId, mOnYotiAppNotInstalledListener == null, mYotiCallResultReceiver);
+            YotiSDK.startScenario(getContext(),
+                    mUseCaseId,
+                    mOnYotiAppNotInstalledListener == null || mOnAppNotInstalledListener == null,
+                    mYotiCallResultReceiver,
+                    getSdkButtonTheme());
         } catch (YotiSDKException cause) {
 
             YotiSDKLogger.error(cause.getMessage(), cause);
 
-            if (mOnYotiAppNotInstalledListener != null && cause instanceof YotiSDKNoYotiAppException) {
-                mOnYotiAppNotInstalledListener.onYotiAppNotInstalledError((YotiSDKNoYotiAppException) cause);
+            if (mOnAppNotInstalledListener != null && cause instanceof YotiSDKAppNotInstalledException) {
+                String appUrl = getAppUrl();
+                YotiSDKLogger.warning("App not installed, open the browser to get the app - " + appUrl);
+                mOnAppNotInstalledListener.onAppNotInstalled((YotiSDKAppNotInstalledException) cause, appUrl);
+            } else if (mOnYotiAppNotInstalledListener != null && cause instanceof YotiSDKAppNotInstalledException) {
+                mOnYotiAppNotInstalledListener.onYotiAppNotInstalledError(new YotiSDKNoYotiAppException("App not installed"));
             } else if (mOnYotiButtonClickListener != null) {
                 mOnYotiButtonClickListener.onStartScenarioError(cause);
             }
         }
+    }
+
+    private String getAppUrl() {
+        String appUrl;
+        switch (getSdkButtonTheme()) {
+            case THEME_YOTI:
+                appUrl = YotiAppDefs.YOTI_APP_URL;
+                break;
+            case THEME_EASYID:
+                appUrl = YotiAppDefs.EASY_ID_APP_URL;
+                break;
+            default:
+                appUrl = YotiAppDefs.PARTNERSHIP_APP_URL;
+                break;
+        }
+        return appUrl;
     }
 
     public interface OnYotiButtonClickListener {
@@ -133,6 +166,10 @@ public class YotiSDKButton extends YotiButton implements View.OnClickListener {
 
     public interface OnYotiAppNotInstalledListener {
         void onYotiAppNotInstalledError(YotiSDKNoYotiAppException cause);
+    }
+
+    public interface OnAppNotInstalledListener {
+        void onAppNotInstalled(YotiSDKAppNotInstalledException cause, String appURL);
     }
 
     public interface OnYotiCalledListener {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="Theme.Yoti.AppCompat.Translucent" parent="Theme.AppCompat.NoActionBar">
         <item name="android:background">#00000000</item>
         <item name="android:windowNoTitle">true</item>
@@ -7,4 +8,65 @@
         <item name="android:colorBackgroundCacheHint">@null</item>
         <item name="android:windowIsTranslucent">true</item>
     </style>
+
+    <style name="Yoti.Sdk.Button.Global" parent="Yoti.Sdk.Button.Base">
+        <item name="icon">@drawable/ic_yoti_logo</item>
+        <item name="iconTint">@null</item>
+        <item name="theme">@style/Theme.Yoti.Button.Global</item>
+        <item name="android:text">@string/yoti.sdk.yoti.button.label</item>
+        <item name="android:textAppearance">@style/Sdk.Button.Text.Yoti</item>
+    </style>
+
+    <style name="Yoti.Sdk.Button.UK" parent="Yoti.Sdk.Button.Base">
+        <item name="icon">@drawable/ic_yoti_logo_uk</item>
+        <item name="cornerRadius">8dp</item>
+        <item name="theme">@style/Theme.Yoti.Button.Global</item>
+        <item name="android:text">@string/yoti.sdk.yoti.button.label</item>
+        <item name="android:textAppearance">@style/Sdk.Button.Text.Yoti</item>
+    </style>
+
+    <style name="Yoti.Sdk.Button.EasyId" parent="Yoti.Sdk.Button.Base">
+        <item name="icon">@drawable/ic_yoti_logo_uk</item>
+        <item name="cornerRadius">4dp</item>
+        <item name="theme">@style/Theme.Yoti.Button.EasyId</item>
+        <item name="android:text">@string/yoti.sdk.easyid.button.label</item>
+        <item name="iconPadding">16dp</item>
+        <item name="android:textAppearance">@style/Sdk.Button.Text.EasyId</item>
+    </style>
+
+    <style name="Yoti.Sdk.Button.Partnership" parent="Yoti.Sdk.Button.Base">
+        <item name="icon">@drawable/ic_yoti_logo_partnership</item>
+        <item name="cornerRadius">8dp</item>
+        <item name="theme">@style/Theme.Yoti.Button.Partnership</item>
+        <item name="android:text">@string/yoti.sdk.partnership.button.label</item>
+        <item name="android:textAppearance">@style/Sdk.Button.Text.Partnership</item>
+    </style>
+
+    <style name="Yoti.Sdk.Button.Base" parent="Yoti.v4.Button.Primary.Icon">
+        <item name="android:minWidth">300dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="iconSize">20dp</item>
+        <item name="iconGravity">start</item>
+        <item name="android:minHeight">44dp</item>
+    </style>
+
+    <style name="Sdk.Button.Text.Yoti" parent="Yoti.v4.Font.ButtonText">
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="Sdk.Button.Text.EasyId" parent="Yoti.v4.Font.ButtonText">
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="Sdk.Button.Text.Partnership" parent="Yoti.v4.Font.ButtonText">
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="Yoti.Sdk.Button.SupportText" parent="Yoti.Field.Text">
+        <item name="android:drawablePadding">8dp</item>
+        <item name="android:textColor">@color/yoti_grey_battleship</item>
+    </style>
+
+    <style name="Theme.Yoti.Button" parent="Theme.MaterialComponents.DayNight"/>
+
 </resources>

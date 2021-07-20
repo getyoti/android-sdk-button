@@ -23,5 +23,6 @@
     <string name="result_status_startScenarioError">onStartScenarioError</string>
     <string name="result_status_appNotInstalled">onAppNotInstalled</string>
     <string name="result_status_loading">Loading</string>
+    <string name="sdk_theme">SDK Theme</string>
 
 </resources>

@@ -75,8 +75,18 @@ android:id="@+id/my_id"
 android:layout_height="wrap_content"
 android:layout_width="wrap_content"
 android:text="My Yoti Button"
-yoti:useCaseId="YOUR_USE_CASE_ID"/>
+yoti:useCaseId="YOUR_USE_CASE_ID"
+yoti:buttonTheme="<Theme_Yoti | Theme_EasyId | Theme_Partnership>"/>
 ```
+
+In case ```yoti:buttonTheme``` is not provided, then ```Theme_Partnership``` is considered as a default theme.
+ 
+When the theme is applied as ```Theme_Yoti``` or ```Theme_Partnership```
+* User can share attribute either through Yoti or EasyId app
+
+When the theme is applied as ```Theme_EasyId```
+* User can share attribute only through EasyId app
+
 [See this code in one of our sample apps](./sample-app/src/main/res/layout/activity_main.xml)
 
 Alternatively, you can set the button's useCaseId with:
@@ -218,6 +228,7 @@ If the Yoti app is not installed in the user's phone by default the SDK will sen
 open a website that invites the user to download the Yoti app.
 Alternatively, an error listener can be set up so you can deal with this situation by yourself.
 
+Attention: This listener is now deprecated.
 ```java
         yotiSDKButton.setOnYotiAppNotInstalledListener(new YotiSDKButton.OnYotiAppNotInstalledListener() {
             @Override
@@ -226,6 +237,16 @@ Alternatively, an error listener can be set up so you can deal with this situati
             }
         });
 ```
+Please use the below listener to determine whether the Yoti/EasyId app is not installed:
+```java
+        mYotiSDKButton.setOnAppNotInstalledListener(new OnAppNotInstalledListener() {
+            @Override
+            public void onAppNotInstalled(final YotiSDKAppNotInstalledException cause, final String appURL) {
+                // appURL is the app's play store URL, launch the browser intent to allow user to download the app and proceed
+            }
+        });
+```
+[See this code in one of our sample apps](./sample-app/src/main/java/com/yoti/mobile/android/sdk/sampleapp/MainActivity.java)
 
 ## Running the Example
 

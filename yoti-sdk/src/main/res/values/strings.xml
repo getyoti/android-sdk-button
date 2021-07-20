@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">YotiSDK</string>
     <string name="yoti.sdk.error.yoti_app_version_incompatible">The current Yoti app installed is not compatible, please update your Yoti app.</string>
+    <string name="yoti.sdk.yoti.button.label">CONTINUE WITH YOTI</string>
+    <string name="yoti.sdk.easyid.button.label">Continue with Post Office EasyID</string>
+    <string name="yoti.sdk.partnership.button.label">Continue with your Digital ID</string>
+    <string name="yoti.sdk.support_info.text">Works with:</string>
 </resources>

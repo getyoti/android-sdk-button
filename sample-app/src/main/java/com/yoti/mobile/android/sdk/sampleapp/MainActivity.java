@@ -2,6 +2,8 @@ package com.yoti.mobile.android.sdk.sampleapp;
 
 import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -63,6 +65,22 @@ public class MainActivity extends AppCompatActivity {
                 mProgress.setVisibility(View.GONE);
             }
         });
+
+        mYotiSDKButton.setOnAppNotInstalledListener((cause, appURL) -> {
+            // App is not installed, need to call browser intent with app download link
+            mYotiSDKButton.setVisibility(View.VISIBLE);
+            mProgress.setVisibility(View.GONE);
+            launchAppUrl(appURL);
+        });
+    }
+
+    // required app is not installed, launch app url to download the app
+    private void launchAppUrl(String redirectURL) {
+        Uri webpage = Uri.parse(redirectURL);
+        Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 
     @Override

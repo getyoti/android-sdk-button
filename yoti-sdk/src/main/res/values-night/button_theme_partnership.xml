@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Yoti.Button.Partnership" parent="Theme.Yoti.Button">
+        <item name="button_primary_foreground_disabled" type="color">@color/yoti_charcoal_half_alpha</item>
+        <item name="button_primary_foreground_pressed" type="color">@color/yoti_charcoal_half_alpha</item>
+        <item name="button_primary_foreground" type="color">@color/yoti_charcoal</item>
+
+        <item name="button_primary_background_disabled" type="color">@color/yoti_grey_alpha_50</item>
+        <item name="button_primary_background_pressed" type="color">@color/yoti_grey_light</item>
+        <item name="button_primary_background" type="color">@color/yoti_white</item>
+
+        <item name="button_primary_border_disabled" type="color">@color/yoti_charcoal_half_alpha</item>
+        <item name="button_primary_border_pressed" type="color">@color/yoti_charcoal</item>
+        <item name="button_primary_border" type="color">@color/yoti_charcoal</item>
+
+        <item name="button_primary_ripple" type="color">@color/yoti_grey_light</item>
+        <item name="text_button_ripple">@color/yoti_charcoal</item>
+    </style>
+
+    <style name="Yoti.Sdk.Button.SupportText" parent="Yoti.Field.Text">
+        <item name="android:drawablePadding">8dp</item>
+        <item name="android:textColor">@color/yoti_white</item>
+    </style>
+
+</resources>

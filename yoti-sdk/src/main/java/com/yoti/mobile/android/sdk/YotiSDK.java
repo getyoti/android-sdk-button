@@ -1,20 +1,31 @@
 package com.yoti.mobile.android.sdk;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.Uri;
 import android.os.ResultReceiver;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.yoti.mobile.android.sdk.exceptions.AppNotInstalledErrorCode;
+import com.yoti.mobile.android.sdk.exceptions.YotiSDKAppNotInstalledException;
 import com.yoti.mobile.android.sdk.exceptions.YotiSDKException;
 import com.yoti.mobile.android.sdk.exceptions.YotiSDKMinVersionException;
 import com.yoti.mobile.android.sdk.exceptions.YotiSDKNoScenarioException;
-import com.yoti.mobile.android.sdk.exceptions.YotiSDKNoYotiAppException;
 import com.yoti.mobile.android.sdk.exceptions.YotiSDKNotValidScenarioException;
 import com.yoti.mobile.android.sdk.kernelSDK.KernelSDKIntentService;
 import com.yoti.mobile.android.sdk.model.Scenario;
 
 import java.util.HashMap;
+
+import static com.yoti.mobile.android.sdk.ButtonTheme.THEME_YOTI;
+import static com.yoti.mobile.android.sdk.exceptions.AppNotInstalledErrorCode.EASY_ID_APP_NOT_INSTALLED;
+import static com.yoti.mobile.android.sdk.exceptions.AppNotInstalledErrorCode.PARTNERSHIP_APP_NOT_INSTALLED;
+import static com.yoti.mobile.android.sdk.exceptions.AppNotInstalledErrorCode.YOTI_APP_NOT_INSTALLED;
 
 /**
  * Singleton to manage the different Scenarios defined by a third party app.
@@ -88,14 +99,15 @@ public class YotiSDK {
      *
      * @param context
      * @param useCaseId
-     * @param handleNoYotiAppError true if we want the SDK to handle the error and open a website to
+     * @param handleNoAppInstalledError true if we want the SDK to handle the error and open a website to
      *                             invite the user to download Yoti from the Play Store
-     * @throws YotiSDKException
+     * @throws YotiSDKException When the SDK is not able to start the scenario
      */
     /*package*/
     static void startScenario(final Context context, final String useCaseId,
-                              final boolean handleNoYotiAppError,
-                              final ResultReceiver onYotiCalledResultReceiver) throws YotiSDKException {
+                              final boolean handleNoAppInstalledError,
+                              final ResultReceiver onYotiCalledResultReceiver,
+                              final ButtonTheme sdkButtonTheme) throws YotiSDKException {
 
         YotiSDKLogger.debug("Starting scenario " + useCaseId);
 
@@ -104,18 +116,19 @@ public class YotiSDK {
         }
 
         YotiSDKLogger.debug("Checking Yoti app is available");
+        PackageInfo appPackageInfo = null;
         try {
-            PackageInfo yotiAppInfo = context.getPackageManager().getPackageInfo(YotiAppDefs.YOTI_APP_PACKAGE, 0);
-            if (yotiAppInfo.versionCode < YotiAppDefs.MIN_VERSION_YOTI_APP_REQUIRED) {
+            appPackageInfo = getAppPackageInfoBasedOnTheme(context.getPackageManager(), sdkButtonTheme);
+            if (appPackageInfo.versionCode < YotiAppDefs.MIN_VERSION_YOTI_APP_REQUIRED) {
                 throw new YotiSDKMinVersionException("The current Yoti app installed is not compatible with the SDK");
             }
-        } catch (PackageManager.NameNotFoundException ex) {
-            if (handleNoYotiAppError) {
+        }
+        catch (YotiSDKAppNotInstalledException cause) {
+            if (handleNoAppInstalledError) {
                 // We send the intent so it opens a website that invites the user to download Yoti
-                YotiSDKLogger.debug("No Yoti app installed on the device.");
-            } else {
-                throw new YotiSDKNoYotiAppException("No Yoti app installed on the device");
+                YotiSDKLogger.debug("App not installed on the device.");
             }
+            throw cause;
         }
 
         YotiSDKLogger.debug("Retrieving scenario " + useCaseId);
@@ -130,7 +143,62 @@ public class YotiSDK {
         }
 
         YotiSDKLogger.debug("Started scenario " + useCaseId);
-        KernelSDKIntentService.startActionStartScenario(context, useCaseId, onYotiCalledResultReceiver);
+        KernelSDKIntentService.startActionStartScenario(context, useCaseId, onYotiCalledResultReceiver, getLaunchingAppScheme(appPackageInfo));
+    }
+
+    private static PackageInfo getAppPackageInfoBasedOnTheme(PackageManager packageManager, ButtonTheme buttonTheme) throws YotiSDKAppNotInstalledException {
+        PackageInfo packageInfo = null;
+        try {
+            switch (buttonTheme) {
+                case THEME_YOTI:
+                case THEME_PARTNERSHIP:
+                    if (checkAppInstalled(packageManager, YotiAppDefs.YOTI_APP_PACKAGE)) {
+                        packageInfo = packageManager.getPackageInfo(YotiAppDefs.YOTI_APP_PACKAGE, 0);
+                    } else if (checkAppInstalled(packageManager, YotiAppDefs.EASY_ID_APP_PACKAGE)) {
+                        packageInfo = packageManager.getPackageInfo(YotiAppDefs.EASY_ID_APP_PACKAGE, 0);
+                    } else {
+                        AppNotInstalledErrorCode errorCode = buttonTheme == THEME_YOTI ? YOTI_APP_NOT_INSTALLED : PARTNERSHIP_APP_NOT_INSTALLED;
+                        throw new YotiSDKAppNotInstalledException(errorCode, "Yoti app not installed");
+                    }
+                    break;
+                case THEME_EASYID:
+                    if (checkAppInstalled(packageManager, YotiAppDefs.EASY_ID_APP_PACKAGE)
+                            && checkEasyAppWithSchemeAvailable(packageManager)) {
+                        packageInfo = packageManager.getPackageInfo(YotiAppDefs.EASY_ID_APP_PACKAGE, 0);
+                    } else {
+                        throw new YotiSDKAppNotInstalledException(EASY_ID_APP_NOT_INSTALLED, "EasyId app not installed");
+                    }
+                    break;
+            }
+        }
+        catch (NameNotFoundException e) {
+            throw new YotiSDKAppNotInstalledException(YOTI_APP_NOT_INSTALLED, "Yoti app not installed");
+        }
+        return packageInfo;
+    }
+
+    private static boolean checkAppInstalled(PackageManager packageManager, String packageName) {
+        try {
+            packageManager.getPackageInfo(packageName, 0);
+            return true;
+        } catch (NameNotFoundException e) {
+            return false;
+        }
+    }
+
+    private static boolean checkEasyAppWithSchemeAvailable(@NonNull PackageManager packageManager) {
+        Uri uri = Uri.parse(BuildConfig.EASY_ID_APP_SCHEME.concat(BuildConfig.EASY_ID_HOST_URL));
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        return intent.resolveActivity(packageManager) != null;
+    }
+
+    private static String getLaunchingAppScheme(PackageInfo packageInfo) {
+        if(packageInfo != null && packageInfo.packageName.equals(YotiAppDefs.EASY_ID_APP_PACKAGE)) {
+            return YotiAppDefs.EASY_ID_APP_SCHEME;
+        }
+        else {
+            return YotiAppDefs.YOTI_APP_SCHEME;
+        }
     }
 
     /**
