@@ -158,6 +158,8 @@ public class YotiSDKTest {
 
         mMockYotiAppPackageInfo.versionCode = -1;
 
+        exception.expect(YotiSDKAppNotInstalledException.class);
+
         Scenario scenario = new Scenario.Builder()
                 .setUseCaseId("a_scenario")
                 .setClientSDKId("123")
