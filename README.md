@@ -265,7 +265,7 @@ In order to get the user's information, the backend SDK will decrypt the token i
 ```
 
 ## Support
-For any questions or support please email [sdksupport@yoti.com](mailto:sdksupport@yoti.com). Please provide the following to get you up and working as quickly as possible:
+For any questions or support please email [clientsupport@yoti.com](mailto:clientsupport@yoti.com). Please provide the following to get you up and working as quickly as possible:
 
 * Software version on the phone
 * Language of backend SDK
