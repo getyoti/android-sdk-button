@@ -154,7 +154,8 @@ public class YotiSDK {
                 case THEME_PARTNERSHIP:
                     if (checkAppInstalled(packageManager, YotiAppDefs.YOTI_APP_PACKAGE)) {
                         packageInfo = packageManager.getPackageInfo(YotiAppDefs.YOTI_APP_PACKAGE, 0);
-                    } else if (checkAppInstalled(packageManager, YotiAppDefs.EASY_ID_APP_PACKAGE)) {
+                    } else if (checkAppInstalled(packageManager, YotiAppDefs.EASY_ID_APP_PACKAGE)
+                            && checkEasyAppWithSchemeAvailable(packageManager)) {
                         packageInfo = packageManager.getPackageInfo(YotiAppDefs.EASY_ID_APP_PACKAGE, 0);
                     } else {
                         AppNotInstalledErrorCode errorCode = buttonTheme == THEME_YOTI ? YOTI_APP_NOT_INSTALLED : PARTNERSHIP_APP_NOT_INSTALLED;
