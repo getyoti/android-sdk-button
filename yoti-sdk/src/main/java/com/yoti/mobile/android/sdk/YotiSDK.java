@@ -22,6 +22,7 @@ import com.yoti.mobile.android.sdk.model.Scenario;
 
 import java.util.HashMap;
 
+import static com.yoti.mobile.android.sdk.ButtonTheme.THEME_PARTNERSHIP;
 import static com.yoti.mobile.android.sdk.ButtonTheme.THEME_YOTI;
 import static com.yoti.mobile.android.sdk.exceptions.AppNotInstalledErrorCode.EASY_ID_APP_NOT_INSTALLED;
 import static com.yoti.mobile.android.sdk.exceptions.AppNotInstalledErrorCode.PARTNERSHIP_APP_NOT_INSTALLED;
@@ -143,7 +144,7 @@ public class YotiSDK {
         }
 
         YotiSDKLogger.debug("Started scenario " + useCaseId);
-        KernelSDKIntentService.startActionStartScenario(context, useCaseId, onYotiCalledResultReceiver, getLaunchingAppScheme(appPackageInfo));
+        KernelSDKIntentService.startActionStartScenario(context, useCaseId, onYotiCalledResultReceiver, getLaunchingAppScheme(sdkButtonTheme, appPackageInfo));
     }
 
     private static PackageInfo getAppPackageInfoBasedOnTheme(PackageManager packageManager, ButtonTheme buttonTheme) throws YotiSDKAppNotInstalledException {
@@ -154,8 +155,7 @@ public class YotiSDK {
                 case THEME_PARTNERSHIP:
                     if (checkAppInstalled(packageManager, YotiAppDefs.YOTI_APP_PACKAGE)) {
                         packageInfo = packageManager.getPackageInfo(YotiAppDefs.YOTI_APP_PACKAGE, 0);
-                    } else if (checkAppInstalled(packageManager, YotiAppDefs.EASY_ID_APP_PACKAGE)
-                            && checkEasyAppWithSchemeAvailable(packageManager)) {
+                    } else if (checkAppInstalled(packageManager, YotiAppDefs.EASY_ID_APP_PACKAGE)) {
                         packageInfo = packageManager.getPackageInfo(YotiAppDefs.EASY_ID_APP_PACKAGE, 0);
                     } else {
                         AppNotInstalledErrorCode errorCode = buttonTheme == THEME_YOTI ? YOTI_APP_NOT_INSTALLED : PARTNERSHIP_APP_NOT_INSTALLED;
@@ -193,9 +193,21 @@ public class YotiSDK {
         return intent.resolveActivity(packageManager) != null;
     }
 
-    private static String getLaunchingAppScheme(PackageInfo packageInfo) {
+    /**
+     * For EasyId theme, we are supporting launching EasyId app from v3.30.0 so for Partnership
+     * or Yoti theme we will use yoti:// scheme to launch EasyId app
+     *
+     * @param buttonTheme applied button theme
+     * @param packageInfo installed app's package info
+     * @return resolved scheme Ex. yoti:// or easyid://
+     */
+    private static String getLaunchingAppScheme(ButtonTheme buttonTheme, PackageInfo packageInfo) {
         if(packageInfo != null && packageInfo.packageName.equals(YotiAppDefs.EASY_ID_APP_PACKAGE)) {
-            return YotiAppDefs.EASY_ID_APP_SCHEME;
+            if (buttonTheme == THEME_PARTNERSHIP || buttonTheme == THEME_YOTI) {
+                return YotiAppDefs.YOTI_APP_SCHEME;
+            } else {
+                return YotiAppDefs.EASY_ID_APP_SCHEME;
+            }
         }
         else {
             return YotiAppDefs.YOTI_APP_SCHEME;
