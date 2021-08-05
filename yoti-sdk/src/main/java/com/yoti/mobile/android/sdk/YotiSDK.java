@@ -11,7 +11,7 @@ import android.os.ResultReceiver;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.yoti.mobile.android.sdk.exceptions.AppNotInstalledErrorCode;
+import com.yoti.mobile.android.sdk.exceptions.AppType;
 import com.yoti.mobile.android.sdk.exceptions.YotiSDKAppNotInstalledException;
 import com.yoti.mobile.android.sdk.exceptions.YotiSDKException;
 import com.yoti.mobile.android.sdk.exceptions.YotiSDKMinVersionException;
@@ -24,9 +24,9 @@ import java.util.HashMap;
 
 import static com.yoti.mobile.android.sdk.ButtonTheme.THEME_PARTNERSHIP;
 import static com.yoti.mobile.android.sdk.ButtonTheme.THEME_YOTI;
-import static com.yoti.mobile.android.sdk.exceptions.AppNotInstalledErrorCode.EASY_ID_APP_NOT_INSTALLED;
-import static com.yoti.mobile.android.sdk.exceptions.AppNotInstalledErrorCode.PARTNERSHIP_APP_NOT_INSTALLED;
-import static com.yoti.mobile.android.sdk.exceptions.AppNotInstalledErrorCode.YOTI_APP_NOT_INSTALLED;
+import static com.yoti.mobile.android.sdk.exceptions.AppType.EASY_ID_APP;
+import static com.yoti.mobile.android.sdk.exceptions.AppType.PARTNERSHIP_APP;
+import static com.yoti.mobile.android.sdk.exceptions.AppType.YOTI_APP;
 
 /**
  * Singleton to manage the different Scenarios defined by a third party app.
@@ -158,8 +158,8 @@ public class YotiSDK {
                     } else if (checkAppInstalled(packageManager, YotiAppDefs.EASY_ID_APP_PACKAGE)) {
                         packageInfo = packageManager.getPackageInfo(YotiAppDefs.EASY_ID_APP_PACKAGE, 0);
                     } else {
-                        AppNotInstalledErrorCode errorCode = buttonTheme == THEME_YOTI ? YOTI_APP_NOT_INSTALLED : PARTNERSHIP_APP_NOT_INSTALLED;
-                        throw new YotiSDKAppNotInstalledException(errorCode, "Yoti app not installed");
+                        AppType appType = buttonTheme == THEME_YOTI ? YOTI_APP : PARTNERSHIP_APP;
+                        throw new YotiSDKAppNotInstalledException(appType, appType.getValue()+" app not installed");
                     }
                     break;
                 case THEME_EASYID:
@@ -167,13 +167,13 @@ public class YotiSDK {
                             && checkEasyAppWithSchemeAvailable(packageManager)) {
                         packageInfo = packageManager.getPackageInfo(YotiAppDefs.EASY_ID_APP_PACKAGE, 0);
                     } else {
-                        throw new YotiSDKAppNotInstalledException(EASY_ID_APP_NOT_INSTALLED, "EasyId app not installed");
+                        throw new YotiSDKAppNotInstalledException(EASY_ID_APP, "EasyId app not installed");
                     }
                     break;
             }
         }
         catch (NameNotFoundException e) {
-            throw new YotiSDKAppNotInstalledException(YOTI_APP_NOT_INSTALLED, "Yoti app not installed");
+            throw new YotiSDKAppNotInstalledException(YOTI_APP, "Yoti app not installed");
         }
         return packageInfo;
     }

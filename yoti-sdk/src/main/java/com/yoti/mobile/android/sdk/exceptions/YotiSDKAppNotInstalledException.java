@@ -2,11 +2,11 @@ package com.yoti.mobile.android.sdk.exceptions;
 
 public class YotiSDKAppNotInstalledException extends YotiSDKException {
 
-    AppNotInstalledErrorCode errorCode;
+    AppType unavailableApp;
 
-    public YotiSDKAppNotInstalledException(AppNotInstalledErrorCode errorCode, String message) {
+    public YotiSDKAppNotInstalledException(AppType unavailableApp, String message) {
         super(message);
-        this.errorCode = errorCode;
+        this.unavailableApp = unavailableApp;
     }
 }
 
