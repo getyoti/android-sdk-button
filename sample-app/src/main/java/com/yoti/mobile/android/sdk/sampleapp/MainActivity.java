@@ -57,9 +57,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mYotiSDKButton.setOnYotiCalledListener(new YotiSDKButton.OnYotiCalledListener() {
+        mYotiSDKButton.setOnAppCalledListener(new YotiSDKButton.OnAppCalledListener() {
             @Override
-            public void onYotiCalled() {
+            public void onAppCalled() {
                 // Restore the original state
                 mYotiSDKButton.setVisibility(View.VISIBLE);
                 mProgress.setVisibility(View.GONE);

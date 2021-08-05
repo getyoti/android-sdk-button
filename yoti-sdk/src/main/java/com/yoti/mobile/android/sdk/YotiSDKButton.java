@@ -25,6 +25,7 @@ public final class YotiSDKButton extends YotiButtonContainer {
     private OnYotiAppNotInstalledListener mOnYotiAppNotInstalledListener;
     private OnAppNotInstalledListener mOnAppNotInstalledListener;
     private OnYotiCalledListener mOnYotiCalledListener;
+    private OnAppCalledListener mOnAppCalledListener;
 
     private ResultReceiver mYotiCallResultReceiver = new ResultReceiver(new Handler()) {
         @Override
@@ -32,6 +33,10 @@ public final class YotiSDKButton extends YotiButtonContainer {
             super.onReceiveResult(resultCode, resultData);
             if (mOnYotiCalledListener != null) {
                 mOnYotiCalledListener.onYotiCalled();
+            }
+
+            if (mOnAppCalledListener != null) {
+                mOnAppCalledListener.onAppCalled();
             }
         }
     };
@@ -110,7 +115,12 @@ public final class YotiSDKButton extends YotiButtonContainer {
     }
 
     public void setOnYotiCalledListener(@Nullable OnYotiCalledListener listener) {
+        YotiSDKLogger.warning("The method 'setOnYotiCalledListener' is now deprecated. Please use 'setOnAppCalledListener' instead.");
         mOnYotiCalledListener = listener;
+    }
+
+    public void setOnAppCalledListener(@Nullable OnAppCalledListener listener) {
+        mOnAppCalledListener = listener;
     }
 
     @Override
@@ -174,5 +184,9 @@ public final class YotiSDKButton extends YotiButtonContainer {
 
     public interface OnYotiCalledListener {
         void onYotiCalled();
+    }
+
+    public interface OnAppCalledListener {
+        void onAppCalled();
     }
 }

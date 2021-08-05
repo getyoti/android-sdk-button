@@ -208,7 +208,7 @@ yotiSDKButton.setOnYotiButtonListener(new YotiSDKButton.OnYotiButtonClickListene
 There is also a listener that you can set to be notified when the intent has been sent to the Yoti app.
 When this happens you would probably want to restore your state.
 
-
+Attention: This listener is now deprecated.
 ```java
         yotiSDKButton.setOnYotiCalledListener(new YotiSDKButton.OnYotiCalledListener() {
             @Override
@@ -217,6 +217,16 @@ When this happens you would probably want to restore your state.
             }
         }); 
 ```
+Please use the below listener to get notified when the intent has been sent to app based on the specified theme:
+```java
+        yotiSDKButton.setOnAppCalledListener(new YotiSDKButton.OnAppCalledListener() {
+            @Override
+            public void onAppCalled() {
+                // Restore the original state
+            }
+        }); 
+```
+
 [See this code in one of our sample apps](./sample-app/src/main/java/com/yoti/mobile/android/sdk/sampleapp/MainActivity.java)
 
 You can activate a verbose mode for the SDK by using this method :

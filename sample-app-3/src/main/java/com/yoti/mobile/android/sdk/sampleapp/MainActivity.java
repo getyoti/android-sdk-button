@@ -126,10 +126,13 @@ public class MainActivity extends AppCompatActivity {
             launchAppUrl(appURL);
         });
 
-        yotiSDKButton.setOnYotiCalledListener(() -> {
-            // Restore the original state
-            yotiSDKButton.setVisibility(View.VISIBLE);
-            showStatus(true, R.string.result_status_openYoti);
+        mYotiSDKButton.setOnAppCalledListener(new YotiSDKButton.OnAppCalledListener() {
+            @Override
+            public void onAppCalled() {
+                // Restore the original state
+                mYotiSDKButton.setVisibility(View.VISIBLE);
+                showStatus(true, R.string.result_status_openYoti);
+            }
         });
     }
 
