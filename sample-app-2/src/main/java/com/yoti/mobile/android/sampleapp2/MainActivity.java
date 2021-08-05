@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
         processExtraData(getIntent());
 
-        yotiSDKButton.setOnYotiScenarioListener(new YotiSDKButton.OnYotiButtonClickListener() {
+        yotiSDKButton.setOnYotiButtonClickListener(new YotiSDKButton.OnYotiButtonClickListener() {
             @Override
             public void onStartScenario() {
                 yotiSDKButton.setVisibility(View.GONE);

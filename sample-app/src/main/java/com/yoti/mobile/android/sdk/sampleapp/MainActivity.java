@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.yoti.mobile.android.sdk.YotiSDKButton;
 import com.yoti.mobile.android.sdk.exceptions.YotiSDKException;
-import com.yoti.mobile.android.sdk.exceptions.YotiSDKNoYotiAppException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,14 +46,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mYotiSDKButton.setOnYotiAppNotInstalledListener(new YotiSDKButton.OnYotiAppNotInstalledListener() {
-            @Override
-            public void onYotiAppNotInstalledError(YotiSDKNoYotiAppException cause) {
-                //The Yoti app is not installed, let's deal with it
-                mYotiSDKButton.setVisibility(View.VISIBLE);
-                mProgress.setVisibility(View.GONE);
-                mMessage.setText(R.string.loc_no_yoti_app_error);
-            }
+        mYotiSDKButton.setOnAppNotInstalledListener((cause, appURL) -> {
+            // App is not installed, need to call browser intent with app download link
+            mYotiSDKButton.setVisibility(View.VISIBLE);
+            mProgress.setVisibility(View.GONE);
+            launchAppUrl(appURL);
         });
 
         mYotiSDKButton.setOnAppCalledListener(new YotiSDKButton.OnAppCalledListener() {
@@ -64,13 +60,6 @@ public class MainActivity extends AppCompatActivity {
                 mYotiSDKButton.setVisibility(View.VISIBLE);
                 mProgress.setVisibility(View.GONE);
             }
-        });
-
-        mYotiSDKButton.setOnAppNotInstalledListener((cause, appURL) -> {
-            // App is not installed, need to call browser intent with app download link
-            mYotiSDKButton.setVisibility(View.VISIBLE);
-            mProgress.setVisibility(View.GONE);
-            launchAppUrl(appURL);
         });
     }
 
