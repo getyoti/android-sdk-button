@@ -242,6 +242,7 @@ Please use the below listener to determine whether the Yoti/EasyId app is not in
         mYotiSDKButton.setOnAppNotInstalledListener(new OnAppNotInstalledListener() {
             @Override
             public void onAppNotInstalled(final YotiSDKAppNotInstalledException cause, final String appURL) {
+                // The exception will provide info on which app is not installed
                 // appURL is the app's play store URL, launch the browser intent to allow user to download the app and proceed
             }
         });
