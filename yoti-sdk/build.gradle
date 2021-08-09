@@ -18,9 +18,16 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField 'String', 'YOTI_APP_PACKAGE', "\"$yotiAppPackage\""
+        buildConfigField 'String', 'EASY_ID_APP_PACKAGE', "\"$easyIdAppPackage\""
         buildConfigField 'int', 'YOTI_APP_MIN_VERSION', yotiAppMinVersion
         buildConfigField 'String', 'YOTI_BACKEND_URL', "\"$yotiBackendUrl\""
         buildConfigField 'int', 'YOTI_BACKEND_PORT', "$yotiBackendPort"
+        buildConfigField 'String', 'YOTI_APP_URL', "\"$yotiAppUrl\""
+        buildConfigField 'String', 'EASY_ID_APP_URL', "\"$easyIdAppUrl\""
+        buildConfigField 'String', 'PARTNERSHIP_APP_URL', "\"$partnershipAppUrl\""
+        buildConfigField 'String', 'YOTI_APP_SCHEME', "\"$yotiAppScheme\""
+        buildConfigField 'String', 'EASY_ID_APP_SCHEME', "\"$easyIDScheme\""
+        buildConfigField 'String', 'EASY_ID_HOST_URL', "\"$appHostUrl\""
     }
 
     testOptions {
@@ -30,6 +37,11 @@ android {
     lintOptions {
         abortOnError false
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -38,7 +50,7 @@ dependencies {
 
     implementation parent.ext.libAndroidSupport
 
-    api(group: 'com.yoti.mobile.android', name: 'base-commons-ui', version: yotiCommonUIVersion, ext: 'aar')
+    implementation "com.yoti.mobile.android.common.ui:ui-widgets:${uiWidgetsVersion}"
 }
 
 apply from: "$rootDir/publish-maven.gradle"

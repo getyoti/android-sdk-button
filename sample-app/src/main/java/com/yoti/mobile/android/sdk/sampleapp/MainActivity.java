@@ -2,6 +2,8 @@ package com.yoti.mobile.android.sdk.sampleapp;
 
 import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -9,7 +11,6 @@ import android.widget.TextView;
 
 import com.yoti.mobile.android.sdk.YotiSDKButton;
 import com.yoti.mobile.android.sdk.exceptions.YotiSDKException;
-import com.yoti.mobile.android.sdk.exceptions.YotiSDKNoYotiAppException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,24 +46,30 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mYotiSDKButton.setOnYotiAppNotInstalledListener(new YotiSDKButton.OnYotiAppNotInstalledListener() {
-            @Override
-            public void onYotiAppNotInstalledError(YotiSDKNoYotiAppException cause) {
-                //The Yoti app is not installed, let's deal with it
-                mYotiSDKButton.setVisibility(View.VISIBLE);
-                mProgress.setVisibility(View.GONE);
-                mMessage.setText(R.string.loc_no_yoti_app_error);
-            }
+        mYotiSDKButton.setOnAppNotInstalledListener((cause, appURL) -> {
+            // App is not installed, need to call browser intent with app download link
+            mYotiSDKButton.setVisibility(View.VISIBLE);
+            mProgress.setVisibility(View.GONE);
+            launchAppUrl(appURL);
         });
 
-        mYotiSDKButton.setOnYotiCalledListener(new YotiSDKButton.OnYotiCalledListener() {
+        mYotiSDKButton.setOnAppCalledListener(new YotiSDKButton.OnAppCalledListener() {
             @Override
-            public void onYotiCalled() {
+            public void onAppCalled() {
                 // Restore the original state
                 mYotiSDKButton.setVisibility(View.VISIBLE);
                 mProgress.setVisibility(View.GONE);
             }
         });
+    }
+
+    // required app is not installed, launch app url to download the app
+    private void launchAppUrl(String redirectURL) {
+        Uri webpage = Uri.parse(redirectURL);
+        Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 
     @Override

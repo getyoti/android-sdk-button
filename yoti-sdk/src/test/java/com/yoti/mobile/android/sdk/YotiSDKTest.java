@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
+import com.yoti.mobile.android.sdk.exceptions.YotiSDKAppNotInstalledException;
 import com.yoti.mobile.android.sdk.exceptions.YotiSDKException;
 import com.yoti.mobile.android.sdk.exceptions.YotiSDKMinVersionException;
-import com.yoti.mobile.android.sdk.exceptions.YotiSDKNoYotiAppException;
 import com.yoti.mobile.android.sdk.model.Scenario;
 
 import org.junit.Before;
@@ -36,6 +36,8 @@ public class YotiSDKTest {
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
+    private ButtonTheme buttonTheme = ButtonTheme.THEME_YOTI;
+
     @Before
     public void setup() {
 
@@ -57,7 +59,7 @@ public class YotiSDKTest {
         exception.expect(YotiSDKException.class);
         exception.expectMessage("SDK not initialised");
 
-        YotiSDK.startScenario(mMockContext, "a_scenario", true, null);
+        YotiSDK.startScenario(mMockContext, "a_scenario", true, null, buttonTheme);
     }
 
     @Test
@@ -74,7 +76,7 @@ public class YotiSDKTest {
                 .create();
 
         YotiSDK.addScenario(scenario);
-        YotiSDK.startScenario(mMockContext, "a_scenario", true, null);
+        YotiSDK.startScenario(mMockContext, "a_scenario", true, null, buttonTheme);
     }
 
     @Test
@@ -91,7 +93,7 @@ public class YotiSDKTest {
                 .create();
 
         YotiSDK.addScenario(scenario);
-        YotiSDK.startScenario(mMockContext, "a_scenario", true, null);
+        YotiSDK.startScenario(mMockContext, "a_scenario", true, null, buttonTheme);
     }
 
     @Test
@@ -104,7 +106,7 @@ public class YotiSDKTest {
                 .create();
 
         YotiSDK.addScenario(scenario);
-        YotiSDK.startScenario(mMockContext, "b_scenario", true, null);
+        YotiSDK.startScenario(mMockContext, "b_scenario", true, null, buttonTheme);
     }
 
     @Test
@@ -124,17 +126,17 @@ public class YotiSDKTest {
 
 
         YotiSDK.addScenario(scenario);
-        YotiSDK.startScenario(mMockContext, "a_scenario", true, null);
+        YotiSDK.startScenario(mMockContext, "a_scenario", true, null, buttonTheme);
     }
 
     @Test
     public void testStartScenario_withNoYotiApp() throws Throwable {
 
-        Mockito.when(mMockPackageManager.getPackageInfo(YotiAppDefs.YOTI_APP_PACKAGE, 0)).thenThrow(PackageManager.NameNotFoundException.class);
+        Mockito.when(mMockPackageManager.getPackageInfo(YotiAppDefs.YOTI_APP_PACKAGE, 0)).thenThrow(YotiSDKAppNotInstalledException.class);
 
         mMockYotiAppPackageInfo.versionCode = -1;
 
-        exception.expect(YotiSDKNoYotiAppException.class);
+        exception.expect(YotiSDKAppNotInstalledException.class);
 
         Scenario scenario = new Scenario.Builder()
                 .setUseCaseId("a_scenario")
@@ -146,15 +148,17 @@ public class YotiSDKTest {
 
 
         YotiSDK.addScenario(scenario);
-        YotiSDK.startScenario(mMockContext, "a_scenario", false, null);
+        YotiSDK.startScenario(mMockContext, "a_scenario", false, null, buttonTheme);
     }
 
     @Test
     public void testStartScenario_whenHandlingNoYotiApp() throws Throwable {
 
-        Mockito.when(mMockPackageManager.getPackageInfo(YotiAppDefs.YOTI_APP_PACKAGE, 0)).thenThrow(PackageManager.NameNotFoundException.class);
+        Mockito.when(mMockPackageManager.getPackageInfo(YotiAppDefs.YOTI_APP_PACKAGE, 0)).thenThrow(YotiSDKAppNotInstalledException.class);
 
         mMockYotiAppPackageInfo.versionCode = -1;
+
+        exception.expect(YotiSDKAppNotInstalledException.class);
 
         Scenario scenario = new Scenario.Builder()
                 .setUseCaseId("a_scenario")
@@ -166,17 +170,17 @@ public class YotiSDKTest {
 
 
         YotiSDK.addScenario(scenario);
-        YotiSDK.startScenario(mMockContext, "a_scenario", true, null);
+        YotiSDK.startScenario(mMockContext, "a_scenario", true, null, buttonTheme);
     }
 
     @Test
     public void testStartScenario_withoutHandlingNoYotiApp() throws Throwable {
 
-        Mockito.when(mMockPackageManager.getPackageInfo(YotiAppDefs.YOTI_APP_PACKAGE, 0)).thenThrow(PackageManager.NameNotFoundException.class);
+        Mockito.when(mMockPackageManager.getPackageInfo(YotiAppDefs.YOTI_APP_PACKAGE, 0)).thenThrow(YotiSDKAppNotInstalledException.class);
 
         mMockYotiAppPackageInfo.versionCode = -1;
 
-        exception.expect(YotiSDKNoYotiAppException.class);
+        exception.expect(YotiSDKAppNotInstalledException.class);
 
         Scenario scenario = new Scenario.Builder()
                 .setUseCaseId("a_scenario")
@@ -188,6 +192,6 @@ public class YotiSDKTest {
 
 
         YotiSDK.addScenario(scenario);
-        YotiSDK.startScenario(mMockContext, "a_scenario", false, null);
+        YotiSDK.startScenario(mMockContext, "a_scenario", false, null, buttonTheme);
     }
 }

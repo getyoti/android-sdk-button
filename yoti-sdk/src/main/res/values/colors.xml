@@ -2,4 +2,18 @@
 <resources>
     <color name="white">#ffffff</color>
     <color name="yoti_btn_bg">#2d9fff</color>
+    <color name="yoti_blue_tone">#007EE8</color>
+    <color name="yoti_ripple_blue">#0030B0</color>
+    <color name="yoti_ripple_white">#859DB5</color>
+
+    <color name="postoffice_cloud">#B6B6B4</color>
+    <color name="postoffice_white">#FFFFFF</color>
+    <color name="postoffice_stone_tint_80">#F5F6F6</color>
+    <color name="postoffice_red_shade_20">#B60038</color>
+    <color name="postoffice_red">#E40046</color>
+    <color name="postoffice_red_shade_50">#710022</color>
+    <color name="postoffice_purple_shade_20">#2E0038</color>
+
+    <color name="yoti_green">#39C48E</color>
+    <color name="yoti_red">#FE5F55</color>
 </resources>

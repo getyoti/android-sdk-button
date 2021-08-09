@@ -1,0 +1,7 @@
+<resources>
+
+    <style name="SampleAppFullScreenTheme" parent="AppTheme">
+        <item name="android:background">@android:color/black</item>
+    </style>
+
+</resources>

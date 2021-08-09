@@ -11,6 +11,7 @@ import android.text.TextUtils;
 
 import com.yoti.mobile.android.sdk.ReceiverActivity;
 import com.yoti.mobile.android.sdk.YotiSDK;
+import com.yoti.mobile.android.sdk.YotiSDKDefs;
 import com.yoti.mobile.android.sdk.YotiSDKLogger;
 import com.yoti.mobile.android.sdk.model.Scenario;
 
@@ -20,6 +21,7 @@ import static com.yoti.mobile.android.sdk.YotiAppDefs.YOTI_APP_PACKAGE;
 import static com.yoti.mobile.android.sdk.YotiSDKDefs.APP_ID_PARAM;
 import static com.yoti.mobile.android.sdk.YotiSDKDefs.APP_NAME_PARAM;
 import static com.yoti.mobile.android.sdk.YotiSDKDefs.CALLBACK_PARAM;
+import static com.yoti.mobile.android.sdk.YotiSDKDefs.QR_CODE_URL_HTTPS_SCHEME;
 import static com.yoti.mobile.android.sdk.YotiSDKDefs.INTENT_EXTRA_ERROR;
 import static com.yoti.mobile.android.sdk.YotiSDKDefs.INTENT_EXTRA_HTTP_ERROR_CODE;
 import static com.yoti.mobile.android.sdk.YotiSDKDefs.INTENT_EXTRA_RESPONSE;
@@ -39,6 +41,7 @@ public class KernelSDKIntentService extends IntentService {
     public static final String YOTI_PENDING_INTENT_EXTRA = "com.yoti.mobile.android.sdk.network.extra.YOTI_PENDING_INTENT_EXTRA";
 
     private static final String EXTRA_USE_CASE_ID = "com.yoti.mobile.android.sdk.network.extra.USE_CASE_ID";
+    private static final String EXTRA_APP_SCHEME = "com.yoti.mobile.android.sdk.network.extra.EXTRA_APP_SCHEME";
     private KernelSDK mKernelSDK;
 
     public KernelSDKIntentService() {
@@ -69,11 +72,12 @@ public class KernelSDKIntentService extends IntentService {
      *
      * @see IntentService
      */
-    public static void startActionStartScenario(Context context, String useCaseId, ResultReceiver resultReceiver) {
+    public static void startActionStartScenario(Context context, String useCaseId, ResultReceiver resultReceiver, String appScheme) {
         Intent intent = new Intent(context, KernelSDKIntentService.class);
         intent.setAction(ACTION_START_SCENARIO);
         intent.putExtra(EXTRA_USE_CASE_ID, useCaseId);
         intent.putExtra(YOTI_CALLED_RESULT_RECEIVER, resultReceiver);
+        intent.putExtra(EXTRA_APP_SCHEME, appScheme);
         context.startService(intent);
     }
 
@@ -82,16 +86,17 @@ public class KernelSDKIntentService extends IntentService {
         if (intent != null) {
             final String action = intent.getAction();
             final String useCaseId = intent.getStringExtra(EXTRA_USE_CASE_ID);
+            final String appScheme = intent.getStringExtra(EXTRA_APP_SCHEME);
             if (ACTION_BACKEND_CALL.equals(action)) {
                 handleActionBackendCall(useCaseId);
             } else if (ACTION_START_SCENARIO.equals(action)) {
                 ResultReceiver resultReceiver = intent.getParcelableExtra(YOTI_CALLED_RESULT_RECEIVER);
-                handleActionStartScenario(useCaseId, resultReceiver);
+                handleActionStartScenario(useCaseId, resultReceiver, appScheme);
             }
         }
     }
 
-    private void handleActionStartScenario(String useCaseId, ResultReceiver resultReceiver) {
+    private void handleActionStartScenario(String useCaseId, ResultReceiver resultReceiver, String appScheme) {
 
         Scenario currentScenario = YotiSDK.getScenario(useCaseId);
 
@@ -118,8 +123,17 @@ public class KernelSDKIntentService extends IntentService {
         int stringId = applicationInfo.labelRes;
         String appName = stringId == 0 ? applicationInfo.nonLocalizedLabel.toString() : getString(stringId);
 
+        String currentScenarioQrCodeUrl = currentScenario.getQrCodeUrl();
+        Intent intent = null;
+        if (currentScenarioQrCodeUrl.startsWith(YotiSDKDefs.QR_CODE_URL_HTTPS_SCHEME) && appScheme != null) {
+            currentScenarioQrCodeUrl = currentScenarioQrCodeUrl.replaceFirst(QR_CODE_URL_HTTPS_SCHEME, appScheme);
+        }
+        else {
+            intent = getPackageManager().getLaunchIntentForPackage(YOTI_APP_PACKAGE);
+        }
+
         // Here we transform the QrCode url to a Uri to add extra parameter so the Yoti App can callback the Yoti SDK.
-        Uri uri = Uri.parse(currentScenario.getQrCodeUrl());
+        Uri uri = Uri.parse(currentScenarioQrCodeUrl);
         uri = uri.buildUpon()
                 .appendQueryParameter(CALLBACK_PARAM, currentScenario.getCallbackAction())
                 .appendQueryParameter(USE_CASE_ID_PARAM, String.valueOf(useCaseId))
@@ -128,9 +142,6 @@ public class KernelSDKIntentService extends IntentService {
                 .build();
 
         resultReceiver.send(0, null);
-
-        Intent intent;
-        intent = getPackageManager().getLaunchIntentForPackage(YOTI_APP_PACKAGE);
 
         if (intent == null) {
             // Yoti app is not installed, let's open the website

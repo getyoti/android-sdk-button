@@ -18,14 +18,16 @@ public class ShareAttributesResultBroadcastReceiver extends AbstractShareAttribu
     public static final String EXTRA_IS_FAILED = "com.yoti.mobile.android.sdk.EXTRA_IS_FAILED";
     public static final String EXTRA_RESPONSE = "com.yoti.mobile.android.sdk.EXTRA_RESPONSE";
     public static final String EXTRA_LOADING = "com.yoti.mobile.android.sdk.EXTRA_LOADING";
+    public static final String EXTRA_FULL_URL = "com.yoti.mobile.android.sdk.EXTRA_FULL_URL";
 
     @Override
     public boolean onCallbackReceived(String useCaseId, String callbackRoot, String token, String fullUrl) {
         Intent intent = new Intent(mContext, MainActivity.class);
         intent.putExtra(EXTRA_LOADING, true);
+        intent.putExtra(EXTRA_FULL_URL, fullUrl);
         intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
         mContext.startActivity(intent);
-        return false;
+        return true;
     }
 
     @Override

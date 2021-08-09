@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.3.0] - 2021-07-20
+### Added
+- Added attribute buttonTheme to the YotiSDKButton for applying the theme.
+- Added OnAppNotInstalledListener for listening to app not installed status.
+
+### Changed
+- Deprecated the OnYotiAppNotInstalledListener
+
 ## [1.2.0] - 2020-03-26
 ### Changed
 Move some SDK configuration to gradle. This allows for creating skinned SDKs with different backends,

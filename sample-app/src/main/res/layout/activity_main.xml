@@ -8,11 +8,12 @@
 
     <com.yoti.mobile.android.sdk.YotiSDKButton
         android:id="@+id/button"
-        android:layout_width="175dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="@string/share_my_phone"
-        yoti:useCaseId="get_user_phone_1"/>
+        yoti:useCaseId="get_user_phone_1"
+        yoti:buttonTheme="Theme_Yoti"/>
 
     <TextView
         android:id="@+id/text"

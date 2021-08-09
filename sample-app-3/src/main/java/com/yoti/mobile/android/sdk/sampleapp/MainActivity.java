@@ -1,13 +1,16 @@
 package com.yoti.mobile.android.sdk.sampleapp;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.View.OnFocusChangeListener;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,14 +18,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.yoti.mobile.android.sdk.YotiSDK;
 import com.yoti.mobile.android.sdk.YotiSDKButton;
 import com.yoti.mobile.android.sdk.exceptions.YotiSDKException;
-import com.yoti.mobile.android.sdk.exceptions.YotiSDKNoYotiAppException;
 import com.yoti.mobile.android.sdk.exceptions.YotiSDKNotValidScenarioException;
 import com.yoti.mobile.android.sdk.model.Scenario;
 import com.yoti.mobile.android.sdk.sampleapp3.R;
 
+import static com.yoti.mobile.android.sdk.sampleapp.ShareAttributesResultBroadcastReceiver.EXTRA_FULL_URL;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+
+    private static final int YOTI_SDK_BUTTON = 0;
+    private static final int EASY_ID_SDK_BUTTON = 1;
+    private static final int PARTNERSHIP_SDK_BUTTON = 2;
 
     private YotiSDKButton mYotiSDKButton;
     private View mStatusContainer;
@@ -32,7 +40,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView mSdkEntry;
     private TextView mButtonTextEntry;
     private TextView mUseCaseEntry;
+    private ViewFlipper mSdkButtonViewFlipper;
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         YotiSDK.enableSDKLogging(true);
 
-        mYotiSDKButton = findViewById(R.id.button);
         mStatusContainer = findViewById(R.id.resultContainer);
         mStatusHeader = findViewById(R.id.resultHeader);
         mStatusMessage = findViewById(R.id.resultStatus);
@@ -48,44 +57,92 @@ public class MainActivity extends AppCompatActivity {
         mSdkEntry = findViewById(R.id.sdkIdText);
         mButtonTextEntry = findViewById(R.id.buttonLabelText);
         mUseCaseEntry = findViewById(R.id.useCaseIdText);
-        createScenario();
 
         mSdkEntry.addTextChangedListener(scenarioUpdateListener);
         mScenarioEntry.addTextChangedListener(scenarioUpdateListener);
         mUseCaseEntry.addTextChangedListener(scenarioUpdateListener);
         mButtonTextEntry.addTextChangedListener(buttonTextListener);
 
-        mYotiSDKButton.setOnYotiButtonClickListener(new YotiSDKButton.OnYotiButtonClickListener() {
+        mSdkButtonViewFlipper = findViewById(R.id.sdkButtonViewFlipper);
+        handleSDKButtonThemeSelection(PARTNERSHIP_SDK_BUTTON);
+
+        RadioGroup buttonSelectionRadioGroup = findViewById(R.id.buttonSelectionRadioGroup);
+        buttonSelectionRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            switch (checkedId) {
+                case R.id.yotiRadioButton:
+                    handleSDKButtonThemeSelection(YOTI_SDK_BUTTON);
+                break;
+                case R.id.easyIdRadioButton:
+                    handleSDKButtonThemeSelection(EASY_ID_SDK_BUTTON);
+                    break;
+                default:
+                    handleSDKButtonThemeSelection(PARTNERSHIP_SDK_BUTTON);
+                    break;
+            }
+        });
+    }
+
+    private void handleSDKButtonThemeSelection(int selection) {
+        switch (selection) {
+            case YOTI_SDK_BUTTON:
+                YotiSDKButton yotiSdkButton = findViewById(R.id.yotiSDKButton);
+                mSdkButtonViewFlipper.setDisplayedChild(YOTI_SDK_BUTTON);
+                initSDKButton(yotiSdkButton);
+                break;
+            case EASY_ID_SDK_BUTTON:
+                YotiSDKButton easyIdSdkButton = findViewById(R.id.easyIdSDKButton);
+                mSdkButtonViewFlipper.setDisplayedChild(EASY_ID_SDK_BUTTON);
+                initSDKButton(easyIdSdkButton);
+                break;
+            case PARTNERSHIP_SDK_BUTTON:
+                YotiSDKButton partnershipSDKButton = findViewById(R.id.partnershipSDKButton);
+                mSdkButtonViewFlipper.setDisplayedChild(PARTNERSHIP_SDK_BUTTON);
+                initSDKButton(partnershipSDKButton);
+                break;
+        }
+    }
+
+    private void initSDKButton(YotiSDKButton yotiSDKButton) {
+        mYotiSDKButton = yotiSDKButton;
+        createScenario();
+
+        yotiSDKButton.setOnYotiButtonClickListener(new YotiSDKButton.OnYotiButtonClickListener() {
             @Override
             public void onStartScenario() {
-                mYotiSDKButton.setVisibility(View.GONE);
+                yotiSDKButton.setVisibility(View.GONE);
                 showStatus(true, R.string.result_status_startScenario);
             }
 
             @Override
             public void onStartScenarioError(YotiSDKException cause) {
-                mYotiSDKButton.setVisibility(View.VISIBLE);
+                yotiSDKButton.setVisibility(View.VISIBLE);
                 showStatus(false, R.string.result_status_startScenarioError);
             }
         });
 
-        mYotiSDKButton.setOnYotiAppNotInstalledListener(new YotiSDKButton.OnYotiAppNotInstalledListener() {
-            @Override
-            public void onYotiAppNotInstalledError(YotiSDKNoYotiAppException cause) {
-                //The Yoti app is not installed, let's deal with it
-                mYotiSDKButton.setVisibility(View.VISIBLE);
-                showStatus(false, R.string.result_status_appNotInstalled);
-            }
+        yotiSDKButton.setOnAppNotInstalledListener((cause, appURL) -> {
+            yotiSDKButton.setVisibility(View.VISIBLE);
+            showStatus(false, R.string.result_status_appNotInstalled);
+            launchAppUrl(appURL);
         });
 
-        mYotiSDKButton.setOnYotiCalledListener(new YotiSDKButton.OnYotiCalledListener() {
+        mYotiSDKButton.setOnAppCalledListener(new YotiSDKButton.OnAppCalledListener() {
             @Override
-            public void onYotiCalled() {
+            public void onAppCalled() {
                 // Restore the original state
                 mYotiSDKButton.setVisibility(View.VISIBLE);
                 showStatus(true, R.string.result_status_openYoti);
             }
         });
+    }
+
+    // required app is not installed, launch app url to download the app
+    private void launchAppUrl(String redirectURL) {
+        Uri webpage = Uri.parse(redirectURL);
+        Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -114,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (intent.hasExtra(ShareAttributesResultBroadcastReceiver.EXTRA_LOADING)) {
-            showStatus(true, R.string.result_status_loading);
+            showStatus(true, R.string.result_status_loading, "\n\n FULL_URL - "+intent.getStringExtra(EXTRA_FULL_URL));
         }
     }
 
@@ -152,14 +209,20 @@ public class MainActivity extends AppCompatActivity {
     private void showStatus(boolean success, @StringRes int message) {
         mStatusContainer.setVisibility(View.VISIBLE);
         if (success) {
-            mStatusContainer.setBackgroundColor(getResources().getColor(R.color.YotiGreen));
+            mStatusContainer.setBackgroundColor(getResources().getColor(R.color.yoti_green));
             mStatusHeader.setText(R.string.result_header_success);
         }else {
-            mStatusContainer.setBackgroundColor(getResources().getColor(R.color.YotiRed));
+            mStatusContainer.setBackgroundColor(getResources().getColor(R.color.yoti_red));
             mStatusHeader.setText(R.string.result_header_error);
         }
 
         mStatusMessage.setText(message);
+    }
+
+    private void showStatus(boolean success, @StringRes int messageResId, String messageText) {
+        showStatus(success, messageResId);
+
+        mStatusMessage.setText(String.format("%s %s", getString(messageResId), messageText));
     }
 
     private void hideStatus() {
@@ -196,7 +259,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void afterTextChanged(final Editable s) {
-            mYotiSDKButton.setText(s.toString());
+
         }
     };
 }
