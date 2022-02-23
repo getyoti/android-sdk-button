@@ -15,6 +15,7 @@
 
         <activity
             android:name="com.yoti.mobile.android.sampleapp2.MainActivity"
+            android:exported="true"
             android:launchMode="singleInstance"
             android:theme="@style/SampleAppFullScreenTheme">
             <intent-filter>
@@ -24,13 +25,17 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name="com.yoti.mobile.android.sampleapp2.recievers.ShareAttributesResultBroadcastReceiver" android:exported="false">
+        <receiver
+            android:name="com.yoti.mobile.android.sampleapp2.recievers.ShareAttributesResultBroadcastReceiver"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.yoti.services.CALLBACK" />
             </intent-filter>
         </receiver>
 
-        <activity android:name="com.yoti.mobile.android.sampleapp2.ProfileActivity" />
+        <activity
+            android:name="com.yoti.mobile.android.sampleapp2.ProfileActivity"
+            android:exported="false" />
 
         <service
             android:name="com.yoti.mobile.android.sampleapp2.services.CallbackIntentService"
