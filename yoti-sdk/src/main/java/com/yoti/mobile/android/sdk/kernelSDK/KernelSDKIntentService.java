@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.ResultReceiver;
 import android.text.TextUtils;
 
@@ -150,8 +151,15 @@ public class KernelSDKIntentService extends IntentService {
             intent.setData(uri);
         }
 
+        int flags;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            flags = PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE;
+        } else {
+            flags = PendingIntent.FLAG_UPDATE_CURRENT;
+        }
         Intent wakeupIntent = new Intent(this, ReceiverActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, wakeupIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, wakeupIntent, flags);
+
 
         intent.putExtra(YOTI_PENDING_INTENT_EXTRA, pendingIntent);
 

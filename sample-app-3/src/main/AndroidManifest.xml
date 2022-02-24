@@ -11,9 +11,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.yoti.mobile.android.sdk.sampleapp.MainActivity"
-            android:theme="@style/SampleAppTheme"
-            android:launchMode="singleInstance">
+        <activity
+            android:name="com.yoti.mobile.android.sdk.sampleapp.MainActivity"
+            android:exported="true"
+            android:launchMode="singleInstance"
+            android:theme="@style/SampleAppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,7 +23,9 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name="com.yoti.mobile.android.sdk.sampleapp.ShareAttributesResultBroadcastReceiver" android:exported="false">
+        <receiver
+            android:name="com.yoti.mobile.android.sdk.sampleapp.ShareAttributesResultBroadcastReceiver"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.test.app.YOTI_CALLBACK" />
                 <action android:name="com.test.app.BACKEND_CALLBACK" />

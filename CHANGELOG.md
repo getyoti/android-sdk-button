@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.3.1] - 2022-02-22
+### Changed
+- Update pending intent flags to support Android 12.
+
 ## [1.3.0] - 2021-07-20
 ### Added
 - Added attribute buttonTheme to the YotiSDKButton for applying the theme.
