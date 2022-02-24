@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.yoti.mobile.android.sdk">
 
+    <queries>
+        <package android:name="com.yoti.mobile.android.live" />
+        <package android:name="com.postofficeid.mobile.android.live" />
+    </queries>
+
     <application
         android:label="@string/app_name">
         <activity android:name=".ReceiverActivity"
