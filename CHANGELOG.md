@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.3.2] - 2022-03-28
+### Changed
+- Add configurable app packages (automation fix)
+
 ## [1.3.1] - 2022-02-22
 ### Changed
 - Update pending intent flags to support Android 12.
