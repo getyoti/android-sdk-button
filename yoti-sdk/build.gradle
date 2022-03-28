@@ -17,8 +17,13 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField 'String', 'YOTI_APP_PACKAGE', "\"$yotiAppPackage\""
-        buildConfigField 'String', 'EASY_ID_APP_PACKAGE', "\"$easyIdAppPackage\""
+        def yotiAppPackageValue = "$yotiAppPackage"
+        def easyIdAppPackageValue = "$easyIdAppPackage"
+
+        manifestPlaceholders = [yotiAppPackage: yotiAppPackageValue, easyIdAppPackage: easyIdAppPackageValue]
+
+        buildConfigField 'String', 'YOTI_APP_PACKAGE', "\"${yotiAppPackageValue}\""
+        buildConfigField 'String', 'EASY_ID_APP_PACKAGE', "\"$easyIdAppPackageValue\""
         buildConfigField 'int', 'YOTI_APP_MIN_VERSION', yotiAppMinVersion
         buildConfigField 'String', 'YOTI_BACKEND_URL', "\"$yotiBackendUrl\""
         buildConfigField 'int', 'YOTI_BACKEND_PORT', "$yotiBackendPort"
