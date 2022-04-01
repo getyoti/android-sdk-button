@@ -1,5 +1,8 @@
 # Changelog
 All notable changes to this project will be documented in this file.
+## [1.3.2] - 2022-03-30
+### Fixed
+- Fix crash when returning from Digital IDs Apps.
 
 ## [1.3.1] - 2022-02-22
 ### Changed
