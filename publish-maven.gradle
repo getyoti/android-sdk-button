@@ -13,8 +13,8 @@ nexusStaging {
     // this package group has to be this one so that all yoti publication there are under the same group
     packageGroup = "com.yoti"
 
-    username = repoUsername
-    password = repoPassword
+    username = sonatypeUsername
+    password = sonatypePassword
 
     delayBetweenRetriesInMillis = 15000
 }

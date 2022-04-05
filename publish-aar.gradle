@@ -295,8 +295,8 @@ project.afterEvaluate {
                 name = yotiRepoName
                 url = releaseRepository
                 credentials {
-                    username = repoUsername
-                    password = repoPassword
+                    username = sonatypeUsername
+                    password = sonatypePassword
                 }
             }
         }
