@@ -3,8 +3,8 @@
     package="com.yoti.mobile.android.sdk">
 
     <queries>
-        <package android:name="com.yoti.mobile.android.live" />
-        <package android:name="com.postofficeid.mobile.android.live" />
+        <package android:name="${yotiAppPackage}" />
+        <package android:name="${easyIdAppPackage}" />
     </queries>
 
     <application
