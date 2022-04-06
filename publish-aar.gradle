@@ -1,4 +1,4 @@
-//Version 2.1.1
+//Version 2.2.2
 buildscript {
     repositories {
         mavenCentral()
@@ -57,17 +57,24 @@ project.afterEvaluate {
 
             def allTaskNames
 
+            def includeDebug = project.hasProperty('publishReleaseOnly') ?
+                    !Boolean.valueOf(publishReleaseOnly) : true
+
             if (project.hasProperty('productFlavors')) {
                 def parts = productFlavors.split(",")
                 allTaskNames = new ArrayList<?>(parts.length * 2)
                 for (part in parts) {
-                    allTaskNames.add(tasksContainer.getByName("bundle${part.capitalize()}DebugAar"))
+                    if (includeDebug) {
+                        allTaskNames.add(tasksContainer.getByName("bundle${part.capitalize()}DebugAar"))
+                    }
                     allTaskNames.add(tasksContainer.getByName("bundle${part.capitalize()}ReleaseAar"))
                 }
             } else {
                 allTaskNames = new ArrayList<?>(2)
                 allTaskNames.add(tasksContainer.getByName("bundleReleaseAar"))
-                allTaskNames.add(tasksContainer.getByName("bundleDebugAar"))
+                if (includeDebug) {
+                    allTaskNames.add(tasksContainer.getByName("bundleDebugAar"))
+                }
             }
 
 
@@ -252,24 +259,21 @@ project.afterEvaluate {
 
                         def scopes = ["compile", "api", "implementation"]
                         for (scope in scopes) {
-                            for (conf in configurations) {
-                                def confName = conf.name.toLowerCase()
+                            def scopeConfigurations = new ArrayList<String>(4)
+                            //api
+                            scopeConfigurations.add(scope)
+                            //debugApi
+                            scopeConfigurations.add(buildTypeLower + scope.capitalize())
+                            if (!productFlavorLower.empty) {
+                                //stagingApi
+                                scopeConfigurations.add(productFlavorLower + scope.capitalize())
+                                //stagingDebugApi
+                                scopeConfigurations.add(productFlavorLower + buildTypeLower.capitalize() + scope.capitalize())
+                            }
 
-                                if (confName.endsWith(scope) &&
-                                        !confName.contains("test") &&
-                                        !confName.contains("metadata") &&
-                                        !confName.contains("android") &&
-                                        !confName.contains("dependencies") && (
-
-                                        // Only consider the debug dependencies for debug publication
-                                        // equally release for release or normal (neither debug,
-                                        // nor release)
-                                        (buildTypeLower == "debug" && confName.contains('debug')) ||
-                                                (buildTypeLower == "release" && confName.contains('release')) ||
-                                                (!confName.contains('debug') && !confName.contains('release'))
-                                )
-                                ) {
-                                    conf.getDependencies().each { dep ->
+                            for (confName in scopeConfigurations) {
+                                configurations.getByName(confName) {
+                                    getDependencies().each { dep ->
                                         //Ignore kotlin transitive dependencies as they will be applied
                                         // by the kotlin plugin
                                         if (!(dep.group == "org.jetbrains.kotlin" &&
@@ -398,8 +402,11 @@ class ArtefactFlavorConf {
 
     // Allow the definition to be only artefact name-based
     boolean isArtefact(PropertyDependency dependency) {
-        return (artefact == dependency || (artefact.isNameOnly() && artefact.name == dependency.name)) ||
-                isForAllArtefacts()
+        return (artefact == dependency || isNamedArtefact(dependency.name))
+    }
+
+    boolean isNamedArtefact(String name) {
+        return (artefact.isNameOnly() && artefact.name == name) || iusForAllArtefacts()
     }
 
     boolean hasFlavor(String flavorName) {
@@ -433,6 +440,21 @@ class ArtefactFlavorProperties {
 
     ArtefactFlavorProperties() {
         configuration = []
+    }
+
+    boolean ignoreFlavorFor(ProjectDependency dependency, String flavor) {
+        if (flavor.empty) {
+            //No flavours in project, treat this as ignored
+            return true
+        }
+
+        for (ArtefactFlavorConf conf : configuration) {
+            if (conf.isNamedArtefact(dependency.name) && conf.hasFlavor(flavor)){
+                return true
+            }
+        }
+
+        return false
     }
 
     boolean ignoreFlavorFor(PropertyDependency dependency, String flavor){
