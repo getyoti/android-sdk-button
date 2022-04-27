@@ -12,6 +12,7 @@ public class ReceiverActivity extends AppCompatActivity {
 
         Intent intent = new Intent(getIntent().getAction());
         intent.setPackage(getIntent().getPackage());
+        intent.putExtras(getIntent().getExtras());
 
         sendBroadcast(intent);
 
