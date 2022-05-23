@@ -20,3 +20,9 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+* * *
+
+This licence does not cover any Yoti or Post Office trading names or logos
+contained in this library. To use the Yoti or Post Office trading names or
+logos you must accept the Yoti Organisation T&Cs available at www.yoti.com/terms
